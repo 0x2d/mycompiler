@@ -54,8 +54,14 @@ extern int yydebug;
     BREAK = 264,
     CONTINUE = 265,
     RETURN = 266,
-    IDENT = 267,
-    INT_CONST = 268
+    LE = 267,
+    GE = 268,
+    EQ = 269,
+    NE = 270,
+    AND = 271,
+    OR = 272,
+    IDENT = 273,
+    INT_CONST = 274
   };
 #endif
 
@@ -64,11 +70,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 9 "parser.y" /* yacc.c:1909  */
+#line 13 "parser.y" /* yacc.c:1909  */
 
     int val;
 
-#line 72 "parser.tab.h" /* yacc.c:1909  */
+#line 78 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
