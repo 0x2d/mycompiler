@@ -41,6 +41,7 @@ ConstDef_temp   : ConstDef {printf("r ConstDef_temp\n");}
                 ;
 
 BType   : INT {printf("r BType\n");}
+        | VOID {printf("r BType\n");}
         ;
 
 ConstDef    : IDENT ConstExp_temp '=' ConstInitVal {printf("r ConstDef\n");}
@@ -79,13 +80,9 @@ InitVal_temp    : InitVal {printf("r InitVal_temp\n");}
                 | InitVal_temp ',' InitVal {printf("r InitVal_temp\n");}
                 ;
 
-FuncDef : FuncType IDENT '(' FuncFParams ')' Block {printf("r FuncDef\n");}
-        | FuncType IDENT '(' ')' Block {printf("r FuncDef\n");}
+FuncDef : BType IDENT '(' FuncFParams ')' Block {printf("r FuncDef\n");}
+        | BType IDENT '(' ')' Block {printf("r FuncDef\n");}
         ;
-
-FuncType    : VOID {printf("r FuncType\n");}
-            | INT {printf("r FuncType\n");}
-            ;
 
 FuncFParams : FuncFParam {printf("r FuncFParams\n");}
             | FuncFParams ',' FuncFParam {printf("r FuncFParams\n");}
