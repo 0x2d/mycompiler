@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<unistd.h>
 #include<errno.h>
-#include"y.tab.h"
+#include"parser.tab.h"
 extern char *optarg;
 extern FILE *yyin;
 extern FILE *yyout;

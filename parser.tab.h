@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -58,18 +58,6 @@ extern int yydebug;
     INT_CONST = 268
   };
 #endif
-/* Tokens.  */
-#define CONST 258
-#define INT 259
-#define VOID 260
-#define IF 261
-#define ELSE 262
-#define WHILE 263
-#define BREAK 264
-#define CONTINUE 265
-#define RETURN 266
-#define IDENT 267
-#define INT_CONST 268
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -80,7 +68,7 @@ union YYSTYPE
 
     int val;
 
-#line 84 "y.tab.h" /* yacc.c:1909  */
+#line 72 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -93,4 +81,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */

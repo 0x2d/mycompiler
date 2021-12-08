@@ -481,10 +481,9 @@ char *yytext;
 #line 2 "lexer.l"
     #include<stdio.h>
     #include<stdlib.h>
-    #include"y.tab.h"
-
+    #include"parser.tab.h"
+#line 486 "lex.yy.c"
 #line 487 "lex.yy.c"
-#line 488 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -701,10 +700,10 @@ YY_DECL
 		}
 
 	{
-#line 13 "lexer.l"
+#line 12 "lexer.l"
 
 
-#line 708 "lex.yy.c"
+#line 707 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -763,62 +762,62 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 15 "lexer.l"
+#line 14 "lexer.l"
 {return INT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 16 "lexer.l"
+#line 15 "lexer.l"
 {return VOID;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "lexer.l"
+#line 16 "lexer.l"
 {return CONST;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 18 "lexer.l"
+#line 17 "lexer.l"
 {return IF;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "lexer.l"
+#line 18 "lexer.l"
 {return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 19 "lexer.l"
 {return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 20 "lexer.l"
 {return BREAK;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 21 "lexer.l"
 {return CONTINUE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 22 "lexer.l"
 {return RETURN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 23 "lexer.l"
 {return IDENT;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "lexer.l"
+#line 24 "lexer.l"
 {return yytext[0];}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 26 "lexer.l"
+#line 25 "lexer.l"
 {
     yylval.val = atoi(yytext);
     return INT_CONST;
@@ -826,15 +825,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 30 "lexer.l"
+#line 29 "lexer.l"
 
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 32 "lexer.l"
+#line 31 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 838 "lex.yy.c"
+#line 837 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1839,5 +1838,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 32 "lexer.l"
+#line 31 "lexer.l"
 

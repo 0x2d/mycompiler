@@ -1,8 +1,7 @@
 %{
     #include<stdio.h>
     #include<stdlib.h>
-    #include"y.tab.h"
-
+    #include"parser.tab.h"
 %}
 
 ident   ([_a-zA-Z][_a-zA-Z0-9]*)
