@@ -8,8 +8,8 @@ extern FILE *yyout;
 
 int main(int argc, char *argv[]){
     int arg_temp = 0;
-    char *input_file_path = nullptr;
-    char *output_file_path = nullptr;
+    char *input_file_path = NULL;
+    char *output_file_path = NULL;
 
     //-f <inputfile> -o <outputfile>
     while(EOF != (arg_temp = getopt(argc,argv,"of"))){
@@ -26,8 +26,8 @@ int main(int argc, char *argv[]){
         }
     }
 
-    FILE *input_file = nullptr;
-    FILE *output_file = nullptr;
+    FILE *input_file = NULL;
+    FILE *output_file = NULL;
 
     if(input_file_path){
         input_file = fopen(input_file_path,"r");
@@ -42,11 +42,11 @@ int main(int argc, char *argv[]){
 
     if(input_file){
         fclose(input_file);
-        yyin = 0;
+        yyin = stdin;
     }
     if(output_file){
         fclose(output_file);
-        yyout = 1;
+        yyout = stdout;
     }
     
     return 0;
