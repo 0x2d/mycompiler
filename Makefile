@@ -13,7 +13,7 @@ y.tab.o: y.tab.c y.tab.h
 	$(CC) -c y.tab.c
 
 y.tab.c  y.tab.h: parser.y
-	$(YACC) -d y.tab.y
+	$(YACC) -d y.tab.c
 
 lex.yy.c: lexer.l
 	$(LEX) lexer.l

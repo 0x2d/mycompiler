@@ -26,9 +26,12 @@ Decl    : ConstDecl {printf("r Decl\n");}
         | VarDecl {printf("r Decl\n");}
         ;
 
-ConstDecl   : CONST BType ConstDef {printf("r ConstDecl\n");}
-            | ConstDecl "," ConstDef ";" {printf("r ConstDecl\n");}
+ConstDecl   : CONST BType ConstDef_temp ";" {printf("r ConstDecl\n");}
             ;
+
+ConstDef_temp   : ConstDef {printf("r ConstDef_temp\n");}
+                | ConstDef_temp "," ConstDef {printf("r ConstDef_temp\n");}
+                ;
 
 BType   : INT {printf("r BType\n");}
         ;
