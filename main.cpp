@@ -3,20 +3,16 @@
 #include<errno.h>
 #include"y.tab.h"
 extern char *optarg;
+extern FILE *yyin;
+extern FILE *yyout;
 
 int main(int argc, char *argv[]){
-
-    if(argc<2){
-        perror("Need more arg!\n");
-        return 1;
-    }
-
     int arg_temp = 0;
     char *input_file_path = nullptr;
     char *output_file_path = nullptr;
 
     //-f <inputfile> -o <outputfile>
-    while(EOF != (arg_temp = getopt(argc,argv,"of:"))){
+    while(EOF != (arg_temp = getopt(argc,argv,"of"))){
         switch(arg_temp){
             case 'o':
                 output_file_path = optarg;
@@ -30,17 +26,28 @@ int main(int argc, char *argv[]){
         }
     }
 
-    FILE *input_file;
-    FILE *output_file;
+    FILE *input_file = nullptr;
+    FILE *output_file = nullptr;
 
-    input_file = fopen(input_file_path, "r");
+    if(input_file_path){
+        input_file = fopen(input_file_path,"r");
+        yyin = input_file;
+    }
     if(output_file_path){
         output_file = fopen(output_file_path,"w");
-    } else{
-        output_file = fopen("b.out","w");
+        yyout = output_file;
     }
 
-    fclose(input_file);
-    fclose(output_file);
+    yyparse();
+
+    if(input_file){
+        fclose(input_file);
+        yyin = 0;
+    }
+    if(output_file){
+        fclose(output_file);
+        yyout = 1;
+    }
+    
     return 0;
 }
