@@ -70,9 +70,9 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 13 "parser.y" /* yacc.c:1909  */
+#line 15 "parser.y" /* yacc.c:1909  */
 
-    int val;
+    class AST *ast; //class关键字必需添加
 
 #line 78 "parser.tab.h" /* yacc.c:1909  */
 };

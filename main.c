@@ -1,8 +1,10 @@
 #include<stdio.h>
 #include<unistd.h>
 #include<errno.h>
+#include"ast.h"
 #include"parser.tab.h"
 extern char *optarg;
+extern AST *root;
 extern FILE *yyin;
 extern FILE *yyout;
 

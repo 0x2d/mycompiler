@@ -1,13 +1,18 @@
 %{
     #include<stdio.h>
     #include<stdlib.h>
+    #include<string.h>
+    //保持以下顺序
+    #include"ast.h"
     #include"parser.tab.h"
+    //保持以上顺序
 %}
 
 %x COMMENTS
 
 ident   ([_a-zA-Z][_a-zA-Z0-9]*)
-symbol  ("="|">"|"<"|"+"|"-"|"*"|"/"|"%"|"!")|("("|")"|"["|"]"|"{"|"}"|";"|",")
+symbol  ("("|")"|"["|"]"|"{"|"}"|";"|",")
+operator ("="|">"|"<"|"+"|"-"|"*"|"/"|"%"|"!")
 decimal ([1-9][0-9]*)
 
 
@@ -17,28 +22,108 @@ decimal ([1-9][0-9]*)
 <COMMENTS>.
 <COMMENTS>\n
 <COMMENTS>"*/"  {BEGIN INITIAL;}
-"int"   {return INT;}
-"void"  {return VOID;}
-"const" {return CONST;}
-"if"    {return IF;}
-"else"  {return ELSE;}
-"while" {return WHILE;}
-"break" {return BREAK;}
-"continue"  {return CONTINUE;}
-"return"    {return RETURN;}
-"<="    {return LE;}
-">="    {return GE;}
-"=="    {return EQ;}
-"!="    {return NE;}
-"&&"    {return AND;}
-"OR"    {return OR;}
-{ident} {return IDENT;}
-{symbol} {return yytext[0];}
+
+"int"   {
+    AST *temp = new AST(_INT);
+    yylval.ast = temp;
+    return INT;
+}
+"void"  {
+    AST *temp = new AST(_VOID);
+    yylval.ast = temp;
+    return VOID;
+}
+"const" {
+    AST *temp = new AST(_CONST);
+    yylval.ast = temp;
+    return CONST;
+}
+"if"    {
+    AST *temp = new AST(_IF);
+    yylval.ast = temp;
+    return IF;
+}
+"else"  {
+    AST *temp = new AST(_ELSE);
+    yylval.ast = temp;
+    return ELSE;
+}
+"while" {
+    AST *temp = new AST(_WHILE);
+    yylval.ast = temp;
+    return WHILE;
+}
+"break" {
+    AST *temp = new AST(_BREAK);
+    yylval.ast = temp;
+    return BREAK;
+}
+"continue"  {
+    AST *temp = new AST(_CONTINUE);
+    yylval.ast = temp;
+    return CONTINUE;
+}
+"return"    {
+    AST *temp = new AST(_RETURN);
+    yylval.ast = temp;
+    return RETURN;
+}
+"<="    {
+    AST *temp = new AST(_LE);
+    yylval.ast = temp;
+    return LE;
+}
+">="    {
+    AST *temp = new AST(_GE);
+    yylval.ast = temp;
+    return GE;
+}
+"=="    {
+    AST *temp = new AST(_EQ);
+    yylval.ast = temp;
+    return EQ;
+}
+"!="    {
+    AST *temp = new AST(_NE);
+    yylval.ast = temp;
+    return NE;
+}
+"&&"    {
+    AST *temp = new AST(_AND);
+    yylval.ast = temp;
+    return AND;
+}
+"OR"    {
+    AST *temp = new AST(_OR);
+    yylval.ast = temp;
+    return OR;
+}
+{ident} {
+    char *id = (char *)malloc(sizeof(yytext));
+    memset(id, '\0', sizeof(id));
+    strcpy(id,yytext);
+    AST *temp = new AST(_IDENT, id);
+    yylval.ast = temp;
+    return IDENT;
+}
+{operator} {
+    AST *temp = new AST(_OP, yytext[0]);
+    yylval.ast = temp;
+    return yytext[0];
+}
+{symbol} {
+    return yytext[0];
+}
 {decimal}   {
-    yylval.val = atoi(yytext);
+    AST *temp = new AST(_INT_CONST,atoi(yytext));
+    yylval.ast = temp;
     return INT_CONST;
 }
 \n
 .
 
 %%
+
+int yywrap(){
+    return 1;
+}
