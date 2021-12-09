@@ -4,13 +4,19 @@
     #include"parser.tab.h"
 %}
 
+%x COMMENTS
+
 ident   ([_a-zA-Z][_a-zA-Z0-9]*)
 symbol  ("="|">"|"<"|"+"|"-"|"*"|"/"|"%"|"!")|("("|")"|"["|"]"|"{"|"}"|";"|",")
-integer ([0-9]+)
+decimal ([1-9][0-9]*)
 
 
 %%
 
+"/*"    {BEGIN COMMENTS;}
+<COMMENTS>.
+<COMMENTS>\n
+<COMMENTS>"*/"  {BEGIN INITIAL;}
 "int"   {return INT;}
 "void"  {return VOID;}
 "const" {return CONST;}
@@ -28,7 +34,7 @@ integer ([0-9]+)
 "OR"    {return OR;}
 {ident} {return IDENT;}
 {symbol} {return yytext[0];}
-{integer}   {
+{decimal}   {
     yylval.val = atoi(yytext);
     return INT_CONST;
 }
