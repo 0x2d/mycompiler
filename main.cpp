@@ -1,12 +1,16 @@
 #include<stdio.h>
 #include<unistd.h>
 #include<errno.h>
+#include<vector>
+#include"symtable.h"
 #include"ast.h"
 #include"parser.tab.h"
 extern char *optarg;
 extern AST *root;
 extern FILE *yyin;
 extern FILE *yyout;
+extern std::vector<TABLE *> symtable_list;
+extern TABLE *symtable_ptr;
 
 int main(int argc, char *argv[]){
     int arg_temp = 0;
@@ -40,7 +44,10 @@ int main(int argc, char *argv[]){
         yyout = output_file;
     }
 
+    symtable_ptr = new TABLE("root_symtable");
+    symtable_list.push_back(symtable_ptr);
     yyparse();
+    root->irgen();
 
     if(input_file){
         fclose(input_file);

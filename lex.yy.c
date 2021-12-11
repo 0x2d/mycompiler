@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 25
-#define YY_END_OF_BUFFER 26
+#define YY_NUM_RULES 26
+#define YY_END_OF_BUFFER 27
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,10 +362,10 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[71] =
     {   0,
-        0,    0,    0,    0,   26,   24,   23,   21,   21,   24,
-       21,   21,   22,   21,   21,   21,   20,   20,   20,   20,
+        0,    0,    0,    0,   27,   25,   24,   21,   21,   25,
+       22,   21,   23,   21,   21,   21,   20,   20,   20,   20,
        20,   20,   20,   20,   20,    2,    3,    2,   17,   18,
-        1,   22,   14,   16,   15,   20,   19,   20,   20,   20,
+        1,   23,   14,   16,   15,   20,   19,   20,   20,   20,
         8,   20,   20,   20,   20,    4,   20,   20,   20,    5,
        20,   20,   20,   20,   20,   20,    9,   20,    6,   20,
        11,    7,   20,   20,   10,   20,   13,   20,   12,    0
@@ -717,7 +717,7 @@ YY_DECL
 		}
 
 	{
-#line 18 "lexer.l"
+#line 19 "lexer.l"
 
 
 #line 724 "lex.yy.c"
@@ -779,28 +779,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 20 "lexer.l"
+#line 21 "lexer.l"
 {BEGIN COMMENTS;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "lexer.l"
+#line 22 "lexer.l"
 
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 22 "lexer.l"
+#line 23 "lexer.l"
 
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "lexer.l"
+#line 24 "lexer.l"
 {BEGIN INITIAL;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "lexer.l"
+#line 26 "lexer.l"
 {
     AST *temp = new AST(_INT);
     yylval.ast = temp;
@@ -809,7 +809,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 30 "lexer.l"
+#line 31 "lexer.l"
 {
     AST *temp = new AST(_VOID);
     yylval.ast = temp;
@@ -818,7 +818,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "lexer.l"
+#line 36 "lexer.l"
 {
     AST *temp = new AST(_CONST);
     yylval.ast = temp;
@@ -827,7 +827,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 40 "lexer.l"
+#line 41 "lexer.l"
 {
     AST *temp = new AST(_IF);
     yylval.ast = temp;
@@ -836,7 +836,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 45 "lexer.l"
+#line 46 "lexer.l"
 {
     AST *temp = new AST(_ELSE);
     yylval.ast = temp;
@@ -845,7 +845,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 50 "lexer.l"
+#line 51 "lexer.l"
 {
     AST *temp = new AST(_WHILE);
     yylval.ast = temp;
@@ -854,7 +854,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 56 "lexer.l"
 {
     AST *temp = new AST(_BREAK);
     yylval.ast = temp;
@@ -863,7 +863,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 61 "lexer.l"
 {
     AST *temp = new AST(_CONTINUE);
     yylval.ast = temp;
@@ -872,7 +872,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 66 "lexer.l"
 {
     AST *temp = new AST(_RETURN);
     yylval.ast = temp;
@@ -881,7 +881,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 71 "lexer.l"
 {
     AST *temp = new AST(_LE);
     yylval.ast = temp;
@@ -890,7 +890,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 76 "lexer.l"
 {
     AST *temp = new AST(_GE);
     yylval.ast = temp;
@@ -899,7 +899,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 80 "lexer.l"
+#line 81 "lexer.l"
 {
     AST *temp = new AST(_EQ);
     yylval.ast = temp;
@@ -908,7 +908,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 85 "lexer.l"
+#line 86 "lexer.l"
 {
     AST *temp = new AST(_NE);
     yylval.ast = temp;
@@ -917,7 +917,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 90 "lexer.l"
+#line 91 "lexer.l"
 {
     AST *temp = new AST(_AND);
     yylval.ast = temp;
@@ -926,7 +926,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 95 "lexer.l"
+#line 96 "lexer.l"
 {
     AST *temp = new AST(_OR);
     yylval.ast = temp;
@@ -935,7 +935,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 100 "lexer.l"
+#line 101 "lexer.l"
 {
     char *id = (char *)malloc(sizeof(yytext));
     memset(id, '\0', sizeof(id));
@@ -947,7 +947,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 108 "lexer.l"
+#line 109 "lexer.l"
 {
     AST *temp = new AST(_OP, yytext[0]);
     yylval.ast = temp;
@@ -956,30 +956,37 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 113 "lexer.l"
+#line 114 "lexer.l"
+{
+    return yytext[0];
+}
+	YY_BREAK
+case 23:
+YY_RULE_SETUP
+#line 117 "lexer.l"
 {
     AST *temp = new AST(_INT_CONST,atoi(yytext));
     yylval.ast = temp;
     return INT_CONST;
 }
 	YY_BREAK
-case 23:
-/* rule 23 can match eol */
-YY_RULE_SETUP
-#line 118 "lexer.l"
-
-	YY_BREAK
 case 24:
+/* rule 24 can match eol */
 YY_RULE_SETUP
-#line 119 "lexer.l"
+#line 122 "lexer.l"
 
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 121 "lexer.l"
+#line 123 "lexer.l"
+
+	YY_BREAK
+case 26:
+YY_RULE_SETUP
+#line 125 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 983 "lex.yy.c"
+#line 990 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENTS):
 	yyterminate();
@@ -1985,7 +1992,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 121 "lexer.l"
+#line 125 "lexer.l"
 
 
 int yywrap(){

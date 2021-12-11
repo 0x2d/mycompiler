@@ -1,16 +1,19 @@
 LEX=flex
 YACC=bison
 CC=g++
-OBJECT=lex.yy.o parser.tab.o ast.o main.o
+OBJECT=lex.yy.o parser.tab.o symtable.o ast.o main.o
 
 mycompiler: $(OBJECT)
 	$(CC) $(OBJECT) -o mycompiler
 
-main.o: main.c parser.tab.h
-	$(CC) -c main.c
+main.o: main.cpp parser.tab.h ast.h symtable.h
+	$(CC) -c main.cpp
 
 ast.o: ast.cpp ast.h
 	$(CC) -c ast.cpp
+
+symtable.o: symtable.cpp symtable.h
+	$(CC) -c symtable.cpp
 
 lex.yy.o: lex.yy.c parser.tab.h ast.h
 	$(CC) -c lex.yy.c
