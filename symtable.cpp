@@ -1,7 +1,7 @@
 #include"symtable.h"
 #include<vector>
 
-std::vector<TABLE *> symtable_list;
+TABLE *root_symtable;
 TABLE *symtable_ptr;
 
 void ENTRY::add_entry(TABLE *t){

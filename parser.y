@@ -115,7 +115,7 @@ ConstDef    : IDENT ConstExp_temp '=' ConstInitVal {
             }
             ;
 
-ConstExp_temp   : ConstExp_temp '[' AddExp ']' {
+ConstExp_temp   : ConstExp_temp '[' ConstExp ']' {
                     printf("r ConstExp_temp\n");
                     $1->son.push_back($3);
                     $$ = $1;
@@ -127,7 +127,7 @@ ConstExp_temp   : ConstExp_temp '[' AddExp ']' {
                 }
                 ;
 
-ConstInitVal    : AddExp {
+ConstInitVal    : ConstExp {
                     printf("r ConstInitVal\n");
                     AST *temp = new AST(_ConstInitVal);
                     temp->son.push_back($1);
@@ -652,5 +652,13 @@ LOrExp  : LAndExp {
             $$ = temp;
         }
         ;
+
+ConstExp    : AddExp {
+                printf("r ConstExp\n");
+                AST *temp = new AST(_ConstExp);
+                temp->son.push_back($1);
+                $$ = temp;
+            }
+            ;
 
 %%

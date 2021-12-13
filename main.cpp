@@ -9,7 +9,7 @@ extern char *optarg;
 extern AST *root;
 extern FILE *yyin;
 extern FILE *yyout;
-extern std::vector<TABLE *> symtable_list;
+extern TABLE *root_symtable;
 extern TABLE *symtable_ptr;
 
 int main(int argc, char *argv[]){
@@ -44,8 +44,8 @@ int main(int argc, char *argv[]){
         yyout = output_file;
     }
 
-    symtable_ptr = new TABLE("root");
-    symtable_list.push_back(symtable_ptr);
+    root_symtable = new TABLE("root");
+    symtable_ptr = root_symtable;
     yyparse();
     root->irgen();
 

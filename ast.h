@@ -27,6 +27,7 @@ public:
     void irgen();
     void irgen_Decl();
     void irgen_FuncDef();
+    void irgen_ConstInitVal(ENTRY *e);
 
     std::vector<AST *> son;
     TYPE type;
