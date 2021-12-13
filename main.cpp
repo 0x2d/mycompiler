@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
         yyout = output_file;
     }
 
-    symtable_ptr = new TABLE("root_symtable");
+    symtable_ptr = new TABLE("root");
     symtable_list.push_back(symtable_ptr);
     yyparse();
     root->irgen();

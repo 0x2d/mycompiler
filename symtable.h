@@ -9,26 +9,36 @@ class TABLE;
 class ENTRY{
 public:
     ENTRY() = default;
-    ENTRY(char *i, TABLE *t): id(i),table(t) {
-        this->T_num = -1;
+    ENTRY(char *i): id(i) {
+        T_num = -1;
         isFunc = false;
         isConst = false;
+        val = 0;
+        size = 0;
     };
 
+    void add_entry(TABLE *t);
+
     char *id;
-    int T_num;
-    bool isFunc;
-    bool isConst;
     TABLE *table;
+
+    int T_num;
+    bool isConst;
+    int val;
+    int size;
+    std::vector<int> shape;
+    int *arr;
+
+    bool isFunc;
 };
 
 class TABLE{
 public:
     TABLE() = default;
-    TABLE(char *f_i): func_id(f_i) {};
+    TABLE(char *s): space(s) {};
 
-    char *func_id;
-    std::vector<ENTRY *> content;
+    char *space;
+    std::vector<ENTRY *> name;
 };
 
 #endif

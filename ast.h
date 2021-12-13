@@ -20,7 +20,7 @@ public:
     AST(TYPE t):type(t){}
     AST(TYPE t, char o):type(t), op(o) {}
     AST(TYPE t, char *i):type(t) {
-        this->entry = new ENTRY(i,symtable_ptr);
+        this->entry = new ENTRY(i);
     }
     AST(TYPE t, int v):type(t), val(v) {}
     

@@ -85,10 +85,8 @@ ConstDef_temp   : ConstDef {
                 }
                 | ConstDef_temp ',' ConstDef {
                     printf("r ConstDef_temp\n");
-                    AST *temp = new AST(_ConstDef_temp);
-                    temp->son.push_back($1);
-                    temp->son.push_back($3);
-                    $$ = temp;
+                    $1->son.push_back($3);
+                    $$ = $1;
                 }
                 ;
 
@@ -117,7 +115,7 @@ ConstDef    : IDENT ConstExp_temp '=' ConstInitVal {
             }
             ;
 
-ConstExp_temp   : ConstExp_temp '[' ConstExp ']' {
+ConstExp_temp   : ConstExp_temp '[' AddExp ']' {
                     printf("r ConstExp_temp\n");
                     $1->son.push_back($3);
                     $$ = $1;
@@ -129,7 +127,7 @@ ConstExp_temp   : ConstExp_temp '[' ConstExp ']' {
                 }
                 ;
 
-ConstInitVal    : ConstExp {
+ConstInitVal    : AddExp {
                     printf("r ConstInitVal\n");
                     AST *temp = new AST(_ConstInitVal);
                     temp->son.push_back($1);
@@ -230,10 +228,8 @@ InitVal_temp    : InitVal {
                 }
                 | InitVal_temp ',' InitVal {
                     printf("r InitVal_temp\n");
-                    AST *temp = new AST(_InitVal_temp);
-                    temp->son.push_back($1);
-                    temp->son.push_back($3);
-                    $$ = temp;
+                    $1->son.push_back($3);
+                    $$ = $1;
                 }
                 ;
 
@@ -523,27 +519,21 @@ MulExp  : UnaryExp {
         }
         | MulExp '*' UnaryExp {
             printf("r MulExp\n");
-            AST *temp = new AST(_MulExp);
-            temp->son.push_back($1);
-            temp->son.push_back($2);
-            temp->son.push_back($3);
-            $$ = temp;
+            $1->son.push_back($2);
+            $1->son.push_back($3);
+            $$ = $1;
         }
         | MulExp '/' UnaryExp {
             printf("r MulExp\n");
-            AST *temp = new AST(_MulExp);
-            temp->son.push_back($1);
-            temp->son.push_back($2);
-            temp->son.push_back($3);
-            $$ = temp;
+            $1->son.push_back($2);
+            $1->son.push_back($3);
+            $$ = $1;
         }
         | MulExp '%' UnaryExp {
             printf("r MulExp\n");
-            AST *temp = new AST(_MulExp);
-            temp->son.push_back($1);
-            temp->son.push_back($2);
-            temp->son.push_back($3);
-            $$ = temp;
+            $1->son.push_back($2);
+            $1->son.push_back($3);
+            $$ = $1;
         }
         ;
 
@@ -555,19 +545,15 @@ AddExp  : MulExp {
         }
         | AddExp '+' MulExp {
             printf("r AddExp\n");
-            AST *temp = new AST(_AddExp);
-            temp->son.push_back($1);
-            temp->son.push_back($2);
-            temp->son.push_back($3);
-            $$ = temp;
+            $1->son.push_back($2);
+            $1->son.push_back($3);
+            $$ = $1;
         }
         | AddExp '-' MulExp {
             printf("r AddExp\n");
-            AST *temp = new AST(_AddExp);
-            temp->son.push_back($1);
-            temp->son.push_back($2);
-            temp->son.push_back($3);
-            $$ = temp;
+            $1->son.push_back($2);
+            $1->son.push_back($3);
+            $$ = $1;
         }
         ;
 
@@ -666,13 +652,5 @@ LOrExp  : LAndExp {
             $$ = temp;
         }
         ;
-
-ConstExp    : AddExp {
-                printf("r ConstExp\n");
-                AST *temp = new AST(_ConstExp);
-                temp->son.push_back($1);
-                $$ = temp;
-            }
-            ;
 
 %%
