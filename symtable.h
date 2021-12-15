@@ -26,7 +26,7 @@ public:
         this->father->son.push_back(this);
     };
 
-    bool isSame(bool isVal, char *id, bool recursive);
+    bool Find(bool isVal, char *id, bool recursive);
     ENTRY *FindAndReturn(bool isVal, char *id);
 
     char *space;
@@ -39,7 +39,7 @@ public:
 class ENTRY_VAL: public ENTRY{
 public:
     ENTRY_VAL(char *i, TABLE *t):ENTRY(i,t) {
-        if(table->isSame(true,id,false)){
+        if(table->Find(true,id,false)){
             yyerror("ConstVar was decleared before\n");
         } else{
             table->val.push_back(this);
@@ -59,7 +59,7 @@ public:
 
 class ENTRY_FUNC: public ENTRY{
 public:
-    ENTRY_FUNC(char *i, TABLE *t):ENTRY(i,t) {
+    ENTRY_FUNC(char *i, TABLE *t, TABLE *s):ENTRY(i,t),symtable(s) {
         table->func.push_back(this);
     };
 

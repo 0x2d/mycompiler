@@ -5,7 +5,7 @@
 TABLE *root_symtable;
 TABLE *symtable_ptr;
 
-bool TABLE::isSame(bool isVal, char *id, bool recursive){
+bool TABLE::Find(bool isVal, char *id, bool recursive){
     if(isVal){
         for(int i=0;i<this->val.size();i++){
             if(strcmp(id,this->val[i]->id) == 0){
@@ -14,7 +14,7 @@ bool TABLE::isSame(bool isVal, char *id, bool recursive){
         }
         if(recursive){
             if(this != root_symtable){
-                return this->father->isSame(isVal,id,recursive);
+                return this->father->Find(isVal,id,recursive);
             }
         }
     } else{

@@ -306,18 +306,16 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
             #if debug_parser_y
                 printf("r FuncDef\n");
             #endif
-            //
-            TABLE *table_temp = symtable_ptr;
-            symtable_ptr = symtable_ptr->father;
-            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr);
-            table_temp->space = $2->id;
-            ((ENTRY_FUNC *)$2->entry)->symtable = table_temp;
+            //params
+            symtable_ptr->space = $2->id;
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr);
             AST *temp = new AST(_FuncDef);
             temp->son.push_back($1);
             temp->son.push_back($2);
             temp->son.push_back($5);
             temp->son.push_back($7);
             $$ = temp;
+            symtable_ptr = symtable_ptr->father;
         }
         | BType IDENT '(' ')' {
             symtable_ptr = new TABLE("func", symtable_ptr);
@@ -326,16 +324,14 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
             #if debug_parser_y
                 printf("r FuncDef\n");
             #endif
-            TABLE *table_temp = symtable_ptr;
-            symtable_ptr = symtable_ptr->father;
-            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr);
-            table_temp->space = $2->id;
-            ((ENTRY_FUNC *)$2->entry)->symtable = table_temp;
+            symtable_ptr->space = $2->id;
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr);
             AST *temp = new AST(_FuncDef);
             temp->son.push_back($1);
             temp->son.push_back($2);
             temp->son.push_back($6);
             $$ = temp;
+            symtable_ptr = symtable_ptr->father;
         }
         ;
 
@@ -551,7 +547,7 @@ LVal    : IDENT {
             #if debug_parser_y
                 printf("r LVal\n");
             #endif
-            if(symtable_ptr->isSame(true,$1->id,true)){
+            if(symtable_ptr->Find(true,$1->id,true)){
                 $1->entry = symtable_ptr->FindAndReturn(true,$1->id);
             } else{
                 yyerror("cite non-decleared variable\n");
@@ -669,10 +665,8 @@ FuncRParams : Exp {
                 #if debug_parser_y
                     printf("r FuncRParams\n");
                 #endif
-                AST *temp = new AST(_FuncRParams);
-                temp->son.push_back($1);
-                temp->son.push_back($3);
-                $$ = temp;
+                $1->son.push_back($3);
+                $$ = $1;
             }
             ;
 

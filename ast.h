@@ -30,9 +30,9 @@ public:
     void irgen_BlockItem();
     void irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e);
     void irgen_InitVal(int addr, int layer, ENTRY_VAL *e);
-    int irgen_AddExp();
-    int irgen_MulExp();
-    int irgen_UnaryExp();
+    std::string irgen_AddExp();
+    std::string irgen_MulExp();
+    std::string irgen_UnaryExp();
 
     std::vector<AST *> son;
     TYPE type;

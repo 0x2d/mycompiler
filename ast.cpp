@@ -64,27 +64,17 @@ int valgen_AddExp(AST *p){
     return result;
 }
 
-int AST::irgen_UnaryExp(){
+std::string AST::irgen_UnaryExp(){
     //UnaryExp      ::= PrimaryExp | IDENT "(" [FuncRParams] ")" | UnaryOp UnaryExp;
-    int val1;
+    std::string val1;
     AST *ptr;
     if(this->son[0]->type == _PrimaryExp){
         ptr = this->son[0]; //PrimaryExp
         if(ptr->son[0]->type == _INT_CONST){
-            print_indent();
-            fprintf(yyout,"var t%d\n",t_i);
-            print_indent();
-            fprintf(yyout,"t%d = %d\n",t_i,ptr->son[0]->val);
-            val1 = t_i;
-            t_i++;
+            val1 = std::to_string(ptr->son[0]->val);
         } else if(ptr->son[0]->type == _LVal){
             if(ptr->son[0]->son.size() == 1){
-                print_indent();
-                fprintf(yyout,"var t%d\n",t_i);
-                print_indent();
-                fprintf(yyout,"t%d = T%d\n",t_i,((ENTRY_VAL *)ptr->son[0]->son[0]->entry)->t_n);
-                val1 = t_i;
-                t_i++;
+                val1 = "T"+std::to_string(((ENTRY_VAL *)ptr->son[0]->son[0]->entry)->t_n);
             } else{
                 //
             }
@@ -95,47 +85,52 @@ int AST::irgen_UnaryExp(){
     return val1;
 }
 
-int AST::irgen_MulExp(){
-    int val1, val2;
+std::string AST::irgen_MulExp(){
+    std::string val1, val2, val3;
     val1 = this->son[0]->irgen_UnaryExp();
-    for(int i=1;i<this->son.size();i+=2){
-        val2 = this->son[i+1]->irgen_UnaryExp();
-        print_indent();
-        fprintf(yyout,"var t%d\n",t_i);
-        if(this->son[i]->op == '*'){
-            print_indent();
-            fprintf(yyout,"t%d = t%d * t%d\n",t_i,val1,val2);
-        } else if(this->son[i]->op == '/'){
-            print_indent();
-            fprintf(yyout,"t%d = t%d / t%d\n",t_i,val1,val2);
-        } else if(this->son[i]->op == '%'){
-            print_indent();
-            fprintf(yyout,"t%d = t%d % t%d\n",t_i,val1,val2);
-        }
-        val1 = t_i;
+    if(this->son.size() == 1){
+        return val1;
+    } else{
+        val3 = "t"+std::to_string(t_i);
         t_i++;
+        print_indent();
+        fprintf(yyout,"var %s\n",val3.c_str());
+        for(int i=1;i<this->son.size();i+=2){
+            val2 = this->son[i+1]->irgen_UnaryExp();
+            if(i == 1){
+                print_indent();
+                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val1.c_str(),this->son[i]->op,val2.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val3.c_str(),this->son[i]->op,val2.c_str());
+            }
+        }
+        return val3;
     }
-    return val1;
 }
 
-int AST::irgen_AddExp(){
-    int val1, val2;
+std::string AST::irgen_AddExp(){
+    std::string val1, val2, val3;
     val1 = this->son[0]->irgen_MulExp();
-    for(int i=1;i<this->son.size();i+=2){
-        val2 = this->son[i+1]->irgen_MulExp();
-        print_indent();
-        fprintf(yyout,"var t%d\n",t_i);
-        if(this->son[i]->op == '+'){
-            print_indent();
-            fprintf(yyout,"t%d = t%d + t%d\n",t_i,val1,val2);
-        } else if(this->son[i]->op == '-'){
-            print_indent();
-            fprintf(yyout,"t%d = t%d - t%d\n",t_i,val1,val2);
-        }
-        val1 = t_i;
+    if(this->son.size() == 1){
+        return val1;
+    } else{
+        val3 = "t"+std::to_string(t_i);
         t_i++;
+        print_indent();
+        fprintf(yyout,"var %s\n",val3.c_str());
+        for(int i=1; i < this->son.size(); i+=2){
+            val2 = this->son[i+1]->irgen_MulExp();
+            if(i == 1){
+                print_indent();
+                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val1.c_str(),this->son[i]->op,val2.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val3.c_str(),this->son[i]->op,val2.c_str());
+            }
+        }
+        return val3;
     }
-    return val1;
 }
 
 void AST::irgen_InitVal(int addr, int layer, ENTRY_VAL *e){
@@ -150,9 +145,9 @@ void AST::irgen_InitVal(int addr, int layer, ENTRY_VAL *e){
             nval_temp += nval/e->shape[layer];
             addr += nval/e->shape[layer]*4;
         } else if(this->son[i]->son[0]->type == _Exp){
-            int init_temp = this->son[i]->son[0]->son[0]->irgen_AddExp();
+            std::string init_temp = this->son[i]->son[0]->son[0]->irgen_AddExp();
             print_indent();
-            fprintf(yyout,"T%d[%d] = t%d\n", e->t_n, addr, init_temp);
+            fprintf(yyout,"T%d[%d] = %s\n", e->t_n, addr, init_temp.c_str());
             addr += 4;
             nval_temp++;
         } else{
@@ -210,9 +205,9 @@ void AST::irgen_BlockItem(){
                 print_indent();
                 fprintf(yyout,"return\n");
             } else{
-                int return_temp = ptr->son[1]->son[0]->irgen_AddExp();
+                std::string return_temp = ptr->son[1]->son[0]->irgen_AddExp();
                 print_indent();
-                fprintf(yyout,"return t%d\n",return_temp);
+                fprintf(yyout,"return %s\n",return_temp.c_str());
             }
         }
     }
@@ -252,14 +247,12 @@ void AST::irgen_Decl(){
                 print_indent();
                 fprintf(yyout,"var T%d\n", entry_temp->t_n);
                 if(ptr_temp->son.size() > 2){
-                    int val_temp = ptr_temp->son[3]->son[0]->son[0]->irgen_AddExp();
+                    std::string val_temp = ptr_temp->son[3]->son[0]->son[0]->irgen_AddExp();
                     print_indent();
-                    fprintf(yyout,"T%d = t%d\n", entry_temp->t_n, val_temp);
+                    fprintf(yyout,"T%d = %s\n", entry_temp->t_n, val_temp.c_str());
                 } else{
                     if(symtable_ptr == root_symtable){
                         entry_temp->val = 0;
-                        print_indent();
-                        fprintf(yyout,"T%d = %d\n", entry_temp->t_n, entry_temp->val);
                     }
                 }
             } else {
