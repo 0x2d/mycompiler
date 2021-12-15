@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
     char *output_file_path = NULL;
 
     //-f <inputfile> -o <outputfile>
-    while(EOF != (arg_temp = getopt(argc,argv,"of"))){
+    while(EOF != (arg_temp = getopt(argc,argv,"o:f:"))){
         switch(arg_temp){
             case 'o':
                 output_file_path = optarg;

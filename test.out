@@ -1,0 +1,4 @@
+f_main [0]
+    var t0
+    t0 = 3
+    return t0

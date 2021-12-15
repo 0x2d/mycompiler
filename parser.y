@@ -1,12 +1,16 @@
 %{
     #include<stdio.h>
     #include"ast.h"
+    #include"symtable.h"
+    #define debug_parser_y 0
     extern FILE *yyin;
     extern FILE *yyout;
     extern int yylex();
     extern int yylineno;
     extern char *yytext;
     extern class AST *root;
+    extern class TABLE *root_symtable;
+    extern class TABLE *symtable_ptr;
     void yyerror(char *str){
         printf("LINE %d in %s : %s\n",yylineno, yytext, str);
     };
@@ -30,23 +34,31 @@
 %%
 
 CompUnit    : CompUnit Decl {
-                printf("r CompUnit\n");
+                #if debug_parser_y
+                    printf("r CompUnit\n");
+                #endif
                 $1->son.push_back($2);
                 $$ = $1;
             }
             | CompUnit FuncDef {
-                printf("r CompUnit\n");
+                #if debug_parser_y
+                    printf("r CompUnit\n");
+                #endif
                 $1->son.push_back($2);
                 $$ = $1;
             }
             | Decl {
-                printf("r CompUnit\n");
+                #if debug_parser_y
+                    printf("r CompUnit\n");
+                #endif
                 root = new AST(_CompUnit);
                 root->son.push_back($1);
                 $$ = root;
             }
             | FuncDef {
-                printf("r CompUnit\n");
+                #if debug_parser_y
+                    printf("r CompUnit\n");
+                #endif
                 root = new AST(_CompUnit);
                 root->son.push_back($1);
                 $$ = root;
@@ -54,13 +66,17 @@ CompUnit    : CompUnit Decl {
             ;
 
 Decl    : ConstDecl {
-            printf("r Decl\n");
+            #if debug_parser_y
+                printf("r Decl\n");
+            #endif
             AST *temp = new AST(_Decl);
             temp->son.push_back($1);
             $$ = temp;
         }
         | VarDecl {
-            printf("r Decl\n");
+            #if debug_parser_y
+                printf("r Decl\n");
+            #endif
             AST *temp = new AST(_Decl);
             temp->son.push_back($1);
             $$ = temp;
@@ -68,7 +84,9 @@ Decl    : ConstDecl {
         ;
 
 ConstDecl   : CONST BType ConstDef_temp ';' {
-                printf("r ConstDecl\n");
+                #if debug_parser_y
+                    printf("r ConstDecl\n");
+                #endif
                 AST *temp = new AST(_ConstDecl);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -78,26 +96,34 @@ ConstDecl   : CONST BType ConstDef_temp ';' {
             ;
 
 ConstDef_temp   : ConstDef {
-                    printf("r ConstDef_temp\n");
+                    #if debug_parser_y
+                        printf("r ConstDef_temp\n");
+                    #endif
                     AST *temp = new AST(_ConstDef_temp);
                     temp->son.push_back($1);
                     $$ = temp;
                 }
                 | ConstDef_temp ',' ConstDef {
-                    printf("r ConstDef_temp\n");
+                    #if debug_parser_y
+                        printf("r ConstDef_temp\n");
+                    #endif
                     $1->son.push_back($3);
                     $$ = $1;
                 }
                 ;
 
 BType   : INT {
-            printf("r BType\n");
+            #if debug_parser_y
+                printf("r BType\n");
+            #endif
             AST *temp = new AST(_BType);
             temp->son.push_back($1);
             $$ = temp;
         }
         | VOID {
-            printf("r BType\n");
+            #if debug_parser_y
+                printf("r BType\n");
+            #endif
             AST *temp = new AST(_BType);
             temp->son.push_back($1);
             $$ = temp;
@@ -105,7 +131,11 @@ BType   : INT {
         ;
 
 ConstDef    : IDENT ConstExp_temp '=' ConstInitVal {
-                printf("r ConstDef\n");
+                #if debug_parser_y
+                    printf("r ConstDef\n");
+                #endif
+                $1->entry = new ENTRY_VAL($1->id, symtable_ptr);
+                ((ENTRY_VAL *)$1->entry)->isConst = true;
                 AST *temp = new AST(_ConstDef);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -116,53 +146,68 @@ ConstDef    : IDENT ConstExp_temp '=' ConstInitVal {
             ;
 
 ConstExp_temp   : ConstExp_temp '[' ConstExp ']' {
-                    printf("r ConstExp_temp\n");
+                    #if debug_parser_y
+                        printf("r ConstExp_temp\n");
+                    #endif
                     $1->son.push_back($3);
                     $$ = $1;
                 }
                 | {
-                    printf("r ConstExp_temp\n");
+                    #if debug_parser_y
+                        printf("r ConstExp_temp\n");
+                    #endif
                     AST *temp = new AST(_ConstExp_temp);
                     $$ = temp;
                 }
                 ;
 
 ConstInitVal    : ConstExp {
-                    printf("r ConstInitVal\n");
+                    #if debug_parser_y
+                        printf("r ConstInitVal\n");
+                    #endif
                     AST *temp = new AST(_ConstInitVal);
                     temp->son.push_back($1);
                     $$ = temp;
                 }
                 | '{' '}' {
-                    printf("r ConstInitVal\n");
+                    #if debug_parser_y
+                        printf("r ConstInitVal\n");
+                    #endif
                     AST *temp = new AST(_ConstInitVal);
                     $$ = temp;
                 }
                 | '{' ConstInitVal_temp '}' {
-                    printf("r ConstInitVal\n");
+                    #if debug_parser_y
+                        printf("r ConstInitVal\n");
+                    #endif
                     AST *temp = new AST(_ConstInitVal);
-                    temp->son.push_back($2);
+                    temp->son = $2->son;    //copy vector
+                    delete $2;
                     $$ = temp;
                 }
                 ;
 
 ConstInitVal_temp   : ConstInitVal {
-                        printf("r ConstInitVal_temp\n");
+                        #if debug_parser_y
+                            printf("r ConstInitVal_temp\n");
+                        #endif
                         AST *temp = new AST(_ConstInitVal_temp);
                         temp->son.push_back($1);
                         $$ = temp;
                     }
                     | ConstInitVal_temp ',' ConstInitVal {
-                        printf("r ConstInitVal_temp\n");
-                        AST *temp = new AST(_ConstInitVal_temp);
-                        temp->son.push_back($1);
-                        temp->son.push_back($3);
-                        $$ = temp;
+                        #if debug_parser_y
+                            printf("r ConstInitVal_temp\n");
+                        #endif
+                        $1->son.push_back($3);
+                        $$ = $1;
                     }
                     ;
 
 VarDecl : BType VarDef_temp ';' {
-            printf("r VarDecl\n");
+            #if debug_parser_y
+                printf("r VarDecl\n");
+            #endif
             AST *temp = new AST(_VarDecl);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -171,27 +216,37 @@ VarDecl : BType VarDef_temp ';' {
         ;
 
 VarDef_temp : VarDef {
-                printf("r VarDef_temp\n");
+                #if debug_parser_y
+                    printf("r VarDef_temp\n");
+                #endif
                 AST *temp = new AST(_VarDef_temp);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | VarDef_temp ',' VarDef {
-                printf("r VarDef_temp\n");
+                #if debug_parser_y
+                    printf("r VarDef_temp\n");
+                #endif
                 $1->son.push_back($3);
                 $$ = $1;
             }
             ;
 
 VarDef  : IDENT ConstExp_temp {
-            printf("r VarDef\n");
+            #if debug_parser_y
+                printf("r VarDef\n");
+            #endif
+            $1->entry = new ENTRY_VAL($1->id, symtable_ptr);
             AST *temp = new AST(_VarDef);
             temp->son.push_back($1);
             temp->son.push_back($2);
             $$ = temp;
         }
         | IDENT ConstExp_temp '=' InitVal {
-            printf("r VarDef\n");
+            #if debug_parser_y
+                printf("r VarDef\n");
+            #endif
+            $1->entry = new ENTRY_VAL($1->id, symtable_ptr);
             AST *temp = new AST(_VarDef);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -202,73 +257,110 @@ VarDef  : IDENT ConstExp_temp {
         ;
 
 InitVal : Exp {
-            printf("r InitVal\n");
+            #if debug_parser_y
+                printf("r InitVal\n");
+            #endif
             AST *temp = new AST(_InitVal);
             temp->son.push_back($1);
             $$ = temp;
         }
         | '{' '}' {
-            printf("r InitVal\n");
+            #if debug_parser_y
+                printf("r InitVal\n");
+            #endif
             AST *temp = new AST(_InitVal);
             $$ = temp;
         }
         | '{' InitVal_temp '}' {
-            printf("r InitVal\n");
+            #if debug_parser_y
+                printf("r InitVal\n");
+            #endif
             AST *temp = new AST(_InitVal);
-            temp->son.push_back($2);
+            temp->son = $2->son;
+            delete $2;
             $$ = temp;
         }
         ;
 
 InitVal_temp    : InitVal {
-                    printf("r InitVal_temp\n");
+                    #if debug_parser_y
+                        printf("r InitVal_temp\n");
+                    #endif
                     AST *temp = new AST(_InitVal_temp);
                     temp->son.push_back($1);
                     $$ = temp;
                 }
                 | InitVal_temp ',' InitVal {
-                    printf("r InitVal_temp\n");
+                    #if debug_parser_y
+                        printf("r InitVal_temp\n");
+                    #endif
                     $1->son.push_back($3);
                     $$ = $1;
                 }
                 ;
 
-FuncDef : BType IDENT '(' FuncFParams ')' Block {
-            printf("r FuncDef\n");
-            AST *temp = new AST(_FuncDef);
-            temp->son.push_back($1);
-            temp->son.push_back($2);
-            temp->son.push_back($4);
-            temp->son.push_back($6);
-            $$ = temp;
+FuncDef : BType IDENT '(' FuncFParams ')' {
+            symtable_ptr = new TABLE("func", symtable_ptr);
         }
-        | BType IDENT '(' ')' Block {
-            printf("r FuncDef\n");
+        Block {
+            #if debug_parser_y
+                printf("r FuncDef\n");
+            #endif
+            //
+            TABLE *table_temp = symtable_ptr;
+            symtable_ptr = symtable_ptr->father;
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr);
+            table_temp->space = $2->id;
+            ((ENTRY_FUNC *)$2->entry)->symtable = table_temp;
             AST *temp = new AST(_FuncDef);
             temp->son.push_back($1);
             temp->son.push_back($2);
             temp->son.push_back($5);
+            temp->son.push_back($7);
+            $$ = temp;
+        }
+        | BType IDENT '(' ')' {
+            symtable_ptr = new TABLE("func", symtable_ptr);
+        } 
+        Block {
+            #if debug_parser_y
+                printf("r FuncDef\n");
+            #endif
+            TABLE *table_temp = symtable_ptr;
+            symtable_ptr = symtable_ptr->father;
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr);
+            table_temp->space = $2->id;
+            ((ENTRY_FUNC *)$2->entry)->symtable = table_temp;
+            AST *temp = new AST(_FuncDef);
+            temp->son.push_back($1);
+            temp->son.push_back($2);
+            temp->son.push_back($6);
             $$ = temp;
         }
         ;
 
 FuncFParams : FuncFParam {
-                printf("r FuncFParams\n");
+                #if debug_parser_y
+                    printf("r FuncFParams\n");
+                #endif
                 AST *temp = new AST(_FuncFParams);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | FuncFParams ',' FuncFParam {
-                printf("r FuncFParams\n");
-                AST *temp = new AST(_FuncFParams);
-                temp->son.push_back($1);
-                temp->son.push_back($3);
-                $$ = temp;
+                #if debug_parser_y
+                    printf("r FuncFParams\n");
+                #endif
+                $1->son.push_back($3);
+                $$ = $1;
             }
             ;
 
 FuncFParam  : BType IDENT '[' ']' ConstExp_temp {
-                printf("r FuncFParam\n");
+                #if debug_parser_y
+                    printf("r FuncFParam\n");
+                #endif
+                $2->entry = new ENTRY_VAL($2->id, symtable_ptr);
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -276,7 +368,10 @@ FuncFParam  : BType IDENT '[' ']' ConstExp_temp {
                 $$ = temp;
             }
             | BType IDENT {
-                printf("r FuncFParam\n");
+                #if debug_parser_y
+                    printf("r FuncFParam\n");
+                #endif
+                $2->entry = new ENTRY_VAL($2->id, symtable_ptr);
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -285,35 +380,44 @@ FuncFParam  : BType IDENT '[' ']' ConstExp_temp {
             ;
 
 Block   : '{' BlockItem_temp '}' {
-            printf("r Block\n");
+            #if debug_parser_y
+                printf("r Block\n");
+            #endif
             AST *temp = new AST(_Block);
-            temp->son.push_back($2);
+            temp->son = $2->son;
+            delete $2;
             $$ = temp;
         }
         ;
 
 BlockItem_temp  : BlockItem_temp BlockItem {
-                    printf("r BlockItem_temp\n");
-                    AST *temp = new AST(_BlockItem_temp);
-                    temp->son.push_back($1);
-                    temp->son.push_back($2);
-                    $$ = temp;
+                    #if debug_parser_y
+                        printf("r BlockItem_temp\n");
+                    #endif
+                    $1->son.push_back($2);
+                    $$ = $1;
                 }
                 | {
-                    printf("r BlockItem_temp\n");
+                    #if debug_parser_y
+                        printf("r BlockItem_temp\n");
+                    #endif
                     AST *temp = new AST(_BlockItem_temp);
                     $$ = temp;
                 }
                 ;
 
 BlockItem   : Decl {
-                printf("r BlockItem\n");
+                #if debug_parser_y
+                    printf("r BlockItem\n");
+                #endif
                 AST *temp = new AST(_BlockItem);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | Stmt {
-                printf("r BlockItem\n");
+                #if debug_parser_y
+                    printf("r BlockItem\n");
+                #endif
                 AST *temp = new AST(_BlockItem);
                 temp->son.push_back($1);
                 $$ = temp;
@@ -321,31 +425,45 @@ BlockItem   : Decl {
             ;
 
 Stmt    : LVal '=' Exp ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
             $$ = temp;
         }
         | Exp ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
         }
         | ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             $$ = temp;
         }
-        | Block {
-            printf("r Stmt\n");
+        | {
+            symtable_ptr = new TABLE("block", symtable_ptr);
+        }
+        Block {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            symtable_ptr = symtable_ptr->father;
             AST *temp = new AST(_Stmt);
-            temp->son.push_back($1);
+            temp->son.push_back($2);
             $$ = temp;
         }
         | IF '(' Cond ')' Stmt ELSE Stmt {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -355,7 +473,9 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | IF '(' Cond ')' Stmt {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -363,7 +483,9 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | WHILE '(' Cond ')' Stmt {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -371,26 +493,34 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | BREAK ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
         }
         | CONTINUE ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
         }
         | RETURN Exp ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($2);
             $$ = temp;
         }
         | RETURN ';' {
-            printf("r Stmt\n");
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
@@ -398,7 +528,9 @@ Stmt    : LVal '=' Exp ';' {
         ;
 
 Exp : AddExp {
-        printf("r Exp\n");
+        #if debug_parser_y
+            printf("r Exp\n");
+        #endif
         AST *temp = new AST(_Exp);
         temp->son.push_back($1);
         $$ = temp;
@@ -406,7 +538,9 @@ Exp : AddExp {
     ;
 
 Cond    : LOrExp {
-            printf("r Cond\n");
+            #if debug_parser_y
+                printf("r Cond\n");
+            #endif
             AST *temp = new AST(_Cond);
             temp->son.push_back($1);
             $$ = temp;
@@ -414,34 +548,47 @@ Cond    : LOrExp {
         ;
 
 LVal    : IDENT {
-            printf("r LVal\n");
+            #if debug_parser_y
+                printf("r LVal\n");
+            #endif
+            if(symtable_ptr->isSame(true,$1->id,true)){
+                $1->entry = symtable_ptr->FindAndReturn(true,$1->id);
+            } else{
+                yyerror("cite non-decleared variable\n");
+            }
             AST *temp = new AST(_LVal);
             temp->son.push_back($1);
             $$ = temp;
         }
         | LVal '[' Exp ']' {
-            printf("r LVal\n");
-            AST *temp = new AST(_LVal);
-            temp->son.push_back($1);
-            temp->son.push_back($3);
-            $$ = temp;
+            #if debug_parser_y
+                printf("r LVal\n");
+            #endif
+            $1->son.push_back($3);
+            $$ = $1;
         }
         ;
 
 PrimaryExp  : '(' Exp ')' {
-                printf("r PrimaryExp\n");
+                #if debug_parser_y
+                    printf("r PrimaryExp\n");
+                #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->son.push_back($2);
                 $$ = temp;
             }
             | LVal {
-                printf("r PrimaryExp\n");
+                #if debug_parser_y
+                    printf("r PrimaryExp\n");
+                #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | INT_CONST {
-                printf("r PrimaryExp\n");
+                #if debug_parser_y
+                    printf("r PrimaryExp\n");
+                #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
@@ -449,26 +596,34 @@ PrimaryExp  : '(' Exp ')' {
             ;
 
 UnaryExp    : PrimaryExp {
-                printf("r UnaryExp\n");
+                #if debug_parser_y
+                    printf("r UnaryExp\n");
+                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | IDENT '(' FuncRParams ')' {
-                printf("r UnaryExp\n");
+                #if debug_parser_y
+                    printf("r UnaryExp\n");
+                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 temp->son.push_back($3);
                 $$ = temp;
             }
             | IDENT '(' ')' {
-                printf("r UnaryExp\n");
+                #if debug_parser_y
+                    printf("r UnaryExp\n");
+                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
             }
-            | UnaryOp UnaryExp 
-                {printf("r UnaryExp\n");
+            | UnaryOp UnaryExp {
+                #if debug_parser_y
+                    printf("r UnaryExp\n");
+                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -477,19 +632,25 @@ UnaryExp    : PrimaryExp {
             ;
 
 UnaryOp : '+' {
-            printf("r UnaryOp\n");
+            #if debug_parser_y
+                printf("r UnaryOp\n");
+            #endif
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | '-' {
-            printf("r UnaryOp\n");
+            #if debug_parser_y
+                printf("r UnaryOp\n");
+            #endif
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | '!' {
-            printf("r UnaryOp\n");
+            #if debug_parser_y
+                printf("r UnaryOp\n");
+            #endif
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back($1);
             $$ = temp;
@@ -497,13 +658,17 @@ UnaryOp : '+' {
         ;
 
 FuncRParams : Exp {
-                printf("r FuncRParams\n");
+                #if debug_parser_y
+                    printf("r FuncRParams\n");
+                #endif
                 AST *temp = new AST(_FuncRParams);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | FuncRParams ',' Exp {
-                printf("r FuncRParams\n");
+                #if debug_parser_y
+                    printf("r FuncRParams\n");
+                #endif
                 AST *temp = new AST(_FuncRParams);
                 temp->son.push_back($1);
                 temp->son.push_back($3);
@@ -512,25 +677,33 @@ FuncRParams : Exp {
             ;
 
 MulExp  : UnaryExp {
-            printf("r MulExp\n");
+            #if debug_parser_y
+                printf("r MulExp\n");
+            #endif
             AST *temp = new AST(_MulExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | MulExp '*' UnaryExp {
-            printf("r MulExp\n");
+            #if debug_parser_y
+                printf("r MulExp\n");
+            #endif
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | MulExp '/' UnaryExp {
-            printf("r MulExp\n");
+            #if debug_parser_y
+                printf("r MulExp\n");
+            #endif
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | MulExp '%' UnaryExp {
-            printf("r MulExp\n");
+            #if debug_parser_y
+                printf("r MulExp\n");
+            #endif
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -538,19 +711,25 @@ MulExp  : UnaryExp {
         ;
 
 AddExp  : MulExp {
-            printf("r AddExp\n");
+            #if debug_parser_y
+                printf("r AddExp\n");
+            #endif
             AST *temp = new AST(_AddExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | AddExp '+' MulExp {
-            printf("r AddExp\n");
+            #if debug_parser_y
+                printf("r AddExp\n");
+            #endif
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | AddExp '-' MulExp {
-            printf("r AddExp\n");
+            #if debug_parser_y
+                printf("r AddExp\n");
+            #endif
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -558,13 +737,17 @@ AddExp  : MulExp {
         ;
 
 RelExp  : AddExp {
-            printf("r RelExp\n");
+            #if debug_parser_y
+                printf("r RelExp\n");
+            #endif
             AST *temp = new AST(_RelExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | RelExp '<' AddExp {
-            printf("r RelExp\n");
+            #if debug_parser_y
+                printf("r RelExp\n");
+            #endif
             AST *temp = new AST(_RelExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -572,7 +755,9 @@ RelExp  : AddExp {
             $$ = temp;
         }
         | RelExp '>' AddExp {
-            printf("r RelExp\n");
+            #if debug_parser_y
+                printf("r RelExp\n");
+            #endif
             AST *temp = new AST(_RelExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -580,7 +765,9 @@ RelExp  : AddExp {
             $$ = temp;
         }
         | RelExp LE AddExp {
-            printf("r RelExp\n");
+            #if debug_parser_y
+                printf("r RelExp\n");
+            #endif
             AST *temp = new AST(_RelExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -588,7 +775,9 @@ RelExp  : AddExp {
             $$ = temp;
         }
         | RelExp GE AddExp {
-            printf("r RelExp\n");
+            #if debug_parser_y
+                printf("r RelExp\n");
+            #endif
             AST *temp = new AST(_RelExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -598,13 +787,17 @@ RelExp  : AddExp {
         ;
 
 EqExp   : RelExp {
-            printf("r EqExp\n");
+            #if debug_parser_y
+                printf("r EqExp\n");
+            #endif
             AST *temp = new AST(_EqExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | EqExp EQ RelExp {
-            printf("r EqExp\n");
+            #if debug_parser_y
+                printf("r EqExp\n");
+            #endif
             AST *temp = new AST(_EqExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -612,7 +805,9 @@ EqExp   : RelExp {
             $$ = temp;
         }
         | EqExp NE RelExp {
-            printf("r EqExp\n");
+            #if debug_parser_y
+                printf("r EqExp\n");
+            #endif
             AST *temp = new AST(_EqExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -622,13 +817,17 @@ EqExp   : RelExp {
         ;
 
 LAndExp : EqExp {
-            printf("r LAndExp\n");
+            #if debug_parser_y
+                printf("r LAndExp\n");
+            #endif
             AST *temp = new AST(_LAndExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | LAndExp AND EqExp {
-            printf("r LAndExp\n");
+            #if debug_parser_y
+                printf("r LAndExp\n");
+            #endif
             AST *temp = new AST(_LAndExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -638,13 +837,17 @@ LAndExp : EqExp {
         ;
 
 LOrExp  : LAndExp {
-            printf("r LOrExp\n");
+            #if debug_parser_y
+                printf("r LOrExp\n");
+            #endif
             AST *temp = new AST(_LOrExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | LOrExp OR LAndExp {
-            printf("r LOrExp\n");
+            #if debug_parser_y
+                printf("r LOrExp\n");
+            #endif
             AST *temp = new AST(_LOrExp);
             temp->son.push_back($1);
             temp->son.push_back($2);
@@ -654,7 +857,9 @@ LOrExp  : LAndExp {
         ;
 
 ConstExp    : AddExp {
-                printf("r ConstExp\n");
+                #if debug_parser_y
+                    printf("r ConstExp\n");
+                #endif
                 AST *temp = new AST(_ConstExp);
                 temp->son.push_back($1);
                 $$ = temp;

@@ -2,6 +2,7 @@
 #define AST_H
 
 #include<vector>
+#include<string>
 #include"symtable.h"
 extern TABLE *symtable_ptr;
 
@@ -19,20 +20,25 @@ public:
     AST() = default;
     AST(TYPE t):type(t){}
     AST(TYPE t, char o):type(t), op(o) {}
-    AST(TYPE t, char *i):type(t) {
-        this->entry = new ENTRY(i);
-    }
+    AST(TYPE t, char *i):type(t), id(i) {}
     AST(TYPE t, int v):type(t), val(v) {}
     
     void irgen();
     void irgen_Decl();
     void irgen_FuncDef();
-    void irgen_ConstInitVal(ENTRY *e);
+    void irgen_Block();
+    void irgen_BlockItem();
+    void irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e);
+    void irgen_InitVal(int addr, int layer, ENTRY_VAL *e);
+    int irgen_AddExp();
+    int irgen_MulExp();
+    int irgen_UnaryExp();
 
     std::vector<AST *> son;
     TYPE type;
     char op;
     int val;
+    char *id;
     ENTRY *entry;
 };
 

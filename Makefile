@@ -18,7 +18,7 @@ symtable.o: symtable.cpp symtable.h
 lex.yy.o: lex.yy.c parser.tab.h ast.h
 	$(CC) -c lex.yy.c
 
-parser.tab.o: parser.tab.c parser.tab.h ast.h
+parser.tab.o: parser.tab.c parser.tab.h ast.h symtable.h
 	$(CC) -c parser.tab.c
 
 parser.tab.c parser.tab.h: parser.y
