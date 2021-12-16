@@ -65,6 +65,7 @@
 #line 1 "parser.y" /* yacc.c:339  */
 
     #include<stdio.h>
+    #include<string.h>
     #include"ast.h"
     #include"symtable.h"
     #define debug_parser_y 0
@@ -79,8 +80,10 @@
     void yyerror(char *str){
         printf("LINE %d in %s : %s\n",yylineno, yytext, str);
     };
+    int NumberOfTemp_global;    //记录程序需要多少全局临时变量
+    int NumberOfTemp;   //记录一个函数需要多少临时变量
 
-#line 84 "parser.tab.c" /* yacc.c:339  */
+#line 87 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -140,11 +143,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 19 "parser.y" /* yacc.c:355  */
+#line 22 "parser.y" /* yacc.c:355  */
 
     class AST *ast; //class关键字必需添加
 
-#line 148 "parser.tab.c" /* yacc.c:355  */
+#line 151 "parser.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -161,7 +164,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 165 "parser.tab.c" /* yacc.c:358  */
+#line 168 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -460,16 +463,16 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    36,    36,    43,    50,    58,    68,    76,    86,    98,
-     106,   115,   123,   133,   148,   155,   164,   172,   179,   190,
-     198,   207,   218,   226,   235,   245,   259,   267,   274,   285,
-     293,   302,   302,   320,   320,   338,   346,   355,   366,   378,
-     389,   396,   405,   413,   423,   432,   440,   447,   447,   459,
-     471,   481,   491,   499,   507,   516,   526,   536,   546,   559,
-     568,   576,   584,   594,   602,   611,   619,   630,   638,   646,
-     656,   664,   673,   681,   689,   697,   707,   715,   723,   733,
-     741,   751,   761,   771,   783,   791,   801,   813,   821,   833,
-     841,   853
+       0,    40,    40,    44,    48,    53,    60,    65,    72,    81,
+      86,    92,    97,   104,   121,   126,   133,   138,   142,   150,
+     155,   161,   169,   174,   180,   193,   210,   215,   219,   227,
+     232,   238,   238,   267,   267,   284,   289,   295,   302,   310,
+     318,   322,   328,   333,   340,   349,   357,   364,   364,   375,
+     387,   397,   407,   415,   423,   432,   442,   453,   463,   476,
+     485,   494,   502,   513,   522,   531,   539,   550,   558,   568,
+     580,   588,   597,   603,   611,   619,   629,   635,   643,   653,
+     658,   665,   672,   679,   688,   693,   700,   709,   714,   723,
+     728,   737
 };
 #endif
 
@@ -1361,11 +1364,8 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 36 "parser.y" /* yacc.c:1646  */
+#line 40 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r CompUnit\n");
-                #endif
                 (yyvsp[-1].ast)->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = (yyvsp[-1].ast);
             }
@@ -1373,393 +1373,340 @@ yyreduce:
     break;
 
   case 3:
-#line 43 "parser.y" /* yacc.c:1646  */
+#line 44 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r CompUnit\n");
-                #endif
                 (yyvsp[-1].ast)->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = (yyvsp[-1].ast);
             }
-#line 1385 "parser.tab.c" /* yacc.c:1646  */
+#line 1382 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 50 "parser.y" /* yacc.c:1646  */
+#line 48 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r CompUnit\n");
-                #endif
                 root = new AST(_CompUnit);
                 root->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = root;
             }
-#line 1398 "parser.tab.c" /* yacc.c:1646  */
+#line 1392 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 58 "parser.y" /* yacc.c:1646  */
+#line 53 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r CompUnit\n");
-                #endif
                 root = new AST(_CompUnit);
                 root->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = root;
             }
-#line 1411 "parser.tab.c" /* yacc.c:1646  */
+#line 1402 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 68 "parser.y" /* yacc.c:1646  */
+#line 60 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r Decl\n");
-            #endif
             AST *temp = new AST(_Decl);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1424 "parser.tab.c" /* yacc.c:1646  */
+#line 1412 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 76 "parser.y" /* yacc.c:1646  */
+#line 65 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r Decl\n");
-            #endif
             AST *temp = new AST(_Decl);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1437 "parser.tab.c" /* yacc.c:1646  */
+#line 1422 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 86 "parser.y" /* yacc.c:1646  */
+#line 72 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r ConstDecl\n");
-                #endif
                 AST *temp = new AST(_ConstDecl);
                 temp->son.push_back((yyvsp[-3].ast));
                 temp->son.push_back((yyvsp[-2].ast));
                 temp->son.push_back((yyvsp[-1].ast));
                 (yyval.ast) = temp;
             }
-#line 1452 "parser.tab.c" /* yacc.c:1646  */
+#line 1434 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 98 "parser.y" /* yacc.c:1646  */
+#line 81 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstDef_temp\n");
-                    #endif
                     AST *temp = new AST(_ConstDef_temp);
                     temp->son.push_back((yyvsp[0].ast));
                     (yyval.ast) = temp;
                 }
-#line 1465 "parser.tab.c" /* yacc.c:1646  */
+#line 1444 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 106 "parser.y" /* yacc.c:1646  */
+#line 86 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstDef_temp\n");
-                    #endif
                     (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
                     (yyval.ast) = (yyvsp[-2].ast);
                 }
-#line 1477 "parser.tab.c" /* yacc.c:1646  */
+#line 1453 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 115 "parser.y" /* yacc.c:1646  */
+#line 92 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r BType\n");
-            #endif
             AST *temp = new AST(_BType);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1490 "parser.tab.c" /* yacc.c:1646  */
+#line 1463 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 123 "parser.y" /* yacc.c:1646  */
+#line 97 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r BType\n");
-            #endif
             AST *temp = new AST(_BType);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1503 "parser.tab.c" /* yacc.c:1646  */
+#line 1473 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 133 "parser.y" /* yacc.c:1646  */
+#line 104 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r ConstDef\n");
-                #endif
-                (yyvsp[-3].ast)->entry = new ENTRY_VAL((yyvsp[-3].ast)->id, symtable_ptr);
+                (yyvsp[-3].ast)->entry = new ENTRY_VAL((yyvsp[-3].ast)->id, symtable_ptr,(yyvsp[-2].ast)->val*4);
                 ((ENTRY_VAL *)(yyvsp[-3].ast)->entry)->isConst = true;
+                if((yyvsp[-2].ast)->son.size() != 0){
+                    ((ENTRY_VAL *)(yyvsp[-3].ast)->entry)->isArray = true;
+                    for(int i=0;i<(yyvsp[-2].ast)->son.size();i++){
+                        ((ENTRY_VAL *)(yyvsp[-3].ast)->entry)->shape.push_back((yyvsp[-2].ast)->son[i]->val);
+                    }
+                }
                 AST *temp = new AST(_ConstDef);
                 temp->son.push_back((yyvsp[-3].ast));
                 temp->son.push_back((yyvsp[-2].ast));
-                temp->son.push_back((yyvsp[-1].ast));
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1521 "parser.tab.c" /* yacc.c:1646  */
+#line 1493 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 148 "parser.y" /* yacc.c:1646  */
+#line 121 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstExp_temp\n");
-                    #endif
                     (yyvsp[-3].ast)->son.push_back((yyvsp[-1].ast));
+                    (yyvsp[-3].ast)->val *= (yyvsp[-1].ast)->val;
                     (yyval.ast) = (yyvsp[-3].ast);
                 }
-#line 1533 "parser.tab.c" /* yacc.c:1646  */
+#line 1503 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 155 "parser.y" /* yacc.c:1646  */
+#line 126 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstExp_temp\n");
-                    #endif
                     AST *temp = new AST(_ConstExp_temp);
+                    temp->val = 1;
                     (yyval.ast) = temp;
                 }
-#line 1545 "parser.tab.c" /* yacc.c:1646  */
+#line 1513 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 164 "parser.y" /* yacc.c:1646  */
+#line 133 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstInitVal\n");
-                    #endif
                     AST *temp = new AST(_ConstInitVal);
                     temp->son.push_back((yyvsp[0].ast));
                     (yyval.ast) = temp;
                 }
-#line 1558 "parser.tab.c" /* yacc.c:1646  */
+#line 1523 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 172 "parser.y" /* yacc.c:1646  */
+#line 138 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstInitVal\n");
-                    #endif
                     AST *temp = new AST(_ConstInitVal);
                     (yyval.ast) = temp;
                 }
-#line 1570 "parser.tab.c" /* yacc.c:1646  */
+#line 1532 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 179 "parser.y" /* yacc.c:1646  */
+#line 142 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r ConstInitVal\n");
-                    #endif
                     AST *temp = new AST(_ConstInitVal);
                     temp->son = (yyvsp[-1].ast)->son;    //copy vector
                     delete (yyvsp[-1].ast);
                     (yyval.ast) = temp;
                 }
-#line 1584 "parser.tab.c" /* yacc.c:1646  */
+#line 1543 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 190 "parser.y" /* yacc.c:1646  */
+#line 150 "parser.y" /* yacc.c:1646  */
     {
-                        #if debug_parser_y
-                            printf("r ConstInitVal_temp\n");
-                        #endif
                         AST *temp = new AST(_ConstInitVal_temp);
                         temp->son.push_back((yyvsp[0].ast));
                         (yyval.ast) = temp;
                     }
-#line 1597 "parser.tab.c" /* yacc.c:1646  */
+#line 1553 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 198 "parser.y" /* yacc.c:1646  */
+#line 155 "parser.y" /* yacc.c:1646  */
     {
-                        #if debug_parser_y
-                            printf("r ConstInitVal_temp\n");
-                        #endif
                         (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
                         (yyval.ast) = (yyvsp[-2].ast);
                     }
-#line 1609 "parser.tab.c" /* yacc.c:1646  */
+#line 1562 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 207 "parser.y" /* yacc.c:1646  */
+#line 161 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r VarDecl\n");
-            #endif
             AST *temp = new AST(_VarDecl);
             temp->son.push_back((yyvsp[-2].ast));
             temp->son.push_back((yyvsp[-1].ast));
             (yyval.ast) = temp;
         }
-#line 1623 "parser.tab.c" /* yacc.c:1646  */
+#line 1573 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 218 "parser.y" /* yacc.c:1646  */
+#line 169 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r VarDef_temp\n");
-                #endif
                 AST *temp = new AST(_VarDef_temp);
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1636 "parser.tab.c" /* yacc.c:1646  */
+#line 1583 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 226 "parser.y" /* yacc.c:1646  */
+#line 174 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r VarDef_temp\n");
-                #endif
                 (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = (yyvsp[-2].ast);
             }
-#line 1648 "parser.tab.c" /* yacc.c:1646  */
+#line 1592 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 235 "parser.y" /* yacc.c:1646  */
+#line 180 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r VarDef\n");
-            #endif
-            (yyvsp[-1].ast)->entry = new ENTRY_VAL((yyvsp[-1].ast)->id, symtable_ptr);
+            (yyvsp[-1].ast)->entry = new ENTRY_VAL((yyvsp[-1].ast)->id, symtable_ptr,(yyvsp[0].ast)->val*4);
+            if((yyvsp[0].ast)->son.size() != 0){
+                ((ENTRY_VAL *)(yyvsp[-1].ast)->entry)->isArray = true;
+                for(int i=0;i<(yyvsp[0].ast)->son.size();i++){
+                    ((ENTRY_VAL *)(yyvsp[-1].ast)->entry)->shape.push_back((yyvsp[0].ast)->son[i]->val);
+                }
+            }
             AST *temp = new AST(_VarDef);
             temp->son.push_back((yyvsp[-1].ast));
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1663 "parser.tab.c" /* yacc.c:1646  */
+#line 1610 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 245 "parser.y" /* yacc.c:1646  */
+#line 193 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r VarDef\n");
-            #endif
-            (yyvsp[-3].ast)->entry = new ENTRY_VAL((yyvsp[-3].ast)->id, symtable_ptr);
+            (yyvsp[-3].ast)->entry = new ENTRY_VAL((yyvsp[-3].ast)->id, symtable_ptr,(yyvsp[-2].ast)->val*4);
+            printf("%d",(yyvsp[-2].ast)->val*4);
+            if((yyvsp[-2].ast)->son.size() != 0){
+                ((ENTRY_VAL *)(yyvsp[-3].ast)->entry)->isArray = true;
+                for(int i=0;i<(yyvsp[-2].ast)->son.size();i++){
+                    ((ENTRY_VAL *)(yyvsp[-3].ast)->entry)->shape.push_back((yyvsp[-2].ast)->son[i]->val);
+                }
+            }
             AST *temp = new AST(_VarDef);
             temp->son.push_back((yyvsp[-3].ast));
             temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1680 "parser.tab.c" /* yacc.c:1646  */
+#line 1630 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 259 "parser.y" /* yacc.c:1646  */
+#line 210 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r InitVal\n");
-            #endif
             AST *temp = new AST(_InitVal);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 1693 "parser.tab.c" /* yacc.c:1646  */
+#line 1640 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 267 "parser.y" /* yacc.c:1646  */
+#line 215 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r InitVal\n");
-            #endif
             AST *temp = new AST(_InitVal);
             (yyval.ast) = temp;
         }
-#line 1705 "parser.tab.c" /* yacc.c:1646  */
+#line 1649 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 274 "parser.y" /* yacc.c:1646  */
+#line 219 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r InitVal\n");
-            #endif
             AST *temp = new AST(_InitVal);
             temp->son = (yyvsp[-1].ast)->son;
             delete (yyvsp[-1].ast);
             (yyval.ast) = temp;
         }
-#line 1719 "parser.tab.c" /* yacc.c:1646  */
+#line 1660 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 285 "parser.y" /* yacc.c:1646  */
+#line 227 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r InitVal_temp\n");
-                    #endif
                     AST *temp = new AST(_InitVal_temp);
                     temp->son.push_back((yyvsp[0].ast));
                     (yyval.ast) = temp;
                 }
-#line 1732 "parser.tab.c" /* yacc.c:1646  */
+#line 1670 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 293 "parser.y" /* yacc.c:1646  */
+#line 232 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r InitVal_temp\n");
-                    #endif
                     (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
                     (yyval.ast) = (yyvsp[-2].ast);
                 }
-#line 1744 "parser.tab.c" /* yacc.c:1646  */
+#line 1679 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 302 "parser.y" /* yacc.c:1646  */
+#line 238 "parser.y" /* yacc.c:1646  */
     {
             symtable_ptr = new TABLE("func", symtable_ptr);
+            NumberOfTemp = 0;
         }
-#line 1752 "parser.tab.c" /* yacc.c:1646  */
+#line 1688 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 305 "parser.y" /* yacc.c:1646  */
+#line 241 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r FuncDef\n");
-            #endif
-            //params
             symtable_ptr->space = (yyvsp[-5].ast)->id;
-            (yyvsp[-5].ast)->entry = new ENTRY_FUNC((yyvsp[-5].ast)->id, symtable_ptr->father, symtable_ptr);
+            for(int i=0;i<(yyvsp[-3].ast)->son.size();i++){
+                AST *param_temp = (yyvsp[-3].ast)->son[i];   //FuncFParam
+                if(param_temp->son.size() == 2){
+                    param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,4);
+                } else{
+                    param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,param_temp->son[2]->val);
+                    ((ENTRY_VAL *)param_temp->son[1]->entry)->isArray = true;
+                    for(int i=0;i<param_temp->son[2]->son.size();i++){
+                        ((ENTRY_VAL *)param_temp->son[1]->entry)->shape.push_back(param_temp->son[2]->son[i]->val);
+                    }
+                }
+                ((ENTRY_VAL *)param_temp->son[1]->entry)->isParam = true;
+            }
+            (yyvsp[-5].ast)->entry = new ENTRY_FUNC((yyvsp[-5].ast)->id, symtable_ptr->father, symtable_ptr,NumberOfTemp);
+            NumberOfTemp_global -= NumberOfTemp;
+            NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
             temp->son.push_back((yyvsp[-6].ast));
             temp->son.push_back((yyvsp[-5].ast));
@@ -1768,25 +1715,25 @@ yyreduce:
             (yyval.ast) = temp;
             symtable_ptr = symtable_ptr->father;
         }
-#line 1772 "parser.tab.c" /* yacc.c:1646  */
+#line 1719 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 320 "parser.y" /* yacc.c:1646  */
+#line 267 "parser.y" /* yacc.c:1646  */
     {
             symtable_ptr = new TABLE("func", symtable_ptr);
+            NumberOfTemp = 0;
         }
-#line 1780 "parser.tab.c" /* yacc.c:1646  */
+#line 1728 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 323 "parser.y" /* yacc.c:1646  */
+#line 270 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r FuncDef\n");
-            #endif
             symtable_ptr->space = (yyvsp[-4].ast)->id;
-            (yyvsp[-4].ast)->entry = new ENTRY_FUNC((yyvsp[-4].ast)->id, symtable_ptr->father, symtable_ptr);
+            (yyvsp[-4].ast)->entry = new ENTRY_FUNC((yyvsp[-4].ast)->id, symtable_ptr->father, symtable_ptr,NumberOfTemp);
+            NumberOfTemp_global -= NumberOfTemp;
+            NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
             temp->son.push_back((yyvsp[-5].ast));
             temp->son.push_back((yyvsp[-4].ast));
@@ -1794,131 +1741,102 @@ yyreduce:
             (yyval.ast) = temp;
             symtable_ptr = symtable_ptr->father;
         }
-#line 1798 "parser.tab.c" /* yacc.c:1646  */
+#line 1745 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 338 "parser.y" /* yacc.c:1646  */
+#line 284 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r FuncFParams\n");
-                #endif
                 AST *temp = new AST(_FuncFParams);
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1811 "parser.tab.c" /* yacc.c:1646  */
+#line 1755 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 346 "parser.y" /* yacc.c:1646  */
+#line 289 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r FuncFParams\n");
-                #endif
                 (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = (yyvsp[-2].ast);
             }
-#line 1823 "parser.tab.c" /* yacc.c:1646  */
+#line 1764 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 355 "parser.y" /* yacc.c:1646  */
+#line 295 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r FuncFParam\n");
-                #endif
-                (yyvsp[-3].ast)->entry = new ENTRY_VAL((yyvsp[-3].ast)->id, symtable_ptr);
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back((yyvsp[-4].ast));
                 temp->son.push_back((yyvsp[-3].ast));
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1839 "parser.tab.c" /* yacc.c:1646  */
+#line 1776 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 366 "parser.y" /* yacc.c:1646  */
+#line 302 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r FuncFParam\n");
-                #endif
-                (yyvsp[0].ast)->entry = new ENTRY_VAL((yyvsp[0].ast)->id, symtable_ptr);
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back((yyvsp[-1].ast));
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1854 "parser.tab.c" /* yacc.c:1646  */
+#line 1787 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 378 "parser.y" /* yacc.c:1646  */
+#line 310 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r Block\n");
-            #endif
             AST *temp = new AST(_Block);
             temp->son = (yyvsp[-1].ast)->son;
             delete (yyvsp[-1].ast);
             (yyval.ast) = temp;
         }
-#line 1868 "parser.tab.c" /* yacc.c:1646  */
+#line 1798 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 389 "parser.y" /* yacc.c:1646  */
+#line 318 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r BlockItem_temp\n");
-                    #endif
                     (yyvsp[-1].ast)->son.push_back((yyvsp[0].ast));
                     (yyval.ast) = (yyvsp[-1].ast);
                 }
-#line 1880 "parser.tab.c" /* yacc.c:1646  */
+#line 1807 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 396 "parser.y" /* yacc.c:1646  */
+#line 322 "parser.y" /* yacc.c:1646  */
     {
-                    #if debug_parser_y
-                        printf("r BlockItem_temp\n");
-                    #endif
                     AST *temp = new AST(_BlockItem_temp);
                     (yyval.ast) = temp;
                 }
-#line 1892 "parser.tab.c" /* yacc.c:1646  */
+#line 1816 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 405 "parser.y" /* yacc.c:1646  */
+#line 328 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r BlockItem\n");
-                #endif
                 AST *temp = new AST(_BlockItem);
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1905 "parser.tab.c" /* yacc.c:1646  */
+#line 1826 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 413 "parser.y" /* yacc.c:1646  */
+#line 333 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r BlockItem\n");
-                #endif
                 AST *temp = new AST(_BlockItem);
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 1918 "parser.tab.c" /* yacc.c:1646  */
+#line 1836 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 423 "parser.y" /* yacc.c:1646  */
+#line 340 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r Stmt\n");
@@ -1928,10 +1846,144 @@ yyreduce:
             temp->son.push_back((yyvsp[-1].ast));
             (yyval.ast) = temp;
         }
-#line 1932 "parser.tab.c" /* yacc.c:1646  */
+#line 1850 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
+#line 349 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-1].ast));
+            (yyval.ast) = temp;
+        }
+#line 1863 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 46:
+#line 357 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            (yyval.ast) = temp;
+        }
+#line 1875 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 47:
+#line 364 "parser.y" /* yacc.c:1646  */
+    {
+            symtable_ptr = new TABLE("block", symtable_ptr);
+        }
+#line 1883 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 48:
+#line 366 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            symtable_ptr = symtable_ptr->father;
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 1897 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 49:
+#line 375 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-6].ast));
+            temp->son.push_back((yyvsp[-4].ast));
+            temp->son.push_back((yyvsp[-2].ast));
+            temp->son.push_back((yyvsp[-1].ast));
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 1914 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 50:
+#line 387 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-4].ast));
+            temp->son.push_back((yyvsp[-2].ast));
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 1929 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 51:
+#line 397 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-4].ast));
+            temp->son.push_back((yyvsp[-2].ast));
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 1944 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 52:
+#line 407 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-1].ast));
+            (yyval.ast) = temp;
+        }
+#line 1957 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 53:
+#line 415 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-1].ast));
+            (yyval.ast) = temp;
+        }
+#line 1970 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 54:
+#line 423 "parser.y" /* yacc.c:1646  */
+    {
+            #if debug_parser_y
+                printf("r Stmt\n");
+            #endif
+            AST *temp = new AST(_Stmt);
+            temp->son.push_back((yyvsp[-2].ast));
+            temp->son.push_back((yyvsp[-1].ast));
+            (yyval.ast) = temp;
+        }
+#line 1984 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 55:
 #line 432 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
@@ -1941,158 +1993,25 @@ yyreduce:
             temp->son.push_back((yyvsp[-1].ast));
             (yyval.ast) = temp;
         }
-#line 1945 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 46:
-#line 440 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            (yyval.ast) = temp;
-        }
-#line 1957 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 47:
-#line 447 "parser.y" /* yacc.c:1646  */
-    {
-            symtable_ptr = new TABLE("block", symtable_ptr);
-        }
-#line 1965 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 48:
-#line 450 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            symtable_ptr = symtable_ptr->father;
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 1979 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 49:
-#line 459 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-6].ast));
-            temp->son.push_back((yyvsp[-4].ast));
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 1996 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 50:
-#line 471 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-4].ast));
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2011 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 51:
-#line 481 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-4].ast));
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2026 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 52:
-#line 491 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-1].ast));
-            (yyval.ast) = temp;
-        }
-#line 2039 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 53:
-#line 499 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-1].ast));
-            (yyval.ast) = temp;
-        }
-#line 2052 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 54:
-#line 507 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            (yyval.ast) = temp;
-        }
-#line 2066 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 55:
-#line 516 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
-            AST *temp = new AST(_Stmt);
-            temp->son.push_back((yyvsp[-1].ast));
-            (yyval.ast) = temp;
-        }
-#line 2079 "parser.tab.c" /* yacc.c:1646  */
+#line 1997 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 526 "parser.y" /* yacc.c:1646  */
+#line 442 "parser.y" /* yacc.c:1646  */
     {
         #if debug_parser_y
             printf("r Exp\n");
         #endif
         AST *temp = new AST(_Exp);
+        temp->val = (yyvsp[0].ast)->val;
         temp->son.push_back((yyvsp[0].ast));
         (yyval.ast) = temp;
     }
-#line 2092 "parser.tab.c" /* yacc.c:1646  */
+#line 2011 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 536 "parser.y" /* yacc.c:1646  */
+#line 453 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r Cond\n");
@@ -2101,11 +2020,11 @@ yyreduce:
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 2105 "parser.tab.c" /* yacc.c:1646  */
+#line 2024 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 546 "parser.y" /* yacc.c:1646  */
+#line 463 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r LVal\n");
@@ -2119,11 +2038,11 @@ yyreduce:
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 2123 "parser.tab.c" /* yacc.c:1646  */
+#line 2042 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 559 "parser.y" /* yacc.c:1646  */
+#line 476 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r LVal\n");
@@ -2131,24 +2050,25 @@ yyreduce:
             (yyvsp[-3].ast)->son.push_back((yyvsp[-1].ast));
             (yyval.ast) = (yyvsp[-3].ast);
         }
-#line 2135 "parser.tab.c" /* yacc.c:1646  */
+#line 2054 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 568 "parser.y" /* yacc.c:1646  */
+#line 485 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r PrimaryExp\n");
                 #endif
                 AST *temp = new AST(_PrimaryExp);
+                temp->val = (yyvsp[-1].ast)->val;
                 temp->son.push_back((yyvsp[-1].ast));
                 (yyval.ast) = temp;
             }
-#line 2148 "parser.tab.c" /* yacc.c:1646  */
+#line 2068 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 576 "parser.y" /* yacc.c:1646  */
+#line 494 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r PrimaryExp\n");
@@ -2157,37 +2077,39 @@ yyreduce:
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 2161 "parser.tab.c" /* yacc.c:1646  */
+#line 2081 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 584 "parser.y" /* yacc.c:1646  */
+#line 502 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r PrimaryExp\n");
                 #endif
                 AST *temp = new AST(_PrimaryExp);
+                temp->val = (yyvsp[0].ast)->val;
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 2174 "parser.tab.c" /* yacc.c:1646  */
+#line 2095 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 594 "parser.y" /* yacc.c:1646  */
+#line 513 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r UnaryExp\n");
                 #endif
                 AST *temp = new AST(_UnaryExp);
+                temp->val = (yyvsp[0].ast)->val;
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 2187 "parser.tab.c" /* yacc.c:1646  */
+#line 2109 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 602 "parser.y" /* yacc.c:1646  */
+#line 522 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r UnaryExp\n");
@@ -2197,11 +2119,11 @@ yyreduce:
                 temp->son.push_back((yyvsp[-1].ast));
                 (yyval.ast) = temp;
             }
-#line 2201 "parser.tab.c" /* yacc.c:1646  */
+#line 2123 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 611 "parser.y" /* yacc.c:1646  */
+#line 531 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r UnaryExp\n");
@@ -2210,11 +2132,11 @@ yyreduce:
                 temp->son.push_back((yyvsp[-2].ast));
                 (yyval.ast) = temp;
             }
-#line 2214 "parser.tab.c" /* yacc.c:1646  */
+#line 2136 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 619 "parser.y" /* yacc.c:1646  */
+#line 539 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r UnaryExp\n");
@@ -2224,11 +2146,11 @@ yyreduce:
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 2228 "parser.tab.c" /* yacc.c:1646  */
+#line 2150 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 630 "parser.y" /* yacc.c:1646  */
+#line 550 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r UnaryOp\n");
@@ -2237,37 +2159,41 @@ yyreduce:
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 2241 "parser.tab.c" /* yacc.c:1646  */
+#line 2163 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 638 "parser.y" /* yacc.c:1646  */
+#line 558 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r UnaryOp\n");
             #endif
+            NumberOfTemp++;
+            NumberOfTemp_global++;
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 2254 "parser.tab.c" /* yacc.c:1646  */
+#line 2178 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 646 "parser.y" /* yacc.c:1646  */
+#line 568 "parser.y" /* yacc.c:1646  */
     {
             #if debug_parser_y
                 printf("r UnaryOp\n");
             #endif
+            NumberOfTemp++;
+            NumberOfTemp_global++;
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 2267 "parser.tab.c" /* yacc.c:1646  */
+#line 2193 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 656 "parser.y" /* yacc.c:1646  */
+#line 580 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r FuncRParams\n");
@@ -2276,11 +2202,11 @@ yyreduce:
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 2280 "parser.tab.c" /* yacc.c:1646  */
+#line 2206 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 664 "parser.y" /* yacc.c:1646  */
+#line 588 "parser.y" /* yacc.c:1646  */
     {
                 #if debug_parser_y
                     printf("r FuncRParams\n");
@@ -2288,287 +2214,245 @@ yyreduce:
                 (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = (yyvsp[-2].ast);
             }
-#line 2292 "parser.tab.c" /* yacc.c:1646  */
+#line 2218 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 673 "parser.y" /* yacc.c:1646  */
+#line 597 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r MulExp\n");
-            #endif
             AST *temp = new AST(_MulExp);
+            temp->val = (yyvsp[0].ast)->val;
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
+        }
+#line 2229 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 73:
+#line 603 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->val = (yyvsp[-2].ast)->val * (yyvsp[0].ast)->val;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2242 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 74:
+#line 611 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->val = (yyvsp[-2].ast)->val / (yyvsp[0].ast)->val;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2255 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 75:
+#line 619 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->val = (yyvsp[-2].ast)->val % (yyvsp[0].ast)->val;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2268 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 76:
+#line 629 "parser.y" /* yacc.c:1646  */
+    {
+            AST *temp = new AST(_AddExp);
+            temp->val = (yyvsp[0].ast)->val;
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 2279 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 77:
+#line 635 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->val = (yyvsp[-2].ast)->val + (yyvsp[0].ast)->val;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2292 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 78:
+#line 643 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->val = (yyvsp[-2].ast)->val - (yyvsp[0].ast)->val;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
         }
 #line 2305 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 73:
-#line 681 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r MulExp\n");
-            #endif
-            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
-            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = (yyvsp[-2].ast);
-        }
-#line 2318 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 74:
-#line 689 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r MulExp\n");
-            #endif
-            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
-            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = (yyvsp[-2].ast);
-        }
-#line 2331 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 75:
-#line 697 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r MulExp\n");
-            #endif
-            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
-            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = (yyvsp[-2].ast);
-        }
-#line 2344 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 76:
-#line 707 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r AddExp\n");
-            #endif
-            AST *temp = new AST(_AddExp);
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2357 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 77:
-#line 715 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r AddExp\n");
-            #endif
-            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
-            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = (yyvsp[-2].ast);
-        }
-#line 2370 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 78:
-#line 723 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r AddExp\n");
-            #endif
-            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
-            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = (yyvsp[-2].ast);
-        }
-#line 2383 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
   case 79:
-#line 733 "parser.y" /* yacc.c:1646  */
+#line 653 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r RelExp\n");
-            #endif
             AST *temp = new AST(_RelExp);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
         }
-#line 2396 "parser.tab.c" /* yacc.c:1646  */
+#line 2315 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 741 "parser.y" /* yacc.c:1646  */
+#line 658 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r RelExp\n");
-            #endif
-            AST *temp = new AST(_RelExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
         }
-#line 2411 "parser.tab.c" /* yacc.c:1646  */
+#line 2327 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 751 "parser.y" /* yacc.c:1646  */
+#line 665 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r RelExp\n");
-            #endif
-            AST *temp = new AST(_RelExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
         }
-#line 2426 "parser.tab.c" /* yacc.c:1646  */
+#line 2339 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 761 "parser.y" /* yacc.c:1646  */
+#line 672 "parser.y" /* yacc.c:1646  */
     {
-            #if debug_parser_y
-                printf("r RelExp\n");
-            #endif
-            AST *temp = new AST(_RelExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2351 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 83:
+#line 679 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2363 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 84:
+#line 688 "parser.y" /* yacc.c:1646  */
+    {
+            AST *temp = new AST(_EqExp);
             temp->son.push_back((yyvsp[0].ast));
             (yyval.ast) = temp;
+        }
+#line 2373 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 85:
+#line 693 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2385 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 86:
+#line 700 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2397 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 87:
+#line 709 "parser.y" /* yacc.c:1646  */
+    {
+            AST *temp = new AST(_LAndExp);
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 2407 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 88:
+#line 714 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
+        }
+#line 2419 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 89:
+#line 723 "parser.y" /* yacc.c:1646  */
+    {
+            AST *temp = new AST(_LOrExp);
+            temp->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = temp;
+        }
+#line 2429 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 90:
+#line 728 "parser.y" /* yacc.c:1646  */
+    {
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+            (yyvsp[-2].ast)->son.push_back((yyvsp[-1].ast));
+            (yyvsp[-2].ast)->son.push_back((yyvsp[0].ast));
+            (yyval.ast) = (yyvsp[-2].ast);
         }
 #line 2441 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 83:
-#line 771 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r RelExp\n");
-            #endif
-            AST *temp = new AST(_RelExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2456 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 84:
-#line 783 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r EqExp\n");
-            #endif
-            AST *temp = new AST(_EqExp);
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2469 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 85:
-#line 791 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r EqExp\n");
-            #endif
-            AST *temp = new AST(_EqExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2484 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 86:
-#line 801 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r EqExp\n");
-            #endif
-            AST *temp = new AST(_EqExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2499 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 87:
-#line 813 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r LAndExp\n");
-            #endif
-            AST *temp = new AST(_LAndExp);
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2512 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 88:
-#line 821 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r LAndExp\n");
-            #endif
-            AST *temp = new AST(_LAndExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2527 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 89:
-#line 833 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r LOrExp\n");
-            #endif
-            AST *temp = new AST(_LOrExp);
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2540 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 90:
-#line 841 "parser.y" /* yacc.c:1646  */
-    {
-            #if debug_parser_y
-                printf("r LOrExp\n");
-            #endif
-            AST *temp = new AST(_LOrExp);
-            temp->son.push_back((yyvsp[-2].ast));
-            temp->son.push_back((yyvsp[-1].ast));
-            temp->son.push_back((yyvsp[0].ast));
-            (yyval.ast) = temp;
-        }
-#line 2555 "parser.tab.c" /* yacc.c:1646  */
-    break;
-
   case 91:
-#line 853 "parser.y" /* yacc.c:1646  */
+#line 737 "parser.y" /* yacc.c:1646  */
     {
-                #if debug_parser_y
-                    printf("r ConstExp\n");
-                #endif
                 AST *temp = new AST(_ConstExp);
+                temp->val = (yyvsp[0].ast)->val;
                 temp->son.push_back((yyvsp[0].ast));
                 (yyval.ast) = temp;
             }
-#line 2568 "parser.tab.c" /* yacc.c:1646  */
+#line 2452 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2572 "parser.tab.c" /* yacc.c:1646  */
+#line 2456 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2796,4 +2680,4 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 863 "parser.y" /* yacc.c:1906  */
+#line 745 "parser.y" /* yacc.c:1906  */

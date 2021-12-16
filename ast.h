@@ -27,12 +27,15 @@ public:
     void irgen_Decl();
     void irgen_FuncDef();
     void irgen_Block();
-    void irgen_BlockItem();
+    void irgen_Stmt();
     void irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e);
     void irgen_InitVal(int addr, int layer, ENTRY_VAL *e);
     std::string irgen_AddExp();
     std::string irgen_MulExp();
     std::string irgen_UnaryExp();
+    std::string irgen_LVal();
+    std::string irgen_LOrExp();
+    std::string irgen_LAndExp();
 
     std::vector<AST *> son;
     TYPE type;
@@ -40,6 +43,9 @@ public:
     int val;
     char *id;
     ENTRY *entry;
+
+    int label_in;
+    int label_out;
 };
 
 #endif

@@ -1,7 +1,1 @@
-/*test global var define*/
-int a = 3;
-int b = 5;
-
-int main(){
-    return a + b;
-}
+int x[4][2] = {1,{3},2};

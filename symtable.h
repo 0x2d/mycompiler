@@ -2,6 +2,7 @@
 #define SYMTABLE_H
 
 #include<vector>
+#include<string>
 extern void yyerror(char *str);
 
 class ENTRY;
@@ -38,19 +39,17 @@ public:
 
 class ENTRY_VAL: public ENTRY{
 public:
-    ENTRY_VAL(char *i, TABLE *t):ENTRY(i,t) {
-        if(table->Find(true,id,false)){
-            yyerror("ConstVar was decleared before\n");
-        } else{
-            table->val.push_back(this);
-            isConst = false;
-            isArray = false;
-        }
+    ENTRY_VAL(char *i, TABLE *t, int s):ENTRY(i,t),size(s) {
+        table->val.push_back(this);
+        isConst = false;
+        isArray = false;
+        isParam = false;
     };
 
     bool isConst;
     bool isArray;
-    int t_n;
+    bool isParam;
+    std::string eeyore_id;
     int size;
     std::vector<int> shape;
     int val;
@@ -59,12 +58,12 @@ public:
 
 class ENTRY_FUNC: public ENTRY{
 public:
-    ENTRY_FUNC(char *i, TABLE *t, TABLE *s):ENTRY(i,t),symtable(s) {
+    ENTRY_FUNC(char *i, TABLE *t, TABLE *s, int nt):ENTRY(i,t),symtable(s),NumberOfTemp(nt) {
         table->func.push_back(this);
     };
 
-    int label;
     TABLE *symtable;
+    int NumberOfTemp;
 };
 
 #endif

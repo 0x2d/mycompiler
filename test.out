@@ -1,8 +1,0 @@
-var T0
-T0 = 3
-var T1
-T1 = 5
-f_main [0]
-  var t0
-  t0 = T0 + T1
-  return t0
