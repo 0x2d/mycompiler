@@ -192,7 +192,6 @@ VarDef  : IDENT ConstExp_temp {
         }
         | IDENT ConstExp_temp '=' InitVal {
             $1->entry = new ENTRY_VAL($1->id, symtable_ptr,$2->val*4);
-            printf("%d",$2->val*4);
             if($2->son.size() != 0){
                 ((ENTRY_VAL *)$1->entry)->isArray = true;
                 for(int i=0;i<$2->son.size();i++){
