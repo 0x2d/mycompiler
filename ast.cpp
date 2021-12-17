@@ -24,16 +24,18 @@ void print_indent(){
 void print_decl(TABLE *table, int numberoftemp){
     for(int i=0;i<table->val.size();i++){
         if(table->val[i]->isParam){
-            continue;
-        }
-        table->val[i]->eeyore_id = "T"+std::to_string(T_i);
-        T_i++;
-        if(table->val[i]->isArray){
-            print_indent();
-            fprintf(yyout,"var %d %s\n", table->val[i]->size, table->val[i]->eeyore_id.c_str());
+            table->val[i]->eeyore_id = "p"+std::to_string(p_i);
+            p_i++;
         } else{
-            print_indent();
-            fprintf(yyout,"var %s\n", table->val[i]->eeyore_id.c_str());
+            table->val[i]->eeyore_id = "T"+std::to_string(T_i);
+            T_i++;
+            if(table->val[i]->isArray){
+                print_indent();
+                fprintf(yyout,"var %d %s\n", table->val[i]->size, table->val[i]->eeyore_id.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"var %s\n", table->val[i]->eeyore_id.c_str());
+            }
         }
     }
     if(table != root_symtable){
@@ -55,22 +57,40 @@ std::string AST::irgen_LVal(){
     if(this->son.size() == 1){
         return ((ENTRY_VAL *)this->son[0]->entry)->eeyore_id;
     } else{
-        //
+        std::string val1;
+        ENTRY_VAL *entry_temp = (ENTRY_VAL *)this->son[0]->entry;
+        int addr_temp = 0;
+        int size_temp = entry_temp->size;
+        val1 = "t"+std::to_string(t_i);
+        t_i++;
+        for(int i=1;i<this->son.size();i++){
+            size_temp /= entry_temp->shape[i-1];
+            addr_temp += size_temp * this->son[i]->val;
+        }
+        print_indent();
+        fprintf(yyout,"%s = %s[%d]\n",val1.c_str(),entry_temp->eeyore_id.c_str(),addr_temp);
+        return val1;
     }
 }
 
 std::string AST::irgen_UnaryExp(){
     //UnaryExp      ::= PrimaryExp | IDENT "(" [FuncRParams] ")" | UnaryOp UnaryExp;
-    std::string val1;
-    AST *ptr;
+    std::string val1, val2;
     if(this->son[0]->type == _PrimaryExp){
-        ptr = this->son[0]; //PrimaryExp
+        AST *ptr = this->son[0]; //PrimaryExp
         if(ptr->son[0]->type == _INT_CONST){
             val1 = std::to_string(ptr->son[0]->val);
         } else if(ptr->son[0]->type == _LVal){
             val1 = ptr->son[0]->irgen_LVal();
+        } else{
+            val1 = ptr->son[0]->son[0]->irgen_AddExp();
         }
-        //
+    } else if(this->son[0]->type == _UnaryOp){
+        val1 = "t"+std::to_string(t_i);
+        t_i++;
+        val2 = this->son[1]->irgen_UnaryExp();
+        print_indent();
+        fprintf(yyout,"%s = %c %s\n",val1.c_str(),this->son[0]->son[0]->op,val2.c_str());
     }
     //
     return val1;
@@ -182,8 +202,31 @@ void AST::irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e){
     }
 }
 
-std::string AST::irgen_EqExp(){
-    //
+std::string AST::irgen_LOrExp(){
+    std::string val1, val2, val3;
+    //val1 = this->son[0]->irgen_LAndExp();
+    if(this->son.size() == 1){
+        return val1;
+    } else{
+        val3 = "t"+std::to_string(t_i);
+        t_i++;
+        for(int i=1; i < this->son.size(); i+=2){
+            if(val1.size() > 6){
+                fprintf(yyout,"t%d = %s",t_i,val1.c_str());
+                val1 = "t"+std::to_string(t_i);
+                t_i++;
+            }
+            //val2 = this->son[i+1]->irgen_LAndExp();
+            if(i == 1){
+                print_indent();
+                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val1.c_str(),this->son[i]->op,val2.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val3.c_str(),this->son[i]->op,val2.c_str());
+            }
+        }
+        return val3;
+    }
 }
 
 void AST::irgen_Stmt(){
@@ -217,7 +260,7 @@ void AST::irgen_Stmt(){
         label += 2;
         fprintf(yyout,"l%d:\n",this->label_in);
 
-        std::string cond_temp = this->son[1]->son[0]->son[0]->son[0]->irgen_EqExp();
+        std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
         print_indent();
         fprintf(yyout,"if %s goto l%d\n",cond_temp.c_str(),this->label_out);
 
@@ -241,29 +284,18 @@ void AST::irgen_Block(){
 
 //需要在函数开头打印所有声明变量语句，包括T变量和t变量
 void AST::irgen_FuncDef(){
-    symtable_ptr = ((ENTRY_FUNC *)this->son[1]->entry)->symtable;
+    ENTRY_FUNC *func_ptr = (ENTRY_FUNC *)this->son[1]->entry;
+    symtable_ptr = func_ptr->symtable;
     symtable_i = 0;
-    if(this->son.size() == 3){
-        print_indent();
-        fprintf(yyout,"f_%s [0]\n",this->son[1]->id);
-        indent++;
-        print_decl(((ENTRY_FUNC *)this->son[1]->entry)->symtable,((ENTRY_FUNC *)this->son[1]->entry)->NumberOfTemp);
-        this->son[2]->irgen_Block();
-    } else{
-        int params_temp = this->son[2]->son.size();
-        AST *ptr_temp = this->son[2]; //FuncFParams
-        for(int i=0;i<params_temp;i++){
-            ENTRY_VAL *entry_temp = (ENTRY_VAL *)ptr_temp->son[i]->entry;
-            entry_temp->eeyore_id = "p"+ std::to_string(p_i);
-            p_i++;
-        }
-        print_indent();
-        fprintf(yyout,"f_%s [%d]\n",this->son[1]->id, params_temp);
-        indent++;
-        print_decl(((ENTRY_FUNC *)this->son[1]->entry)->symtable,((ENTRY_FUNC *)this->son[1]->entry)->NumberOfTemp);
-        this->son[3]->irgen_Block();
-    }
+
+    print_indent();
+    fprintf(yyout,"f_%s [%d]\n",func_ptr->id, func_ptr->NumberOfParam);
+
+    indent++;
+    print_decl(func_ptr->symtable,func_ptr->NumberOfTemp);
+    this->son[this->son.size()-1]->irgen_Block();
     indent--;
+    
     print_indent();
     fprintf(yyout,"end f_%s\n",this->son[1]->id);
     symtable_ptr = symtable_ptr->father;
@@ -309,6 +341,14 @@ void AST::irgen_Decl(){
 }
 
 void AST::irgen(){
+    new ENTRY_FUNC("getint",root_symtable,nullptr,0,0);
+    new ENTRY_FUNC("getch",root_symtable,nullptr,0,0);
+    new ENTRY_FUNC("getarray",root_symtable,nullptr,0,1);
+    new ENTRY_FUNC("putint",root_symtable,nullptr,0,1);
+    new ENTRY_FUNC("putch",root_symtable,nullptr,0,1);
+    new ENTRY_FUNC("putarray",root_symtable,nullptr,0,2);
+    new ENTRY_FUNC("starttime",root_symtable,nullptr,0,0);
+    new ENTRY_FUNC("stoptime",root_symtable,nullptr,0,0);
     print_decl(root_symtable, NumberOfTemp_global);
     for(int i=0;i<this->son.size();i++){
         if(this->son[i]->type==_Decl){

@@ -1,4 +1,4 @@
-//test subc
+
 int main(){
     int a;
     a = 10;

@@ -1,4 +1,4 @@
-//test sub
+
 int main(){
     int a, b;
     a = 10;

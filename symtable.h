@@ -58,11 +58,12 @@ public:
 
 class ENTRY_FUNC: public ENTRY{
 public:
-    ENTRY_FUNC(char *i, TABLE *t, TABLE *s, int nt):ENTRY(i,t),symtable(s),NumberOfTemp(nt) {
+    ENTRY_FUNC(char *i, TABLE *t, TABLE *s, int nt, int np):ENTRY(i,t),symtable(s),NumberOfTemp(nt),NumberOfParam(np) {
         table->func.push_back(this);
     };
 
     TABLE *symtable;
+    int NumberOfParam;
     int NumberOfTemp;
 };
 

@@ -252,7 +252,7 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
                 }
                 ((ENTRY_VAL *)param_temp->son[1]->entry)->isParam = true;
             }
-            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr,NumberOfTemp);
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr,NumberOfTemp,$4->son.size());
             NumberOfTemp_global -= NumberOfTemp;
             NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
@@ -268,7 +268,7 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
             NumberOfTemp = 0;
         } Block {
             symtable_ptr->space = $2->id;
-            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr,NumberOfTemp);
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr,NumberOfTemp,0);
             NumberOfTemp_global -= NumberOfTemp;
             NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
@@ -443,6 +443,10 @@ Exp : AddExp {
             printf("r Exp\n");
         #endif
         AST *temp = new AST(_Exp);
+        if($1->son.size() > 1){
+            NumberOfTemp++;
+            NumberOfTemp_global++;
+        }
         temp->val = $1->val;
         temp->son.push_back($1);
         $$ = temp;
@@ -495,6 +499,10 @@ PrimaryExp  : '(' Exp ')' {
                     printf("r PrimaryExp\n");
                 #endif
                 AST *temp = new AST(_PrimaryExp);
+                if($1->son.size() > 1){
+                    NumberOfTemp++;
+                    NumberOfTemp_global++;
+                }
                 temp->son.push_back($1);
                 $$ = temp;
             }
@@ -510,36 +518,33 @@ PrimaryExp  : '(' Exp ')' {
             ;
 
 UnaryExp    : PrimaryExp {
-                #if debug_parser_y
-                    printf("r UnaryExp\n");
-                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->val = $1->val;
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | IDENT '(' FuncRParams ')' {
-                #if debug_parser_y
-                    printf("r UnaryExp\n");
-                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 temp->son.push_back($3);
                 $$ = temp;
             }
             | IDENT '(' ')' {
-                #if debug_parser_y
-                    printf("r UnaryExp\n");
-                #endif
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | UnaryOp UnaryExp {
-                #if debug_parser_y
-                    printf("r UnaryExp\n");
-                #endif
                 AST *temp = new AST(_UnaryExp);
+                if($1->op == '-'){
+                    temp->val = 0-$2->val;
+                } else if($1->op == '!'){
+                    if($2->val != 0){
+                        temp->val = 0;
+                    } else{
+                        temp->val = 1;
+                    }
+                }
                 temp->son.push_back($1);
                 temp->son.push_back($2);
                 $$ = temp;
@@ -547,17 +552,11 @@ UnaryExp    : PrimaryExp {
             ;
 
 UnaryOp : '+' {
-            #if debug_parser_y
-                printf("r UnaryOp\n");
-            #endif
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | '-' {
-            #if debug_parser_y
-                printf("r UnaryOp\n");
-            #endif
             NumberOfTemp++;
             NumberOfTemp_global++;
             AST *temp = new AST(_UnaryOp);
@@ -565,9 +564,6 @@ UnaryOp : '+' {
             $$ = temp;
         }
         | '!' {
-            #if debug_parser_y
-                printf("r UnaryOp\n");
-            #endif
             NumberOfTemp++;
             NumberOfTemp_global++;
             AST *temp = new AST(_UnaryOp);
@@ -600,24 +596,19 @@ MulExp  : UnaryExp {
             $$ = temp;
         }
         | MulExp '*' UnaryExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->val = $1->val * $3->val;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | MulExp '/' UnaryExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
-            $1->val = $1->val / $3->val;
+            if($3->val != 0)
+                $1->val = $1->val / $3->val;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | MulExp '%' UnaryExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->val = $1->val % $3->val;
             $1->son.push_back($2);
             $1->son.push_back($3);
@@ -626,22 +617,22 @@ MulExp  : UnaryExp {
         ;
 
 AddExp  : MulExp {
+            if($1->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             AST *temp = new AST(_AddExp);
             temp->val = $1->val;
             temp->son.push_back($1);
             $$ = temp;
         }
         | AddExp '+' MulExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->val = $1->val + $3->val;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | AddExp '-' MulExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->val = $1->val - $3->val;
             $1->son.push_back($2);
             $1->son.push_back($3);
@@ -651,33 +642,29 @@ AddExp  : MulExp {
 
 RelExp  : AddExp {
             AST *temp = new AST(_RelExp);
+            if($1->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             temp->son.push_back($1);
             $$ = temp;
         }
         | RelExp '<' AddExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp '>' AddExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp LE AddExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp GE AddExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -685,6 +672,10 @@ RelExp  : AddExp {
         ;
 
 EqExp   : RelExp {
+            if($1->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             AST *temp = new AST(_EqExp);
             temp->son.push_back($1);
             $$ = temp;
@@ -735,6 +726,10 @@ LOrExp  : LAndExp {
 
 ConstExp    : AddExp {
                 AST *temp = new AST(_ConstExp);
+                if($1->son.size() > 1){
+                    NumberOfTemp++;
+                    NumberOfTemp_global++;
+                }
                 temp->val = $1->val;
                 temp->son.push_back($1);
                 $$ = temp;
