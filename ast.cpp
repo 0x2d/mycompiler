@@ -202,27 +202,26 @@ void AST::irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e){
     }
 }
 
+std::string AST::irgen_LAndExp(){
+    //
+}
+
 std::string AST::irgen_LOrExp(){
     std::string val1, val2, val3;
-    //val1 = this->son[0]->irgen_LAndExp();
+    val1 = this->son[0]->irgen_LAndExp();
     if(this->son.size() == 1){
         return val1;
     } else{
         val3 = "t"+std::to_string(t_i);
         t_i++;
         for(int i=1; i < this->son.size(); i+=2){
-            if(val1.size() > 6){
-                fprintf(yyout,"t%d = %s",t_i,val1.c_str());
-                val1 = "t"+std::to_string(t_i);
-                t_i++;
-            }
-            //val2 = this->son[i+1]->irgen_LAndExp();
+            val2 = this->son[i+1]->irgen_LAndExp();
             if(i == 1){
                 print_indent();
-                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val1.c_str(),this->son[i]->op,val2.c_str());
+                fprintf(yyout,"%s = %s || %s\n",val3.c_str(), val1.c_str(),val2.c_str());
             } else{
                 print_indent();
-                fprintf(yyout,"%s = %s %c %s\n",val3.c_str(), val3.c_str(),this->son[i]->op,val2.c_str());
+                fprintf(yyout,"%s = %s || %s\n",val3.c_str(), val3.c_str(),val2.c_str());
             }
         }
         return val3;
@@ -262,7 +261,7 @@ void AST::irgen_Stmt(){
 
         std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
         print_indent();
-        fprintf(yyout,"if %s goto l%d\n",cond_temp.c_str(),this->label_out);
+        fprintf(yyout,"if %s == 0 goto l%d\n",cond_temp.c_str(),this->label_out);
 
         this->son[2]->irgen_Stmt();
 
