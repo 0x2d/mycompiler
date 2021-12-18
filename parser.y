@@ -110,6 +110,10 @@ ConstDef    : IDENT ConstExp_temp '=' ConstInitVal {
                         ((ENTRY_VAL *)$1->entry)->shape.push_back($2->son[i]->val);
                     }
                 }
+                //还没想好怎么处理常量数组的赋值
+                if($4->son.size() == 1 && $4->son[0]->type == _ConstExp){
+                    ((ENTRY_VAL *)$1->entry)->val = $4->son[0]->val;
+                }
                 AST *temp = new AST(_ConstDef);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -457,6 +461,10 @@ Cond    : LOrExp {
             #if debug_parser_y
                 printf("r Cond\n");
             #endif
+            if($1->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             AST *temp = new AST(_Cond);
             temp->son.push_back($1);
             $$ = temp;
@@ -473,6 +481,7 @@ LVal    : IDENT {
                 yyerror("cite non-decleared variable\n");
             }
             AST *temp = new AST(_LVal);
+            temp->val = ((ENTRY_VAL *)$1->entry)->val;
             temp->son.push_back($1);
             $$ = temp;
         }
@@ -503,6 +512,7 @@ PrimaryExp  : '(' Exp ')' {
                     NumberOfTemp++;
                     NumberOfTemp_global++;
                 }
+                temp->val = $1->val;
                 temp->son.push_back($1);
                 $$ = temp;
             }
@@ -681,15 +691,11 @@ EqExp   : RelExp {
             $$ = temp;
         }
         | EqExp EQ RelExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | EqExp NE RelExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -697,13 +703,15 @@ EqExp   : RelExp {
         ;
 
 LAndExp : EqExp {
+            if($1->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             AST *temp = new AST(_LAndExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | LAndExp AND EqExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -711,13 +719,15 @@ LAndExp : EqExp {
         ;
 
 LOrExp  : LAndExp {
+            if($1->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             AST *temp = new AST(_LOrExp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | LOrExp OR LAndExp {
-            NumberOfTemp++;
-            NumberOfTemp_global++;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;

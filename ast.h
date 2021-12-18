@@ -36,6 +36,8 @@ public:
     std::string irgen_LVal();
     std::string irgen_LOrExp();
     std::string irgen_LAndExp();
+    std::string irgen_EqExp();
+    std::string irgen_RelExp();
 
     std::vector<AST *> son;
     TYPE type;

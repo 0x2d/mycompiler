@@ -202,8 +202,82 @@ void AST::irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e){
     }
 }
 
+std::string AST::irgen_RelExp(){
+    std::string val1, val2, val3, op;
+    val1 = this->son[0]->irgen_AddExp();
+    if(this->son.size() == 1){
+        return val1;
+    } else{
+        val3 = "t"+std::to_string(t_i);
+        t_i++;
+        for(int i=1; i < this->son.size(); i+=2){
+            if(this->son[i]->type == _LE){
+                op = "<=";
+            } else if(this->son[i]->type == _GE){
+                op = ">=";
+            } else{
+                op = this->son[i]->op;
+            }
+            val2 = this->son[i+1]->irgen_AddExp();
+            if(i == 1){
+                print_indent();
+                fprintf(yyout,"%s = %s %s %s\n",val3.c_str(), val1.c_str(),op.c_str(),val2.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s %s %s\n",val3.c_str(), val3.c_str(),op.c_str(),val2.c_str());
+            }
+        }
+        return val3;
+    }
+}
+
+std::string AST::irgen_EqExp(){
+    std::string val1, val2, val3, op;
+    val1 = this->son[0]->irgen_RelExp();
+    if(this->son.size() == 1){
+        return val1;
+    } else{
+        val3 = "t"+std::to_string(t_i);
+        t_i++;
+        for(int i=1; i < this->son.size(); i+=2){
+            if(this->son[i]->type == _EQ){
+                op = "==";
+            } else{
+                op = "!=";
+            }
+            val2 = this->son[i+1]->irgen_RelExp();
+            if(i == 1){
+                print_indent();
+                fprintf(yyout,"%s = %s %s %s\n",val3.c_str(), val1.c_str(),op.c_str(),val2.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s %s %s\n",val3.c_str(), val3.c_str(),op.c_str(),val2.c_str());
+            }
+        }
+        return val3;
+    }
+}
+
 std::string AST::irgen_LAndExp(){
-    //
+    std::string val1, val2, val3;
+    val1 = this->son[0]->irgen_EqExp();
+    if(this->son.size() == 1){
+        return val1;
+    } else{
+        val3 = "t"+std::to_string(t_i);
+        t_i++;
+        for(int i=1; i < this->son.size(); i+=2){
+            val2 = this->son[i+1]->irgen_EqExp();
+            if(i == 1){
+                print_indent();
+                fprintf(yyout,"%s = %s && %s\n",val3.c_str(), val1.c_str(),val2.c_str());
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s && %s\n",val3.c_str(), val3.c_str(),val2.c_str());
+            }
+        }
+        return val3;
+    }
 }
 
 std::string AST::irgen_LOrExp(){

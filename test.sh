@@ -39,4 +39,6 @@ echo --------019_mod.c---------
 ./mycompiler -f ./functional/019_mod.c
 echo --------020_arr_defn.c---------
 ./mycompiler -f ./functional/020_arr_defn.c
+echo --------021_arr_expr_len.c---------
+./mycompiler -f ./functional/021_arr_expr_len.c
 echo -----------------
