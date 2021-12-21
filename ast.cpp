@@ -1,10 +1,12 @@
 #include"ast.h"
 #include"symtable.h"
 #include<stdio.h>
+#include<stack>
 #include<string>
 extern FILE *yyout;
 extern TABLE *root_symtable;
-extern TABLE *symtable_ptr;
+extern std::vector<TABLE *>symtable_vector;
+extern TABLE * symtable_ptr;
 extern int NumberOfTemp_global;
 
 AST *root;
@@ -13,7 +15,9 @@ int t_i = 0;    //temp var
 int p_i = 0;    //func var
 int indent = 0; //global indent
 int label = 0;  //global label
-int symtable_i = 0; //函数下一个要打开的符号表编号
+int symtable_i = 1; //下一个要打开的符号表编号
+int label_in_global;   //最内层代码块的进入标号
+int label_out_global;  
 
 void print_indent(){
     for(int indent_temp=0;indent_temp<indent;indent_temp++){
@@ -53,23 +57,34 @@ void print_decl(TABLE *table, int numberoftemp){
     t_i = t_i_temp;
 }
 
-std::string AST::irgen_LVal(){
+std::string AST::irgen_LVal(bool isleft){
     if(this->son.size() == 1){
         return ((ENTRY_VAL *)this->son[0]->entry)->eeyore_id;
     } else{
-        std::string val1;
+        std::string val1, val2, val3;
         ENTRY_VAL *entry_temp = (ENTRY_VAL *)this->son[0]->entry;
-        int addr_temp = 0;
         int size_temp = entry_temp->size;
         val1 = "t"+std::to_string(t_i);
         t_i++;
+        val3 = "t"+std::to_string(t_i);
+        t_i++;
+        print_indent();
+        fprintf(yyout,"%s = 0\n",val1.c_str());
         for(int i=1;i<this->son.size();i++){
             size_temp /= entry_temp->shape[i-1];
-            addr_temp += size_temp * this->son[i]->val;
+            val2 = this->son[i]->son[0]->irgen_AddExp();
+            print_indent();
+            fprintf(yyout,"%s = %s * %d\n",val3.c_str(),val2.c_str(),size_temp);
+            print_indent();
+            fprintf(yyout,"%s = %s + %s\n",val1.c_str(),val1.c_str(),val3.c_str());
         }
-        print_indent();
-        fprintf(yyout,"%s = %s[%d]\n",val1.c_str(),entry_temp->eeyore_id.c_str(),addr_temp);
-        return val1;
+        if(isleft){
+            return entry_temp->eeyore_id+"["+val1+"]";
+        } else{
+            print_indent();
+            fprintf(yyout,"%s = %s[%s]\n",val1.c_str(),entry_temp->eeyore_id.c_str(),val1.c_str());
+            return val1;
+        }
     }
 }
 
@@ -81,7 +96,7 @@ std::string AST::irgen_UnaryExp(){
         if(ptr->son[0]->type == _INT_CONST){
             val1 = std::to_string(ptr->son[0]->val);
         } else if(ptr->son[0]->type == _LVal){
-            val1 = ptr->son[0]->irgen_LVal();
+            val1 = ptr->son[0]->irgen_LVal(false);
         } else{
             val1 = ptr->son[0]->son[0]->irgen_AddExp();
         }
@@ -316,21 +331,20 @@ void AST::irgen_Stmt(){
             fprintf(yyout,"return %s\n",return_temp.c_str());
         }
     } else if(this->son[0]->type == _LVal){
-        std::string left_temp = this->son[0]->irgen_LVal();
+        std::string left_temp = this->son[0]->irgen_LVal(true);
         std::string right_temp = this->son[1]->son[0]->irgen_AddExp();
         print_indent();
         fprintf(yyout,"%s = %s\n",left_temp.c_str(),right_temp.c_str());
     } else if(this->son[0]->type == _Exp){
         return;
     } else if(this->son[0]->type == _Block){
-        symtable_ptr = symtable_ptr->son[symtable_i];
-        symtable_i++;
         this->son[0]->irgen_Block();
-        symtable_ptr = symtable_ptr->father;
     } else if(this->son[0]->type == _WHILE){
         this->label_in = label;
         this->label_out = label+1;
         label += 2;
+        label_in_global = this->label_in;
+        label_out_global = this->label_out;
         fprintf(yyout,"l%d:\n",this->label_in);
 
         std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
@@ -342,10 +356,47 @@ void AST::irgen_Stmt(){
         print_indent();
         fprintf(yyout,"goto l%d\n",this->label_in);
         fprintf(yyout,"l%d:\n",this->label_out);
+    } else if(this->son[0]->type == _IF && this->son.size() == 5){
+        this->label_in = label;
+        this->label_out = label+1;
+        label += 2;
+
+        std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
+        print_indent();
+        fprintf(yyout,"if %s == 0 goto l%d\n",cond_temp.c_str(),this->label_in);
+
+        this->son[2]->irgen_Stmt();
+
+        print_indent();
+        fprintf(yyout,"goto l%d\n",this->label_out);
+
+        fprintf(yyout,"l%d:\n",this->label_in);
+        this->son[4]->irgen_Stmt();
+
+        fprintf(yyout,"l%d:\n",this->label_out);
+    } else if(this->son[0]->type == _IF && this->son.size() == 3){
+        this->label_out = label;
+        label++;
+
+        std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
+        print_indent();
+        fprintf(yyout,"if %s == 0 goto l%d\n",cond_temp.c_str(),this->label_out);
+
+        this->son[2]->irgen_Stmt();
+
+        fprintf(yyout,"l%d:\n",this->label_out);
+    } else if(this->son[0]->type == _BREAK){
+        print_indent();
+        fprintf(yyout,"goto l%d\n",label_out_global);
+    } else if(this->son[0]->type == _CONTINUE){
+        print_indent();
+        fprintf(yyout,"goto l%d\n",label_in_global);
     }
 }
 
 void AST::irgen_Block(){
+    symtable_ptr = symtable_vector[symtable_i];
+    symtable_i++;
     for(int i=0;i<this->son.size();i++){
         if(this->son[i]->son[0]->type == _Decl){
             this->son[i]->son[0]->irgen_Decl();
@@ -353,13 +404,12 @@ void AST::irgen_Block(){
             this->son[i]->son[0]->irgen_Stmt();
         }
     }
+    symtable_ptr = symtable_ptr->father;
 }
 
 //需要在函数开头打印所有声明变量语句，包括T变量和t变量
 void AST::irgen_FuncDef(){
     ENTRY_FUNC *func_ptr = (ENTRY_FUNC *)this->son[1]->entry;
-    symtable_ptr = func_ptr->symtable;
-    symtable_i = 0;
 
     print_indent();
     fprintf(yyout,"f_%s [%d]\n",func_ptr->id, func_ptr->NumberOfParam);
@@ -371,7 +421,6 @@ void AST::irgen_FuncDef(){
     
     print_indent();
     fprintf(yyout,"end f_%s\n",this->son[1]->id);
-    symtable_ptr = symtable_ptr->father;
 }
 
 void AST::irgen_Decl(){
@@ -392,8 +441,10 @@ void AST::irgen_Decl(){
                     }
                 }
             } else {
-                entry_temp->arr = new int [entry_temp->size/4];
-                ptr_temp->son[2]->irgen_InitVal(0, 0, entry_temp);
+                if(ptr_temp->son.size() > 2){
+                    entry_temp->arr = new int [entry_temp->size/4];
+                    ptr_temp->son[2]->irgen_InitVal(0, 0, entry_temp);
+                }
             }
         }
     } else if(ptr->type == _ConstDecl){
@@ -406,8 +457,10 @@ void AST::irgen_Decl(){
                 print_indent();
                 fprintf(yyout,"%s = %d\n", entry_temp->eeyore_id.c_str(), entry_temp->val);
             } else {
-                entry_temp->arr = new int [entry_temp->size/4];
-                ptr_temp->son[2]->irgen_ConstInitVal(0, 0, entry_temp);
+                if(ptr_temp->son.size() > 2){
+                    entry_temp->arr = new int [entry_temp->size/4];
+                    ptr_temp->son[2]->irgen_ConstInitVal(0, 0, entry_temp);
+                }
             }
         }
     }

@@ -3,7 +3,8 @@
 #include<string.h>
 
 TABLE *root_symtable;
-TABLE *symtable_ptr;
+std::vector<TABLE *> symtable_vector;
+TABLE * symtable_ptr;
 
 bool TABLE::Find(bool isVal, char *id, bool recursive){
     if(isVal){

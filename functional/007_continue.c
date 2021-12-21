@@ -1,4 +1,4 @@
-//test continue
+
 int main(){
     int i;
     i = 0;

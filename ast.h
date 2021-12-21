@@ -4,7 +4,6 @@
 #include<vector>
 #include<string>
 #include"symtable.h"
-extern TABLE *symtable_ptr;
 
 enum TYPE {
     _INT, _VOID, _CONST, _IF, _ELSE, _WHILE, _BREAK, _CONTINUE, _RETURN, _LE, 
@@ -33,7 +32,7 @@ public:
     std::string irgen_AddExp();
     std::string irgen_MulExp();
     std::string irgen_UnaryExp();
-    std::string irgen_LVal();
+    std::string irgen_LVal(bool isleft);
     std::string irgen_LOrExp();
     std::string irgen_LAndExp();
     std::string irgen_EqExp();
@@ -45,6 +44,8 @@ public:
     int val;
     char *id;
     ENTRY *entry;
+
+    bool isint = false;
 
     int label_in;
     int label_out;

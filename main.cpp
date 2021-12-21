@@ -10,6 +10,7 @@ extern AST *root;
 extern FILE *yyin;
 extern FILE *yyout;
 extern TABLE *root_symtable;
+extern std::vector<TABLE *>symtable_vector;
 extern TABLE *symtable_ptr;
 
 int main(int argc, char *argv[]){
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]){
     }
 
     root_symtable = new TABLE("root");
+    symtable_vector.push_back(root_symtable);
     symtable_ptr = root_symtable;
     yyparse();
     root->irgen();

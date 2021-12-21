@@ -11,6 +11,7 @@
     extern char *yytext;
     extern class AST *root;
     extern class TABLE *root_symtable;
+    extern std::vector<TABLE *>symtable_vector;
     extern class TABLE *symtable_ptr;
     void yyerror(char *str){
         printf("LINE %d in %s : %s\n",yylineno, yytext, str);
@@ -240,6 +241,7 @@ InitVal_temp    : InitVal {
 
 FuncDef : BType IDENT '(' FuncFParams ')' {
             symtable_ptr = new TABLE("func", symtable_ptr);
+            symtable_vector.push_back(symtable_ptr);
             NumberOfTemp = 0;
         } Block {
             symtable_ptr->space = $2->id;
@@ -248,8 +250,9 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
                 if(param_temp->son.size() == 2){
                     param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,4);
                 } else{
-                    param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,param_temp->son[2]->val);
+                    param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,param_temp->son[2]->val*4);
                     ((ENTRY_VAL *)param_temp->son[1]->entry)->isArray = true;
+                    ((ENTRY_VAL *)param_temp->son[1]->entry)->shape.push_back(1);
                     for(int i=0;i<param_temp->son[2]->son.size();i++){
                         ((ENTRY_VAL *)param_temp->son[1]->entry)->shape.push_back(param_temp->son[2]->son[i]->val);
                     }
@@ -269,6 +272,7 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
         }
         | BType IDENT '(' ')' {
             symtable_ptr = new TABLE("func", symtable_ptr);
+            symtable_vector.push_back(symtable_ptr);
             NumberOfTemp = 0;
         } Block {
             symtable_ptr->space = $2->id;
@@ -344,6 +348,10 @@ Stmt    : LVal '=' Exp ';' {
             #if debug_parser_y
                 printf("r Stmt\n");
             #endif
+            if($1->son.size() > 1){
+                NumberOfTemp += 2;
+                NumberOfTemp_global += 2;
+            }
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -366,6 +374,7 @@ Stmt    : LVal '=' Exp ';' {
         }
         | {
             symtable_ptr = new TABLE("block", symtable_ptr);
+            symtable_vector.push_back(symtable_ptr);
         } Block {
             #if debug_parser_y
                 printf("r Stmt\n");
@@ -452,6 +461,7 @@ Exp : AddExp {
             NumberOfTemp_global++;
         }
         temp->val = $1->val;
+        temp->isint = $1->isint;
         temp->son.push_back($1);
         $$ = temp;
     }
@@ -466,6 +476,7 @@ Cond    : LOrExp {
                 NumberOfTemp_global++;
             }
             AST *temp = new AST(_Cond);
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
@@ -500,6 +511,7 @@ PrimaryExp  : '(' Exp ')' {
                 #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->val = $2->val;
+                temp->isint = $2->isint;
                 temp->son.push_back($2);
                 $$ = temp;
             }
@@ -509,8 +521,8 @@ PrimaryExp  : '(' Exp ')' {
                 #endif
                 AST *temp = new AST(_PrimaryExp);
                 if($1->son.size() > 1){
-                    NumberOfTemp++;
-                    NumberOfTemp_global++;
+                    NumberOfTemp += 2;
+                    NumberOfTemp_global += 2;
                 }
                 temp->val = $1->val;
                 temp->son.push_back($1);
@@ -522,6 +534,7 @@ PrimaryExp  : '(' Exp ')' {
                 #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->val = $1->val;
+                temp->isint = true;
                 temp->son.push_back($1);
                 $$ = temp;
             }
@@ -530,6 +543,7 @@ PrimaryExp  : '(' Exp ')' {
 UnaryExp    : PrimaryExp {
                 AST *temp = new AST(_UnaryExp);
                 temp->val = $1->val;
+                temp->isint = $1->isint;
                 temp->son.push_back($1);
                 $$ = temp;
             }
@@ -548,6 +562,7 @@ UnaryExp    : PrimaryExp {
                 AST *temp = new AST(_UnaryExp);
                 if($1->op == '-'){
                     temp->val = 0-$2->val;
+                    temp->isint = $2->isint;
                 } else if($1->op == '!'){
                     if($2->val != 0){
                         temp->val = 0;
@@ -602,24 +617,29 @@ FuncRParams : Exp {
 MulExp  : UnaryExp {
             AST *temp = new AST(_MulExp);
             temp->val = $1->val;
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
         | MulExp '*' UnaryExp {
             $1->val = $1->val * $3->val;
+            $1->isint = $1->isint && $3->isint;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | MulExp '/' UnaryExp {
-            if($3->val != 0)
+            if($3->val != 0){
                 $1->val = $1->val / $3->val;
+                $1->isint = $1->isint && $3->isint;
+            }
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | MulExp '%' UnaryExp {
             $1->val = $1->val % $3->val;
+            $1->isint = $1->isint && $3->isint;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -633,17 +653,20 @@ AddExp  : MulExp {
             }
             AST *temp = new AST(_AddExp);
             temp->val = $1->val;
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
         | AddExp '+' MulExp {
             $1->val = $1->val + $3->val;
+            $1->isint = $1->isint && $3->isint;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | AddExp '-' MulExp {
             $1->val = $1->val - $3->val;
+            $1->isint = $1->isint && $3->isint;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -656,25 +679,30 @@ RelExp  : AddExp {
                 NumberOfTemp++;
                 NumberOfTemp_global++;
             }
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
         | RelExp '<' AddExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp '>' AddExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp LE AddExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp GE AddExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -687,15 +715,18 @@ EqExp   : RelExp {
                 NumberOfTemp_global++;
             }
             AST *temp = new AST(_EqExp);
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
         | EqExp EQ RelExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | EqExp NE RelExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -708,10 +739,12 @@ LAndExp : EqExp {
                 NumberOfTemp_global++;
             }
             AST *temp = new AST(_LAndExp);
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
         | LAndExp AND EqExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -724,10 +757,12 @@ LOrExp  : LAndExp {
                 NumberOfTemp_global++;
             }
             AST *temp = new AST(_LOrExp);
+            temp->isint = $1->isint;
             temp->son.push_back($1);
             $$ = temp;
         }
         | LOrExp OR LAndExp {
+            $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
@@ -741,6 +776,7 @@ ConstExp    : AddExp {
                     NumberOfTemp_global++;
                 }
                 temp->val = $1->val;
+                temp->isint = $1->isint;
                 temp->son.push_back($1);
                 $$ = temp;
             }
