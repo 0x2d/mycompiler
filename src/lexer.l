@@ -4,7 +4,7 @@
     #include<string.h>
     //保持以下顺序
     #include"ast.h"
-    #include"parser.tab.h"
+    #include"parser.tab.hpp"
     //保持以上顺序
 %}
 

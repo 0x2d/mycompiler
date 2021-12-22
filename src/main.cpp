@@ -4,7 +4,7 @@
 #include<vector>
 #include"symtable.h"
 #include"ast.h"
-#include"parser.tab.h"
+#include"parser.tab.hpp"
 extern char *optarg;
 extern AST *root;
 extern FILE *yyin;
@@ -19,12 +19,12 @@ int main(int argc, char *argv[]){
     char *output_file_path = NULL;
 
     //-f <inputfile> -o <outputfile>
-    while(EOF != (arg_temp = getopt(argc,argv,"o:f:"))){
+    while(EOF != (arg_temp = getopt(argc,argv,"o:e:S"))){
         switch(arg_temp){
             case 'o':
                 output_file_path = optarg;
                 break;
-            case 'f':
+            case 'e':
                 input_file_path = optarg;
                 break;
             case '?':
