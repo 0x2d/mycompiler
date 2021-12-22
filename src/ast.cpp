@@ -105,24 +105,18 @@ std::string AST::irgen_UnaryExp(){
         val2 = this->son[1]->irgen_UnaryExp();
         print_indent();
         fprintf(yyout,"%s = %c %s\n",val1.c_str(),this->son[0]->son[0]->op,val2.c_str());
-    } else if(this->son[0]->type == _IDENT && this->son.size() == 1){
-        ENTRY_FUNC *func_temp = (ENTRY_FUNC *)this->son[0]->entry;
-        if(func_temp->isreturn){
-            val1 = "t"+std::to_string(t_i);
-            t_i++;
-            print_indent();
-            fprintf(yyout,"%s = call f_%s\n",val1.c_str(),func_temp->id);
-        } else{
-            print_indent();
-            fprintf(yyout,"call f_%s\n",func_temp->id);
-        }
-    } else if(this->son[0]->type == _IDENT && this->son.size() == 2){
-        for(int i=0;i<this->son[1]->son.size();i++){
-            val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
-            print_indent();
-            fprintf(yyout,"param %s\n", val1.c_str());
+    } else if(this->son[0]->type == _IDENT){
+        if(root_symtable->Find(false,this->son[0]->id,false)){
+            this->son[0]->entry = root_symtable->FindAndReturn(false,this->son[0]->id);
         }
         ENTRY_FUNC *func_temp = (ENTRY_FUNC *)this->son[0]->entry;
+        if(this->son.size() == 2){
+            for(int i=0;i<this->son[1]->son.size();i++){
+                val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
+                print_indent();
+                fprintf(yyout,"param %s\n", val1.c_str());
+            }
+        }
         if(func_temp->isreturn){
             val1 = "t"+std::to_string(t_i);
             t_i++;

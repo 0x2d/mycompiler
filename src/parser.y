@@ -508,30 +508,16 @@ UnaryExp    : PrimaryExp {
                 $$ = temp;
             }
             | IDENT '(' FuncRParams ')' {
-                if(root_symtable->Find(false,$1->id,false)){
-                    $1->entry = root_symtable->FindAndReturn(false,$1->id);
-                } else{
-                    yyerror("cite non-decleared function\n");
-                }
-                if(((ENTRY_FUNC *)$1->entry)->isreturn){
-                    NumberOfTemp++;
-                    NumberOfTemp_global++;
-                }
+                NumberOfTemp++;
+                NumberOfTemp_global++;
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 temp->son.push_back($3);
                 $$ = temp;
             }
             | IDENT '(' ')' {
-                if(root_symtable->Find(false,$1->id,false)){
-                    $1->entry = root_symtable->FindAndReturn(false,$1->id);
-                } else{
-                    yyerror("cite non-decleared function\n");
-                }
-                if(((ENTRY_FUNC *)$1->entry)->isreturn){
-                    NumberOfTemp++;
-                    NumberOfTemp_global++;
-                }
+                NumberOfTemp++;
+                NumberOfTemp_global++;
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
