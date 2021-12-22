@@ -14,6 +14,8 @@ ident   ([_a-zA-Z][_a-zA-Z0-9]*)
 symbol  ("("|")"|"["|"]"|"{"|"}"|";"|",")
 operator ("="|">"|"<"|"+"|"-"|"*"|"/"|"%"|"!")
 decimal ([1-9][0-9]*)|0
+oct 0[0-7]*
+hex 0[xX][0-9A-Fa-f]+
 comment ("//".*)
 
 
@@ -117,6 +119,18 @@ comment ("//".*)
 }
 {decimal}   {
     AST *temp = new AST(_INT_CONST,atoi(yytext));
+    yylval.ast = temp;
+    return INT_CONST;
+}
+{oct}   {
+    int val = strtol(yytext, NULL, 8);
+    AST *temp = new AST(_INT_CONST,val);
+    yylval.ast = temp;
+    return INT_CONST;
+}
+{hex}   {
+    int val = strtol(yytext, NULL, 16);
+    AST *temp = new AST(_INT_CONST,val);
     yylval.ast = temp;
     return INT_CONST;
 }
