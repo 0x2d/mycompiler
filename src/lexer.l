@@ -14,6 +14,7 @@ ident   ([_a-zA-Z][_a-zA-Z0-9]*)
 symbol  ("("|")"|"["|"]"|"{"|"}"|";"|",")
 operator ("="|">"|"<"|"+"|"-"|"*"|"/"|"%"|"!")
 decimal ([1-9][0-9]*)|0
+comment ("//".*)
 
 
 %%
@@ -119,6 +120,7 @@ decimal ([1-9][0-9]*)|0
     yylval.ast = temp;
     return INT_CONST;
 }
+{comment}
 \n
 .
 
