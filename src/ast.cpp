@@ -118,7 +118,7 @@ std::string AST::irgen_UnaryExp(){
         }
     } else if(this->son[0]->type == _IDENT && this->son.size() == 2){
         for(int i=0;i<this->son[1]->son.size();i++){
-            val1 = this->son[1]->son[0]->son[0]->irgen_AddExp();
+            val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
             print_indent();
             fprintf(yyout,"param %s\n", val1.c_str());
         }
