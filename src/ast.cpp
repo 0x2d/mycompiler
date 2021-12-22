@@ -19,6 +19,7 @@ int symtable_i = 1; //下一个要打开的符号表编号
 int label_in_global;   //最内层代码块的进入标号
 int label_out_global;  
 bool returned = false;  //是否已经打印return
+bool wait_for_pointer = false;  //用于判断对于数组的引用是否生成指针
 
 void print_indent(){
     for(int indent_temp=0;indent_temp<indent;indent_temp++){
@@ -79,6 +80,12 @@ std::string AST::irgen_LVal(bool isleft){
             print_indent();
             fprintf(yyout,"%s = %s + %s\n",val1.c_str(),val1.c_str(),val3.c_str());
         }
+        if(wait_for_pointer){
+            print_indent();
+            fprintf(yyout,"%s = %s + %s\n",val1.c_str(),entry_temp->eeyore_id.c_str(),val1.c_str());
+            wait_for_pointer = false;
+            return val1;
+        }
         if(isleft){
             return entry_temp->eeyore_id+"["+val1+"]";
         } else{
@@ -117,6 +124,14 @@ std::string AST::irgen_UnaryExp(){
         ENTRY_FUNC *func_temp = (ENTRY_FUNC *)this->son[0]->entry;
         if(this->son.size() == 2){
             for(int i=0;i<this->son[1]->son.size();i++){
+                if(func_temp->symtable){
+                    std::string p_temp = "p"+std::to_string(i);
+                    for(int j=0;j<func_temp->symtable->val.size();j++){
+                        if(func_temp->symtable->val[j]->isParam && p_temp == func_temp->symtable->val[j]->eeyore_id){
+                            wait_for_pointer = func_temp->symtable->val[j]->isArray;
+                        }
+                    }
+                }
                 val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
                 print_indent();
                 fprintf(yyout,"param %s\n", val1.c_str());

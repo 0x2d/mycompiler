@@ -291,11 +291,11 @@ FuncFParam  : BType IDENT '[' ']' ConstExp_temp {
                 $2->entry = new ENTRY_VAL($2->id, symtable_ptr,$5->val*4);
                 ((ENTRY_VAL *)$2->entry)->shape.push_back(1);
                 if($5->son.size() != 0){
-                    ((ENTRY_VAL *)$2->entry)->isArray = true;
                     for(int i=0;i<$5->son.size();i++){
                         ((ENTRY_VAL *)$2->entry)->shape.push_back($5->son[i]->val);
                     }
                 }
+                ((ENTRY_VAL *)$2->entry)->isArray = true;
                 ((ENTRY_VAL *)$2->entry)->isParam = true;
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back($1);
