@@ -1,13 +1,34 @@
-int a,b,c;
+int n;
 
-void add(int a,int b){
-    c=a+b;
-    return;
+int gcd(int m,int n)
+{ 
+    int t;
+    int r;
+
+    if(m<n) { t=m;m=n;n=t; }
+
+    r=m%n;
+
+    while(r!=0)
+    {
+        m=n;   
+        n=r;   
+        r=m%n;  
+    }
+
+  return n;
+
 }
 
-int main(){
-    a=3;
-    b=2;
-    add(a,b);
-    return c;
+int main()
+{
+    //newline=10;
+    int i;
+    int m;
+    //m = 1478;
+    //int t;
+    i=getint();
+    m=getint();
+    
+    return gcd(i,m);
 }

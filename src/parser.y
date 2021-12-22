@@ -596,8 +596,10 @@ MulExp  : UnaryExp {
             $$ = $1;
         }
         | MulExp '%' UnaryExp {
-            $1->val = $1->val % $3->val;
-            $1->isint = $1->isint && $3->isint;
+            if($3->val != 0){
+                $1->val = $1->val % $3->val;
+                $1->isint = $1->isint && $3->isint;
+            }
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
