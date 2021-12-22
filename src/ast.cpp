@@ -128,6 +128,7 @@ std::string AST::irgen_UnaryExp(){
             print_indent();
             fprintf(yyout,"%s = call f_%s\n",val1.c_str(),func_temp->id);
         } else{
+            t_i++;
             print_indent();
             fprintf(yyout,"call f_%s\n",func_temp->id);
         }
