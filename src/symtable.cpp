@@ -19,7 +19,11 @@ bool TABLE::Find(bool isVal, char *id, bool recursive){
             }
         }
     } else{
-        //
+        for(int i=0;i<this->func.size();i++){
+            if(strcmp(id,this->func[i]->id) == 0){
+                return true;
+            }
+        }
     }
     return false;
 }
@@ -35,6 +39,10 @@ ENTRY * TABLE::FindAndReturn(bool isVal, char *id){
             return this->father->FindAndReturn(isVal,id);
         }
     } else{
-        //
+        for(int i=0;i<this->func.size();i++){
+            if(strcmp(id,this->func[i]->id) == 0){
+                return this->func[i];
+            }
+        }
     }
 }

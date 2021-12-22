@@ -89,7 +89,6 @@ std::string AST::irgen_LVal(bool isleft){
 }
 
 std::string AST::irgen_UnaryExp(){
-    //UnaryExp      ::= PrimaryExp | IDENT "(" [FuncRParams] ")" | UnaryOp UnaryExp;
     std::string val1, val2;
     if(this->son[0]->type == _PrimaryExp){
         AST *ptr = this->son[0]; //PrimaryExp
@@ -106,8 +105,34 @@ std::string AST::irgen_UnaryExp(){
         val2 = this->son[1]->irgen_UnaryExp();
         print_indent();
         fprintf(yyout,"%s = %c %s\n",val1.c_str(),this->son[0]->son[0]->op,val2.c_str());
+    } else if(this->son[0]->type == _IDENT && this->son.size() == 1){
+        ENTRY_FUNC *func_temp = (ENTRY_FUNC *)this->son[0]->entry;
+        if(func_temp->isreturn){
+            val1 = "t"+std::to_string(t_i);
+            t_i++;
+            print_indent();
+            fprintf(yyout,"%s = call f_%s\n",val1.c_str(),func_temp->id);
+        } else{
+            print_indent();
+            fprintf(yyout,"call f_%s\n",func_temp->id);
+        }
+    } else if(this->son[0]->type == _IDENT && this->son.size() == 2){
+        for(int i=0;i<this->son[1]->son.size();i++){
+            val1 = this->son[1]->son[0]->son[0]->irgen_AddExp();
+            print_indent();
+            fprintf(yyout,"param %s\n", val1.c_str());
+        }
+        ENTRY_FUNC *func_temp = (ENTRY_FUNC *)this->son[0]->entry;
+        if(func_temp->isreturn){
+            val1 = "t"+std::to_string(t_i);
+            t_i++;
+            print_indent();
+            fprintf(yyout,"%s = call f_%s\n",val1.c_str(),func_temp->id);
+        } else{
+            print_indent();
+            fprintf(yyout,"call f_%s\n",func_temp->id);
+        }
     }
-    //
     return val1;
 }
 
@@ -336,7 +361,7 @@ void AST::irgen_Stmt(){
         print_indent();
         fprintf(yyout,"%s = %s\n",left_temp.c_str(),right_temp.c_str());
     } else if(this->son[0]->type == _Exp){
-        return;
+        this->son[0]->son[0]->irgen_AddExp();
     } else if(this->son[0]->type == _Block){
         this->son[0]->irgen_Block();
     } else if(this->son[0]->type == _WHILE){
@@ -467,14 +492,6 @@ void AST::irgen_Decl(){
 }
 
 void AST::irgen(){
-    new ENTRY_FUNC("getint",root_symtable,nullptr,0,0);
-    new ENTRY_FUNC("getch",root_symtable,nullptr,0,0);
-    new ENTRY_FUNC("getarray",root_symtable,nullptr,0,1);
-    new ENTRY_FUNC("putint",root_symtable,nullptr,0,1);
-    new ENTRY_FUNC("putch",root_symtable,nullptr,0,1);
-    new ENTRY_FUNC("putarray",root_symtable,nullptr,0,2);
-    new ENTRY_FUNC("starttime",root_symtable,nullptr,0,0);
-    new ENTRY_FUNC("stoptime",root_symtable,nullptr,0,0);
     print_decl(root_symtable, NumberOfTemp_global);
     for(int i=0;i<this->son.size();i++){
         if(this->son[i]->type==_Decl){

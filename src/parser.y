@@ -239,27 +239,14 @@ InitVal_temp    : InitVal {
                 }
                 ;
 
-FuncDef : BType IDENT '(' FuncFParams ')' {
+FuncDef : BType IDENT '(' {
             symtable_ptr = new TABLE("func", symtable_ptr);
             symtable_vector.push_back(symtable_ptr);
             NumberOfTemp = 0;
-        } Block {
+        } FuncFParams ')'  Block {
             symtable_ptr->space = $2->id;
-            for(int i=0;i<$4->son.size();i++){
-                AST *param_temp = $4->son[i];   //FuncFParam
-                if(param_temp->son.size() == 2){
-                    param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,4);
-                } else{
-                    param_temp->son[1]->entry = new ENTRY_VAL(param_temp->son[1]->id, symtable_ptr,param_temp->son[2]->val*4);
-                    ((ENTRY_VAL *)param_temp->son[1]->entry)->isArray = true;
-                    ((ENTRY_VAL *)param_temp->son[1]->entry)->shape.push_back(1);
-                    for(int i=0;i<param_temp->son[2]->son.size();i++){
-                        ((ENTRY_VAL *)param_temp->son[1]->entry)->shape.push_back(param_temp->son[2]->son[i]->val);
-                    }
-                }
-                ((ENTRY_VAL *)param_temp->son[1]->entry)->isParam = true;
-            }
-            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr,NumberOfTemp,$4->son.size());
+            bool isreturn = ($1->son[0]->type == _INT);
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father,isreturn, symtable_ptr,NumberOfTemp,$5->son.size());
             NumberOfTemp_global -= NumberOfTemp;
             NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
@@ -270,13 +257,14 @@ FuncDef : BType IDENT '(' FuncFParams ')' {
             $$ = temp;
             symtable_ptr = symtable_ptr->father;
         }
-        | BType IDENT '(' ')' {
+        | BType IDENT '(' {
             symtable_ptr = new TABLE("func", symtable_ptr);
             symtable_vector.push_back(symtable_ptr);
             NumberOfTemp = 0;
-        } Block {
+        } ')'  Block {
             symtable_ptr->space = $2->id;
-            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, symtable_ptr,NumberOfTemp,0);
+            bool isreturn = ($1->son[0]->type == _INT);
+            $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, isreturn, symtable_ptr,NumberOfTemp,0);
             NumberOfTemp_global -= NumberOfTemp;
             NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
@@ -300,6 +288,15 @@ FuncFParams : FuncFParam {
             ;
 
 FuncFParam  : BType IDENT '[' ']' ConstExp_temp {
+                $2->entry = new ENTRY_VAL($2->id, symtable_ptr,$5->val*4);
+                ((ENTRY_VAL *)$2->entry)->shape.push_back(1);
+                if($5->son.size() != 0){
+                    ((ENTRY_VAL *)$2->entry)->isArray = true;
+                    for(int i=0;i<$5->son.size();i++){
+                        ((ENTRY_VAL *)$2->entry)->shape.push_back($5->son[i]->val);
+                    }
+                }
+                ((ENTRY_VAL *)$2->entry)->isParam = true;
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -307,6 +304,8 @@ FuncFParam  : BType IDENT '[' ']' ConstExp_temp {
                 $$ = temp;
             }
             | BType IDENT {
+                $2->entry = new ENTRY_VAL($2->id, symtable_ptr,4);
+                ((ENTRY_VAL *)$2->entry)->isParam = true;
                 AST *temp = new AST(_FuncFParam);
                 temp->son.push_back($1);
                 temp->son.push_back($2);
@@ -548,12 +547,30 @@ UnaryExp    : PrimaryExp {
                 $$ = temp;
             }
             | IDENT '(' FuncRParams ')' {
+                if(root_symtable->Find(false,$1->id,false)){
+                    $1->entry = root_symtable->FindAndReturn(false,$1->id);
+                } else{
+                    yyerror("cite non-decleared function\n");
+                }
+                if(((ENTRY_FUNC *)$1->entry)->isreturn){
+                    NumberOfTemp++;
+                    NumberOfTemp_global++;
+                }
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 temp->son.push_back($3);
                 $$ = temp;
             }
             | IDENT '(' ')' {
+                if(root_symtable->Find(false,$1->id,false)){
+                    $1->entry = root_symtable->FindAndReturn(false,$1->id);
+                } else{
+                    yyerror("cite non-decleared function\n");
+                }
+                if(((ENTRY_FUNC *)$1->entry)->isreturn){
+                    NumberOfTemp++;
+                    NumberOfTemp_global++;
+                }
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 $$ = temp;

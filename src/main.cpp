@@ -48,6 +48,14 @@ int main(int argc, char *argv[]){
     root_symtable = new TABLE("root");
     symtable_vector.push_back(root_symtable);
     symtable_ptr = root_symtable;
+    new ENTRY_FUNC("getint",root_symtable,true,nullptr,0,0);
+    new ENTRY_FUNC("getch",root_symtable,true,nullptr,0,0);
+    new ENTRY_FUNC("getarray",root_symtable,true,nullptr,0,1);
+    new ENTRY_FUNC("putint",root_symtable,false,nullptr,0,1);
+    new ENTRY_FUNC("putch",root_symtable,false,nullptr,0,1);
+    new ENTRY_FUNC("putarray",root_symtable,false,nullptr,0,2);
+    new ENTRY_FUNC("starttime",root_symtable,false,nullptr,0,0);
+    new ENTRY_FUNC("stoptime",root_symtable,false,nullptr,0,0);
     yyparse();
     root->irgen();
 
