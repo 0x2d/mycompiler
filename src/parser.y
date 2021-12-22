@@ -344,9 +344,6 @@ BlockItem   : Decl {
             ;
 
 Stmt    : LVal '=' Exp ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             if($1->son.size() > 1){
                 NumberOfTemp += 2;
                 NumberOfTemp_global += 2;
@@ -357,17 +354,11 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | Exp ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
         }
         | ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             $$ = temp;
         }
@@ -375,18 +366,12 @@ Stmt    : LVal '=' Exp ';' {
             symtable_ptr = new TABLE("block", symtable_ptr);
             symtable_vector.push_back(symtable_ptr);
         } Block {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             symtable_ptr = symtable_ptr->father;
             AST *temp = new AST(_Stmt);
             temp->son.push_back($2);
             $$ = temp;
         }
         | IF '(' Cond ')' Stmt ELSE Stmt {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -396,9 +381,6 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | IF '(' Cond ')' Stmt {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -406,9 +388,6 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | WHILE '(' Cond ')' Stmt {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($3);
@@ -416,34 +395,22 @@ Stmt    : LVal '=' Exp ';' {
             $$ = temp;
         }
         | BREAK ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
         }
         | CONTINUE ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
         }
         | RETURN Exp ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             temp->son.push_back($2);
             $$ = temp;
         }
         | RETURN ';' {
-            #if debug_parser_y
-                printf("r Stmt\n");
-            #endif
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
             $$ = temp;
@@ -451,9 +418,6 @@ Stmt    : LVal '=' Exp ';' {
         ;
 
 Exp : AddExp {
-        #if debug_parser_y
-            printf("r Exp\n");
-        #endif
         AST *temp = new AST(_Exp);
         if($1->son.size() > 1){
             NumberOfTemp++;
@@ -467,9 +431,6 @@ Exp : AddExp {
     ;
 
 Cond    : LOrExp {
-            #if debug_parser_y
-                printf("r Cond\n");
-            #endif
             if($1->son.size() > 1){
                 NumberOfTemp++;
                 NumberOfTemp_global++;
@@ -615,17 +576,11 @@ UnaryOp : '+' {
         ;
 
 FuncRParams : Exp {
-                #if debug_parser_y
-                    printf("r FuncRParams\n");
-                #endif
                 AST *temp = new AST(_FuncRParams);
                 temp->son.push_back($1);
                 $$ = temp;
             }
             | FuncRParams ',' Exp {
-                #if debug_parser_y
-                    printf("r FuncRParams\n");
-                #endif
                 $1->son.push_back($3);
                 $$ = $1;
             }
@@ -675,6 +630,10 @@ AddExp  : MulExp {
             $$ = temp;
         }
         | AddExp '+' MulExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->val = $1->val + $3->val;
             $1->isint = $1->isint && $3->isint;
             $1->son.push_back($2);
@@ -682,6 +641,10 @@ AddExp  : MulExp {
             $$ = $1;
         }
         | AddExp '-' MulExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->val = $1->val - $3->val;
             $1->isint = $1->isint && $3->isint;
             $1->son.push_back($2);
@@ -701,24 +664,40 @@ RelExp  : AddExp {
             $$ = temp;
         }
         | RelExp '<' AddExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp '>' AddExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp LE AddExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | RelExp GE AddExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
@@ -737,12 +716,20 @@ EqExp   : RelExp {
             $$ = temp;
         }
         | EqExp EQ RelExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
             $$ = $1;
         }
         | EqExp NE RelExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
@@ -761,6 +748,10 @@ LAndExp : EqExp {
             $$ = temp;
         }
         | LAndExp AND EqExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);
@@ -779,6 +770,10 @@ LOrExp  : LAndExp {
             $$ = temp;
         }
         | LOrExp OR LAndExp {
+            if($3->son.size() > 1){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            }
             $1->isint = false;
             $1->son.push_back($2);
             $1->son.push_back($3);

@@ -94,7 +94,7 @@ comment ("//".*)
     yylval.ast = temp;
     return AND;
 }
-"OR"    {
+"||"    {
     AST *temp = new AST(_OR);
     yylval.ast = temp;
     return OR;
