@@ -18,6 +18,7 @@ int label = 0;  //global label
 int symtable_i = 1; //下一个要打开的符号表编号
 int label_in_global;   //最内层代码块的进入标号
 int label_out_global;  
+bool returned = false;  //是否已经打印return
 
 void print_indent(){
     for(int indent_temp=0;indent_temp<indent;indent_temp++){
@@ -341,6 +342,7 @@ void AST::irgen_Stmt(){
         return;
     }
     if(this->son[0]->type == _RETURN){
+        returned = true;
         if(this->son.size() == 1){
             print_indent();
             fprintf(yyout,"return\n");
@@ -435,8 +437,13 @@ void AST::irgen_FuncDef(){
 
     indent++;
     p_i = 0;
+    returned = false;
     print_decl(func_ptr->symtable,func_ptr->NumberOfTemp);
     this->son[this->son.size()-1]->irgen_Block();
+    if(!returned){
+        print_indent();
+        fprintf(yyout,"return\n");
+    }
     indent--;
     
     print_indent();
