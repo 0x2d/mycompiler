@@ -101,11 +101,15 @@ std::string AST::irgen_UnaryExp(){
             val1 = ptr->son[0]->son[0]->irgen_AddExp();
         }
     } else if(this->son[0]->type == _UnaryOp){
-        val1 = "t"+std::to_string(t_i);
-        t_i++;
-        val2 = this->son[1]->irgen_UnaryExp();
-        print_indent();
-        fprintf(yyout,"%s = %c %s\n",val1.c_str(),this->son[0]->son[0]->op,val2.c_str());
+        if(this->son[0]->son[0]->op != '+'){
+            val1 = "t"+std::to_string(t_i);
+            t_i++;
+            val2 = this->son[1]->irgen_UnaryExp();
+            print_indent();
+            fprintf(yyout,"%s = %c %s\n",val1.c_str(),this->son[0]->son[0]->op,val2.c_str());
+        } else{
+            val1 = this->son[1]->irgen_UnaryExp();
+        }
     } else if(this->son[0]->type == _IDENT){
         if(root_symtable->Find(false,this->son[0]->id,false)){
             this->son[0]->entry = root_symtable->FindAndReturn(false,this->son[0]->id);

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-num=67
+num=29
 i=0
 echo --------test.c--------
 ./build/compiler -e test.c
