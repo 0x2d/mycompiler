@@ -83,7 +83,6 @@ std::string AST::irgen_LVal(bool isleft){
         if(wait_for_pointer){
             print_indent();
             fprintf(yyout,"%s = %s + %s\n",val1.c_str(),entry_temp->eeyore_id.c_str(),val1.c_str());
-            wait_for_pointer = false;
             return val1;
         }
         if(isleft){
@@ -133,6 +132,7 @@ std::string AST::irgen_UnaryExp(){
                     }
                 }
                 val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
+                wait_for_pointer = false;
                 print_indent();
                 fprintf(yyout,"param %s\n", val1.c_str());
             }
