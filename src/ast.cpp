@@ -434,6 +434,7 @@ void AST::irgen_FuncDef(){
     fprintf(yyout,"f_%s [%d]\n",func_ptr->id, func_ptr->NumberOfParam);
 
     indent++;
+    p_i = 0;
     print_decl(func_ptr->symtable,func_ptr->NumberOfTemp);
     this->son[this->son.size()-1]->irgen_Block();
     indent--;
