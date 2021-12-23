@@ -68,17 +68,22 @@ std::string AST::irgen_LVal(bool isleft){
         int size_temp = entry_temp->size;
         val1 = "t"+std::to_string(t_i);
         t_i++;
-        val3 = "t"+std::to_string(t_i);
-        t_i++;
-        print_indent();
-        fprintf(yyout,"%s = 0\n",val1.c_str());
+        if(this->son.size() > 2){
+            val3 = "t"+std::to_string(t_i);
+            t_i++;
+        }
         for(int i=1;i<this->son.size();i++){
             size_temp /= entry_temp->shape[i-1];
             val2 = this->son[i]->son[0]->irgen_AddExp();
-            print_indent();
-            fprintf(yyout,"%s = %s * %d\n",val3.c_str(),val2.c_str(),size_temp);
-            print_indent();
-            fprintf(yyout,"%s = %s + %s\n",val1.c_str(),val1.c_str(),val3.c_str());
+            if(i==1){
+                print_indent();
+                fprintf(yyout,"%s = %s * %d\n",val1.c_str(),val2.c_str(),size_temp);
+            } else{
+                print_indent();
+                fprintf(yyout,"%s = %s * %d\n",val3.c_str(),val2.c_str(),size_temp);
+                print_indent();
+                fprintf(yyout,"%s = %s + %s\n",val1.c_str(),val1.c_str(),val3.c_str());
+            }
         }
         if(wait_for_pointer){
             print_indent();

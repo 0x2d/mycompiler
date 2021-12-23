@@ -3,7 +3,6 @@
     #include<string.h>
     #include"ast.h"
     #include"symtable.h"
-    #define debug_parser_y 0
     extern FILE *yyin;
     extern FILE *yyout;
     extern int yylex();
@@ -344,7 +343,10 @@ BlockItem   : Decl {
             ;
 
 Stmt    : LVal '=' Exp ';' {
-            if($1->son.size() > 1){
+            if($1->son.size() == 2){
+                NumberOfTemp++;
+                NumberOfTemp_global++;
+            } else if($1->son.size() > 2){
                 NumberOfTemp += 2;
                 NumberOfTemp_global += 2;
             }
@@ -439,9 +441,6 @@ Cond    : LOrExp {
         ;
 
 LVal    : IDENT {
-            #if debug_parser_y
-                printf("r LVal\n");
-            #endif
             if(symtable_ptr->Find(true,$1->id,true)){
                 $1->entry = symtable_ptr->FindAndReturn(true,$1->id);
             } else{
@@ -453,18 +452,12 @@ LVal    : IDENT {
             $$ = temp;
         }
         | LVal '[' Exp ']' {
-            #if debug_parser_y
-                printf("r LVal\n");
-            #endif
             $1->son.push_back($3);
             $$ = $1;
         }
         ;
 
 PrimaryExp  : '(' Exp ')' {
-                #if debug_parser_y
-                    printf("r PrimaryExp\n");
-                #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->val = $2->val;
                 temp->isint = $2->isint;
@@ -472,11 +465,11 @@ PrimaryExp  : '(' Exp ')' {
                 $$ = temp;
             }
             | LVal {
-                #if debug_parser_y
-                    printf("r PrimaryExp\n");
-                #endif
                 AST *temp = new AST(_PrimaryExp);
-                if($1->son.size() > 1){
+                if($1->son.size() == 2){
+                    NumberOfTemp++;
+                    NumberOfTemp_global++;
+                } else if($1->son.size() > 2){
                     NumberOfTemp += 2;
                     NumberOfTemp_global += 2;
                 }
@@ -485,9 +478,6 @@ PrimaryExp  : '(' Exp ')' {
                 $$ = temp;
             }
             | INT_CONST {
-                #if debug_parser_y
-                    printf("r PrimaryExp\n");
-                #endif
                 AST *temp = new AST(_PrimaryExp);
                 temp->val = $1->val;
                 temp->isint = true;
