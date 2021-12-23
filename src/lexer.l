@@ -102,8 +102,9 @@ comment ("//".*)
     return OR;
 }
 {ident} {
-    char *id = (char *)malloc(sizeof(yytext));
-    memset(id, '\0', sizeof(id));
+    int len = strlen(yytext)+1;
+    char *id = (char *)malloc(len);
+    memset(id, '\0', len);
     strcpy(id,yytext);
     AST *temp = new AST(_IDENT, id);
     yylval.ast = temp;
