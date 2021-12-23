@@ -127,7 +127,10 @@ std::string AST::irgen_UnaryExp(){
         }
         ENTRY_FUNC *func_temp = (ENTRY_FUNC *)this->son[0]->entry;
         if(this->son.size() == 2){
-            for(int i=0;i<this->son[1]->son.size();i++){
+            int param_num = this->son[1]->son.size();
+            std::string params[param_num];
+            
+            for(int i=0;i<param_num;i++){
                 if(func_temp->symtable){
                     std::string p_temp = "p"+std::to_string(i);
                     for(int j=0;j<func_temp->symtable->val.size();j++){
@@ -138,8 +141,11 @@ std::string AST::irgen_UnaryExp(){
                 }
                 val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
                 wait_for_pointer = false;
+                params[i] = val1;
+            }
+            for(int i=0;i<param_num;i++){
                 print_indent();
-                fprintf(yyout,"param %s\n", val1.c_str());
+                fprintf(yyout,"param %s\n", params[i].c_str());
             }
         }
         if(func_temp->isreturn){
