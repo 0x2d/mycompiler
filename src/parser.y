@@ -520,10 +520,10 @@ UnaryExp    : PrimaryExp {
             }
             | UnaryOp UnaryExp {
                 AST *temp = new AST(_UnaryExp);
-                if($1->op == '-'){
-                    temp->val = 0-$2->val;
+                if($1->son[0]->op == '-'){
+                    temp->val = 0-($2->val);
                     temp->isint = $2->isint;
-                } else if($1->op == '!'){
+                } else if($1->son[0]->op == '!'){
                     if($2->val != 0){
                         temp->val = 0;
                     } else{

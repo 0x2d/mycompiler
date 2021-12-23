@@ -1,44 +1,87 @@
-int a, b, d;
-
-int set_a(int val) { a = val; return a; }
-int set_b(int val) { b = val; return b; }
-int set_d(int val) { d = val; return d; }
-
-int main()
+int n;
+int Merge(int array[], int low, int middle, int high)
 {
-    a = 2; b = 3;
-    if (set_a(0) && set_b(1)) {}
-    putint(a); putch(32);
-    putint(b); putch(32);
+    int n1;
+    n1 = middle - low + 1;
+    int n2;
+    n2 = high - middle;
+    int L[10];
+    int R[10];
+    int i;
+    i = 0;
+    int j;
+    j = 0;
+ 
+    while(i < n1){
+        L[i] = array[i + low];
+        i = i + 1;        
+    }
+    while(j < n2){
+        R[j] = array[j + middle  +1];
+        j = j + 1;        
+    }
+    i = 0;
+    j = 0;
+    int k;
+    k = low;
+    while(i!=n1 && j!= n2)
+    {   
+        if(L[i] < R[j] + 1){
+            array[k] = L[i];
+            k = k + 1;
+            i = i + 1;
+        }
+        else{
+            array[k] = R[j];
+            k = k + 1;
+            j = j + 1;
+        }
+    }
+    while(i < n1){
+        array[k] = L[i];
+        k = k + 1;
+        i = i + 1;
+        
+    }
+    while(j < n2){
+        array[k] = R[j];
+        k = k + 1;
+        j = j + 1;
+    }
+    return 0;
+}
+ 
+int MergeSort(int array[], int p, int q)
+{
+    if(p < q)
+    {
+        int mid;
+        mid = (p+q)/2;
+        int tmp;
+        tmp = MergeSort(array, p, mid);
+        tmp = mid + 1;
+        tmp = MergeSort(array, tmp, q);
+        tmp = Merge(array,p, mid, q);
+    }
+    return 0;
+}
 
-    a = 2; b = 3;
-    if (set_a(0) && set_b(1)) ;
-    putint(a); putch(32);
-    putint(b); putch(10);
-
-    const int c = 1;
-    d = 2;
-    if (c >= 1 && set_d(3)) ;
-    putint(d); putch(32);
-    if (c <= 1 || set_d(4)) {}
-    putint(d); putch(10);
-
-    if (16 >= (3 - (2 + 1))) { putch(65); }
-    if ((25 - 7) != (36 - 6 * 3)) putch(66);
-    if (1 < 8 != 7 % 2) { putch(67); }
-    if (3 > 4 == 0) { putch(68); }
-    if (1 == 0x66 <= 077) putch(69);
-    if (5 - 6 == -!0) putch(70);
-    putch(10);
-
-    int i0 = 0, i1 = 1, i2 = 2, i3 = 3, i4 = 4;
-    while (i0 && i1) putch(32);
-    if (i0 || i1) putch(67);
-    if (i0 >= i1 || i1 <= i0) putch(72);
-    if (i2 >= i1 && i4 != i3) { putch(73); }
-    if (i0 == !i1 && i3 < i3 || i4 >= i4) { putch(74); }
-    if (i0 == !i1 || i3 < i3 && i4 >= i4) putch(75);
-    putch(10);
-
+int main(){
+    n = 10;
+    int a[10];
+    a[0]=4;a[1]=3;a[2]=9;a[3]=2;a[4]=0;
+    a[5]=1;a[6]=6;a[7]=5;a[8]=7;a[9]=8;
+    int i;
+    i = 0;
+    int tmp;
+    tmp = n - 1;
+    i = MergeSort(a, i, tmp);
+    while (i < n) {
+        tmp = a[i];
+        putint(tmp);
+        tmp = 10;
+        putch(tmp);
+        i = i + 1;
+    }
     return 0;
 }
