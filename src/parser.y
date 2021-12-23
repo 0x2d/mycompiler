@@ -431,10 +431,6 @@ Exp : AddExp {
     ;
 
 Cond    : LOrExp {
-            if($1->son.size() > 1){
-                NumberOfTemp++;
-                NumberOfTemp_global++;
-            }
             AST *temp = new AST(_Cond);
             temp->isint = $1->isint;
             temp->son.push_back($1);
@@ -748,10 +744,6 @@ LAndExp : EqExp {
         ;
 
 LOrExp  : LAndExp {
-            if($1->son.size() > 1){
-                NumberOfTemp++;
-                NumberOfTemp_global++;
-            }
             AST *temp = new AST(_LOrExp);
             temp->isint = $1->isint;
             temp->son.push_back($1);

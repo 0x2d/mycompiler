@@ -33,8 +33,8 @@ public:
     std::string irgen_MulExp();
     std::string irgen_UnaryExp();
     std::string irgen_LVal(bool isleft);
-    std::string irgen_LOrExp();
-    std::string irgen_LAndExp();
+    void irgen_LOrExp(int label_true, int label_false);
+    void irgen_LAndExp(int label_false);
     std::string irgen_EqExp();
     std::string irgen_RelExp();
 
@@ -48,6 +48,7 @@ public:
     bool isint = false;
 
     int label_in;
+    int label_in2;
     int label_out;
 };
 

@@ -313,47 +313,27 @@ std::string AST::irgen_EqExp(){
     }
 }
 
-std::string AST::irgen_LAndExp(){
-    std::string val1, val2, val3;
-    val1 = this->son[0]->irgen_EqExp();
-    if(this->son.size() == 1){
-        return val1;
-    } else{
-        val3 = "t"+std::to_string(t_i);
-        t_i++;
-        for(int i=1; i < this->son.size(); i+=2){
-            val2 = this->son[i+1]->irgen_EqExp();
-            if(i == 1){
-                print_indent();
-                fprintf(yyout,"%s = %s && %s\n",val3.c_str(), val1.c_str(),val2.c_str());
-            } else{
-                print_indent();
-                fprintf(yyout,"%s = %s && %s\n",val3.c_str(), val3.c_str(),val2.c_str());
-            }
-        }
-        return val3;
+void AST::irgen_LAndExp(int label_false){
+    std::string val1;
+    for(int i=0;i< this->son.size();i+=2){
+        val1 = this->son[i]->irgen_EqExp();
+        print_indent();
+        fprintf(yyout,"if %s == 0 goto l%d\n",val1.c_str(),label_false);
     }
 }
 
-std::string AST::irgen_LOrExp(){
-    std::string val1, val2, val3;
-    val1 = this->son[0]->irgen_LAndExp();
-    if(this->son.size() == 1){
-        return val1;
-    } else{
-        val3 = "t"+std::to_string(t_i);
-        t_i++;
-        for(int i=1; i < this->son.size(); i+=2){
-            val2 = this->son[i+1]->irgen_LAndExp();
-            if(i == 1){
-                print_indent();
-                fprintf(yyout,"%s = %s || %s\n",val3.c_str(), val1.c_str(),val2.c_str());
-            } else{
-                print_indent();
-                fprintf(yyout,"%s = %s || %s\n",val3.c_str(), val3.c_str(),val2.c_str());
-            }
+void AST::irgen_LOrExp(int label_true, int label_false){
+    int size_temp = this->son.size();
+    for(int i=0;i< size_temp;i+=2){
+        if(i+2 < size_temp){
+            this->son[i]->irgen_LAndExp(label);
+            print_indent();
+            fprintf(yyout,"goto l%d\n",label_true);
+            fprintf(yyout,"l%d:\n",label);
+            label++;
+        } else{
+            this->son[i]->irgen_LAndExp(label_false);
         }
-        return val3;
     }
 }
 
@@ -382,49 +362,41 @@ void AST::irgen_Stmt(){
         this->son[0]->irgen_Block();
     } else if(this->son[0]->type == _WHILE){
         this->label_in = label;
-        this->label_out = label+1;
-        label += 2;
+        this->label_in2 = label+1;
+        this->label_out = label+2;
+        label += 3;
         label_in_global = this->label_in;
         label_out_global = this->label_out;
+
         fprintf(yyout,"l%d:\n",this->label_in);
-
-        std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
-        print_indent();
-        fprintf(yyout,"if %s == 0 goto l%d\n",cond_temp.c_str(),this->label_out);
-
+        this->son[1]->son[0]->irgen_LOrExp(this->label_in2, this->label_out);
+        fprintf(yyout,"l%d:\n",this->label_in2);
         this->son[2]->irgen_Stmt();
-
         print_indent();
         fprintf(yyout,"goto l%d\n",this->label_in);
         fprintf(yyout,"l%d:\n",this->label_out);
     } else if(this->son[0]->type == _IF && this->son.size() == 5){
         this->label_in = label;
+        this->label_in2 = label+1;
+        this->label_out = label+2;
+        label += 3;
+
+        this->son[1]->son[0]->irgen_LOrExp(this->label_in,this->label_in2);
+        fprintf(yyout,"l%d:\n",this->label_in);
+        this->son[2]->irgen_Stmt();
+        print_indent();
+        fprintf(yyout,"goto l%d\n",this->label_out);
+        fprintf(yyout,"l%d:\n",this->label_in2);
+        this->son[4]->irgen_Stmt();
+        fprintf(yyout,"l%d:\n",this->label_out);
+    } else if(this->son[0]->type == _IF && this->son.size() == 3){
+        this->label_in = label;
         this->label_out = label+1;
         label += 2;
 
-        std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
-        print_indent();
-        fprintf(yyout,"if %s == 0 goto l%d\n",cond_temp.c_str(),this->label_in);
-
-        this->son[2]->irgen_Stmt();
-
-        print_indent();
-        fprintf(yyout,"goto l%d\n",this->label_out);
-
+        this->son[1]->son[0]->irgen_LOrExp(this->label_in,this->label_out);
         fprintf(yyout,"l%d:\n",this->label_in);
-        this->son[4]->irgen_Stmt();
-
-        fprintf(yyout,"l%d:\n",this->label_out);
-    } else if(this->son[0]->type == _IF && this->son.size() == 3){
-        this->label_out = label;
-        label++;
-
-        std::string cond_temp = this->son[1]->son[0]->irgen_LOrExp();
-        print_indent();
-        fprintf(yyout,"if %s == 0 goto l%d\n",cond_temp.c_str(),this->label_out);
-
         this->son[2]->irgen_Stmt();
-
         fprintf(yyout,"l%d:\n",this->label_out);
     } else if(this->son[0]->type == _BREAK){
         print_indent();
@@ -448,7 +420,6 @@ void AST::irgen_Block(){
     symtable_ptr = symtable_ptr->father;
 }
 
-//需要在函数开头打印所有声明变量语句，包括T变量和t变量
 void AST::irgen_FuncDef(){
     ENTRY_FUNC *func_ptr = (ENTRY_FUNC *)this->son[1]->entry;
 
