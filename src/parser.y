@@ -15,7 +15,6 @@
     void yyerror(char *str){
         printf("LINE %d in %s : %s\n",yylineno, yytext, str);
     };
-    int NumberOfTemp_global;    //记录程序需要多少全局临时变量
     int NumberOfTemp;   //记录一个函数需要多少临时变量
 %}
 
@@ -246,7 +245,6 @@ FuncDef : BType IDENT '(' {
             symtable_ptr->space = $2->id;
             bool isreturn = ($1->son[0]->type == _INT);
             $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father,isreturn, symtable_ptr,NumberOfTemp,$5->son.size());
-            NumberOfTemp_global -= NumberOfTemp;
             NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
             temp->son.push_back($1);
@@ -264,7 +262,6 @@ FuncDef : BType IDENT '(' {
             symtable_ptr->space = $2->id;
             bool isreturn = ($1->son[0]->type == _INT);
             $2->entry = new ENTRY_FUNC($2->id, symtable_ptr->father, isreturn, symtable_ptr,NumberOfTemp,0);
-            NumberOfTemp_global -= NumberOfTemp;
             NumberOfTemp = 0;
             AST *temp = new AST(_FuncDef);
             temp->son.push_back($1);
@@ -345,10 +342,8 @@ BlockItem   : Decl {
 Stmt    : LVal '=' Exp ';' {
             if($1->son.size() == 2){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             } else if($1->son.size() > 2){
                 NumberOfTemp += 2;
-                NumberOfTemp_global += 2;
             }
             AST *temp = new AST(_Stmt);
             temp->son.push_back($1);
@@ -423,7 +418,6 @@ Exp : AddExp {
         AST *temp = new AST(_Exp);
         if($1->son.size() > 1){
             NumberOfTemp++;
-            NumberOfTemp_global++;
         }
         temp->val = $1->val;
         temp->isint = $1->isint;
@@ -468,10 +462,8 @@ PrimaryExp  : '(' Exp ')' {
                 AST *temp = new AST(_PrimaryExp);
                 if($1->son.size() == 2){
                     NumberOfTemp++;
-                    NumberOfTemp_global++;
                 } else if($1->son.size() > 2){
                     NumberOfTemp += 2;
-                    NumberOfTemp_global += 2;
                 }
                 temp->val = $1->val;
                 temp->son.push_back($1);
@@ -495,7 +487,6 @@ UnaryExp    : PrimaryExp {
             }
             | IDENT '(' FuncRParams ')' {
                 NumberOfTemp++;
-                NumberOfTemp_global++;
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 temp->son.push_back($3);
@@ -503,7 +494,6 @@ UnaryExp    : PrimaryExp {
             }
             | IDENT '(' ')' {
                 NumberOfTemp++;
-                NumberOfTemp_global++;
                 AST *temp = new AST(_UnaryExp);
                 temp->son.push_back($1);
                 $$ = temp;
@@ -533,14 +523,12 @@ UnaryOp : '+' {
         }
         | '-' {
             NumberOfTemp++;
-            NumberOfTemp_global++;
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back($1);
             $$ = temp;
         }
         | '!' {
             NumberOfTemp++;
-            NumberOfTemp_global++;
             AST *temp = new AST(_UnaryOp);
             temp->son.push_back($1);
             $$ = temp;
@@ -595,7 +583,6 @@ MulExp  : UnaryExp {
 AddExp  : MulExp {
             if($1->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             AST *temp = new AST(_AddExp);
             temp->val = $1->val;
@@ -606,7 +593,6 @@ AddExp  : MulExp {
         | AddExp '+' MulExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->val = $1->val + $3->val;
             $1->isint = $1->isint && $3->isint;
@@ -617,7 +603,6 @@ AddExp  : MulExp {
         | AddExp '-' MulExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->val = $1->val - $3->val;
             $1->isint = $1->isint && $3->isint;
@@ -631,7 +616,6 @@ RelExp  : AddExp {
             AST *temp = new AST(_RelExp);
             if($1->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             temp->isint = $1->isint;
             temp->son.push_back($1);
@@ -640,7 +624,6 @@ RelExp  : AddExp {
         | RelExp '<' AddExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -650,7 +633,6 @@ RelExp  : AddExp {
         | RelExp '>' AddExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -660,7 +642,6 @@ RelExp  : AddExp {
         | RelExp LE AddExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -670,7 +651,6 @@ RelExp  : AddExp {
         | RelExp GE AddExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -682,7 +662,6 @@ RelExp  : AddExp {
 EqExp   : RelExp {
             if($1->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             AST *temp = new AST(_EqExp);
             temp->isint = $1->isint;
@@ -692,7 +671,6 @@ EqExp   : RelExp {
         | EqExp EQ RelExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -702,7 +680,6 @@ EqExp   : RelExp {
         | EqExp NE RelExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -714,7 +691,6 @@ EqExp   : RelExp {
 LAndExp : EqExp {
             if($1->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             AST *temp = new AST(_LAndExp);
             temp->isint = $1->isint;
@@ -724,7 +700,6 @@ LAndExp : EqExp {
         | LAndExp AND EqExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -742,7 +717,6 @@ LOrExp  : LAndExp {
         | LOrExp OR LAndExp {
             if($3->son.size() > 1){
                 NumberOfTemp++;
-                NumberOfTemp_global++;
             }
             $1->isint = false;
             $1->son.push_back($2);
@@ -755,7 +729,6 @@ ConstExp    : AddExp {
                 AST *temp = new AST(_ConstExp);
                 if($1->son.size() > 1){
                     NumberOfTemp++;
-                    NumberOfTemp_global++;
                 }
                 temp->val = $1->val;
                 temp->isint = $1->isint;

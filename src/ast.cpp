@@ -7,7 +7,6 @@ extern FILE *yyout;
 extern TABLE *root_symtable;
 extern std::vector<TABLE *>symtable_vector;
 extern TABLE * symtable_ptr;
-extern int NumberOfTemp_global;
 
 AST *root;
 int T_i = 0;    //var
