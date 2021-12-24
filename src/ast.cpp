@@ -466,9 +466,15 @@ void AST::irgen_Decl(){
             ENTRY_VAL *entry_temp = (ENTRY_VAL *)ptr_temp->son[0]->entry;
             if(ptr_temp->son[1]->son.size() == 0){
                 if(ptr_temp->son.size() > 2){
-                    entry_temp->val = ptr_temp->son[2]->son[0]->val;
-                    print_indent();
-                    fprintf(yyout,"%s = %d\n", entry_temp->eeyore_id.c_str(), entry_temp->val);
+                    if(symtable_ptr == root_symtable){
+                        entry_temp->val = ptr_temp->son[2]->son[0]->val;
+                        print_indent();
+                        fprintf(yyout,"%s = %d\n", entry_temp->eeyore_id.c_str(), entry_temp->val);
+                    } else{
+                        std::string val_temp = ptr_temp->son[2]->son[0]->son[0]->irgen_AddExp();
+                        print_indent();
+                        fprintf(yyout,"%s = %s\n", entry_temp->eeyore_id.c_str(), val_temp.c_str());
+                    }
                 } else{
                     if(symtable_ptr == root_symtable){
                         entry_temp->val = 0;
@@ -476,6 +482,7 @@ void AST::irgen_Decl(){
                 }
             } else {
                 if(ptr_temp->son.size() > 2){
+                    entry_temp->arr = new int [entry_temp->size/4];
                     ptr_temp->son[2]->irgen_InitVal(0, 0, entry_temp);
                 }
             }
