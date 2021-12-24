@@ -466,9 +466,9 @@ void AST::irgen_Decl(){
             ENTRY_VAL *entry_temp = (ENTRY_VAL *)ptr_temp->son[0]->entry;
             if(ptr_temp->son[1]->son.size() == 0){
                 if(ptr_temp->son.size() > 2){
-                    std::string val_temp = ptr_temp->son[2]->son[0]->son[0]->irgen_AddExp();
+                    entry_temp->val = ptr_temp->son[2]->son[0]->val;
                     print_indent();
-                    fprintf(yyout,"%s = %s\n", entry_temp->eeyore_id.c_str(), val_temp.c_str());
+                    fprintf(yyout,"%s = %d\n", entry_temp->eeyore_id.c_str(), entry_temp->val);
                 } else{
                     if(symtable_ptr == root_symtable){
                         entry_temp->val = 0;
@@ -476,7 +476,6 @@ void AST::irgen_Decl(){
                 }
             } else {
                 if(ptr_temp->son.size() > 2){
-                    entry_temp->arr = new int [entry_temp->size/4];
                     ptr_temp->son[2]->irgen_InitVal(0, 0, entry_temp);
                 }
             }
@@ -501,7 +500,7 @@ void AST::irgen_Decl(){
 }
 
 void AST::irgen(){
-    print_decl(root_symtable, NumberOfTemp_global);
+    print_decl(root_symtable, 0);
     for(int i=0;i<this->son.size();i++){
         if(this->son[i]->type==_Decl){
             this->son[i]->irgen_Decl();
