@@ -372,6 +372,8 @@ void AST::irgen_Stmt(){
     } else if(this->son[0]->type == _Block){
         this->son[0]->irgen_Block();
     } else if(this->son[0]->type == _WHILE){
+        int label_in_temp = label_in_global;
+        int label_out_temp = label_out_global;
         this->label_in = label;
         this->label_in2 = label+1;
         this->label_out = label+2;
@@ -386,6 +388,9 @@ void AST::irgen_Stmt(){
         print_indent();
         fprintf(yyout,"goto l%d\n",this->label_in);
         fprintf(yyout,"l%d:\n",this->label_out);
+
+        label_in_global = label_in_temp;
+        label_out_global = label_out_temp;
     } else if(this->son[0]->type == _IF && this->son.size() == 5){
         this->label_in = label;
         this->label_in2 = label+1;
