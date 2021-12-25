@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<stack>
 #include<string>
+#include<string.h>
 extern FILE *yyout;
 extern TABLE *root_symtable;
 extern std::vector<TABLE *>symtable_vector;
@@ -135,6 +136,11 @@ std::string AST::irgen_UnaryExp(){
                         if(func_temp->symtable->val[j]->isParam && p_temp == func_temp->symtable->val[j]->eeyore_id){
                             wait_for_pointer = func_temp->symtable->val[j]->isArray;
                         }
+                    }
+                } else{
+                    if(strcmp(func_temp->id,"getarray") == 0 && i == 0
+                        || strcmp(func_temp->id,"putarray") == 0 && i == 1){
+                            wait_for_pointer = true;
                     }
                 }
                 val1 = this->son[1]->son[i]->son[0]->irgen_AddExp();
