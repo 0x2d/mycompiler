@@ -3,8 +3,6 @@
     #include<string.h>
     #include"ast.h"
     #include"symtable.h"
-    extern FILE *yyin;
-    extern FILE *yyout;
     extern int yylex();
     extern int yylineno;
     extern char *yytext;
