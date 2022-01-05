@@ -3,10 +3,13 @@
     #include<stdlib.h>
     #include<string.h>
     //保持以下顺序
-    #include"ast.h"
+    #include"ast_sysy.h"
     #include"parser.tab.hpp"
     //保持以上顺序
+    using namespace sysy;
 %}
+
+%option prefix="sysy"
 
 %x COMMENTS
 
@@ -28,77 +31,77 @@ comment ("//".*)
 
 "int"   {
     AST *temp = new AST(_INT);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return INT;
 }
 "void"  {
     AST *temp = new AST(_VOID);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return VOID;
 }
 "const" {
     AST *temp = new AST(_CONST);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return CONST;
 }
 "if"    {
     AST *temp = new AST(_IF);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return IF;
 }
 "else"  {
     AST *temp = new AST(_ELSE);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return ELSE;
 }
 "while" {
     AST *temp = new AST(_WHILE);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return WHILE;
 }
 "break" {
     AST *temp = new AST(_BREAK);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return BREAK;
 }
 "continue"  {
     AST *temp = new AST(_CONTINUE);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return CONTINUE;
 }
 "return"    {
     AST *temp = new AST(_RETURN);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return RETURN;
 }
 "<="    {
     AST *temp = new AST(_LE);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return LE;
 }
 ">="    {
     AST *temp = new AST(_GE);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return GE;
 }
 "=="    {
     AST *temp = new AST(_EQ);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return EQ;
 }
 "!="    {
     AST *temp = new AST(_NE);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return NE;
 }
 "&&"    {
     AST *temp = new AST(_AND);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return AND;
 }
 "||"    {
     AST *temp = new AST(_OR);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return OR;
 }
 {ident} {
@@ -107,12 +110,12 @@ comment ("//".*)
     memset(id, '\0', len);
     strcpy(id,yytext);
     AST *temp = new AST(_IDENT, id);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return IDENT;
 }
 {operator} {
     AST *temp = new AST(_OP, yytext[0]);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return yytext[0];
 }
 {symbol} {
@@ -120,19 +123,19 @@ comment ("//".*)
 }
 {decimal}   {
     AST *temp = new AST(_INT_CONST,atoi(yytext));
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return INT_CONST;
 }
 {oct}   {
     int val = strtol(yytext, NULL, 8);
     AST *temp = new AST(_INT_CONST,val);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return INT_CONST;
 }
 {hex}   {
     int val = strtol(yytext, NULL, 16);
     AST *temp = new AST(_INT_CONST,val);
-    yylval.ast = temp;
+    sysylval.ast = temp;
     return INT_CONST;
 }
 {comment}

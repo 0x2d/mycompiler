@@ -1,0 +1,163 @@
+var 200 T0
+var T1
+var T2
+var 200 T3
+var 200 T4
+var 400 T5
+T1 = 0
+f_printans [0]
+  var T6
+  var t0
+  var t1
+  var t2
+  var t3
+  var t4
+  var t5
+  var t6
+  var t7
+  t0 = T1 + 1
+  T1 = t0
+  T6 = 1
+l0:
+  t1 = T6 <= T2
+  if t1 == 0 goto l2
+l1:
+  t2 = T6 * 4
+  t2 = T0 + t2
+  t2 = t2[0]
+  param t2
+  call f_putint
+  t4 = T6 == T2
+  if t4 == 0 goto l4
+l3:
+  param 10
+  call f_putch
+  return
+  goto l5
+l4:
+  param 32
+  call f_putch
+l5:
+  t7 = T6 + 1
+  T6 = t7
+  goto l0
+l2:
+  return
+end f_printans
+f_f [1]
+  var T7
+  var t8
+  var t9
+  var t10
+  var t11
+  var t12
+  var t13
+  var t14
+  var t15
+  var t16
+  var t17
+  var t18
+  var t19
+  var t20
+  var t21
+  var t22
+  var t23
+  var t24
+  var t25
+  var t26
+  var t27
+  var t28
+  var t29
+  var t30
+  var t31
+  var t32
+  T7 = 1
+l6:
+  t8 = T7 <= T2
+  if t8 == 0 goto l8
+l7:
+  t9 = T7 * 4
+  t9 = T3 + t9
+  t9 = t9[0]
+  t10 = t9 != 1
+  if t10 == 0 goto l10
+  t12 = p0 + T7
+  t11 = t12 * 4
+  t11 = T4 + t11
+  t11 = t11[0]
+  t13 = t11 == 0
+  if t13 == 0 goto l10
+  t16 = T2 + p0
+  t16 = t16 - T7
+  t15 = t16 * 4
+  t15 = T5 + t15
+  t15 = t15[0]
+  t14 = ! t15
+  if t14 == 0 goto l10
+l9:
+  t17 = p0 * 4
+  t17 = T0 + t17
+  t17[0] = T7
+  t18 = p0 == T2
+  if t18 == 0 goto l12
+l11:
+  call f_printans
+l12:
+  t20 = T7 * 4
+  t20 = T3 + t20
+  t20[0] = 1
+  t22 = p0 + T7
+  t21 = t22 * 4
+  t21 = T4 + t21
+  t21[0] = 1
+  t24 = T2 + p0
+  t24 = t24 - T7
+  t23 = t24 * 4
+  t23 = T5 + t23
+  t23[0] = 1
+  t25 = p0 + 1
+  param t25
+  call f_f
+  t27 = T7 * 4
+  t27 = T3 + t27
+  t27[0] = 0
+  t29 = p0 + T7
+  t28 = t29 * 4
+  t28 = T4 + t28
+  t28[0] = 0
+  t31 = T2 + p0
+  t31 = t31 - T7
+  t30 = t31 * 4
+  t30 = T5 + t30
+  t30[0] = 0
+l10:
+  t32 = T7 + 1
+  T7 = t32
+  goto l6
+l8:
+  return
+end f_f
+f_main [0]
+  var T8
+  var t33
+  var t34
+  var t35
+  var t36
+  var t37
+  t33 = call f_getint
+  T8 = t33
+l13:
+  t34 = T8 > 0
+  if t34 == 0 goto l15
+l14:
+  t35 = call f_getint
+  T2 = t35
+  param 1
+  call f_f
+  t37 = T8 - 1
+  T8 = t37
+  goto l13
+l15:
+  return T1
+  return 0
+end f_main

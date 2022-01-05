@@ -1,23 +1,25 @@
 %{
     #include<stdio.h>
     #include<string.h>
-    #include"ast.h"
-    #include"symtable.h"
-    extern int yylex();
-    extern int yylineno;
-    extern char *yytext;
-    extern class AST *root;
+    #include"ast_sysy.h"
+    using namespace sysy;
+    extern int sysylex();
+    extern int sysylineno;
+    extern char *sysytext;
+    extern class AST *root_sysy;
     extern class TABLE *root_symtable;
     extern std::vector<TABLE *>symtable_vector;
     extern class TABLE *symtable_ptr;
     void yyerror(char *str){
-        printf("LINE %d in %s : %s\n",yylineno, yytext, str);
+        printf("LINE %d in %s : %s\n",sysylineno, sysytext, str);
     };
     int NumberOfTemp;   //记录一个函数需要多少临时变量
 %}
 
+%define api.prefix {sysy}
+
 %union{
-    class AST *ast; //class关键字必需添加
+    class sysy::AST *ast; //class关键字必需添加
 }
 
 %token <ast> CONST INT VOID IF ELSE WHILE BREAK CONTINUE RETURN
@@ -43,14 +45,14 @@ CompUnit    : CompUnit Decl {
                 $$ = $1;
             }
             | Decl {
-                root = new AST(_CompUnit);
-                root->son.push_back($1);
-                $$ = root;
+                root_sysy = new AST(_CompUnit);
+                root_sysy->son.push_back($1);
+                $$ = root_sysy;
             }
             | FuncDef {
-                root = new AST(_CompUnit);
-                root->son.push_back($1);
-                $$ = root;
+                root_sysy = new AST(_CompUnit);
+                root_sysy->son.push_back($1);
+                $$ = root_sysy;
             }
             ;
 
