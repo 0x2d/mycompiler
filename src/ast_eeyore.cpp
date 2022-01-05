@@ -264,9 +264,17 @@ void AST::irgen_exp(){
         } else{
             int s = this->son[1]->son[0]->entry->stack;
             if(this->son[1]->son[0]->entry->global){
-                fprintf(eeyoreout,"  load v%d a%d\n",s,param_i);
+                if(this->son[1]->son[0]->entry->array){
+                    fprintf(eeyoreout,"  loadaddr v%d a%d\n",s,param_i);
+                } else{
+                    fprintf(eeyoreout,"  load v%d a%d\n",s,param_i);
+                }
             } else{
-                fprintf(eeyoreout,"  load %d a%d\n",s,param_i);
+                if(this->son[1]->son[0]->entry->array){
+                    fprintf(eeyoreout,"  loadaddr %d a%d\n",s,param_i);
+                } else{
+                    fprintf(eeyoreout,"  load %d a%d\n",s,param_i);
+                }
             }
         }
         param_i++;

@@ -1,101 +1,154 @@
-v0 = malloc 200
-v1 = 0
-v2 = 0
-v3 = malloc 200
-v4 = malloc 200
-v5 = malloc 400
-f_printans [0] [9]
-  load v1 t1
-  t0 = t1 + 1
-  store t0 1
-  load 1 t1
-  loadaddr v1 t0
-  t0[0] = t1
-  t1 = 1
-  store t1 0
+v0 = 0
+f_bubblesort [1] [20]
+  store a0 0
+  t1 = 0
+  store t1 1
 l0:
-  load 0 t1
-  load v2 t2
-  t0 = t1 <= t2
-  store t0 2
-  load 2 t0
+  load v0 t1
+  t0 = t1 - 1
+  store t0 5
+  load 1 t1
+  load 5 t2
+  t0 = t1 < t2
+  store t0 4
+  load 4 t0
   t1 = 0
   if t0 == t1 goto l2
 l1:
-  load 0 t1
-  t0 = t1 * 4
-  store t0 3
-  loadaddr v0 t1
-  load 3 t2
-  t0 = t1 + t2
-  store t0 3
-  load 3 t1
-  t0 = t1[0]
-  store t0 3
-  load 3 a0
-  call f_putint
-  load 0 t1
-  load v2 t2
-  t0 = t1 == t2
-  store t0 5
-  load 5 t0
   t1 = 0
-  if t0 == t1 goto l4
+  store t1 2
 l3:
-  a0 = 10
-  call f_putch
-  return
-  goto l5
+  load v0 t1
+  load 1 t2
+  t0 = t1 - t2
+  store t0 7
+  load 7 t1
+  t0 = t1 - 1
+  store t0 7
+  load 2 t1
+  load 7 t2
+  t0 = t1 < t2
+  store t0 6
+  load 6 t0
+  t1 = 0
+  if t0 == t1 goto l5
 l4:
-  a0 = 32
-  call f_putch
-l5:
+  load 2 t1
+  t0 = t1 * 4
+  store t0 8
   load 0 t1
-  t0 = t1 + 1
+  load 8 t2
+  t0 = t1 + t2
   store t0 8
   load 8 t1
-  store t1 0
+  t0 = t1[0]
+  store t0 8
+  load 2 t1
+  t0 = t1 + 1
+  store t0 11
+  load 11 t1
+  t0 = t1 * 4
+  store t0 10
+  load 0 t1
+  load 10 t2
+  t0 = t1 + t2
+  store t0 10
+  load 10 t1
+  t0 = t1[0]
+  store t0 10
+  load 8 t1
+  load 10 t2
+  t0 = t1 > t2
+  store t0 9
+  load 9 t0
+  t1 = 0
+  if t0 == t1 goto l7
+l6:
+  load 2 t1
+  t0 = t1 + 1
+  store t0 13
+  load 13 t1
+  t0 = t1 * 4
+  store t0 12
+  load 0 t1
+  load 12 t2
+  t0 = t1 + t2
+  store t0 12
+  load 12 t1
+  t0 = t1[0]
+  store t0 12
+  load 12 t1
+  store t1 3
+  load 2 t1
+  t0 = t1 + 1
+  store t0 15
+  load 15 t1
+  t0 = t1 * 4
+  store t0 14
+  load 0 t1
+  load 14 t2
+  t0 = t1 + t2
+  store t0 14
+  load 2 t1
+  t0 = t1 * 4
+  store t0 16
+  load 0 t1
+  load 16 t2
+  t0 = t1 + t2
+  store t0 16
+  load 16 t1
+  t0 = t1[0]
+  store t0 16
+  load 16 t1
+  load 14 t0
+  t0[0] = t1
+  load 2 t1
+  t0 = t1 * 4
+  store t0 17
+  load 0 t1
+  load 17 t2
+  t0 = t1 + t2
+  store t0 17
+  load 3 t1
+  load 17 t0
+  t0[0] = t1
+l7:
+  load 2 t1
+  t0 = t1 + 1
+  store t0 18
+  load 18 t1
+  store t1 2
+  goto l3
+l5:
+  load 1 t1
+  t0 = t1 + 1
+  store t0 19
+  load 19 t1
+  store t1 1
   goto l0
 l2:
+  a0 = 0
   return
-end f_printans
-f_f [1] [27]
+  a0 = 0
+  return
+end f_bubblesort
+f_insertsort [1] [18]
   store a0 0
   t1 = 1
   store t1 1
-l6:
+l8:
   load 1 t1
-  load v2 t2
-  t0 = t1 <= t2
-  store t0 2
-  load 2 t0
-  t1 = 0
-  if t0 == t1 goto l8
-l7:
-  load 1 t1
-  t0 = t1 * 4
-  store t0 3
-  loadaddr v3 t1
-  load 3 t2
-  t0 = t1 + t2
-  store t0 3
-  load 3 t1
-  t0 = t1[0]
-  store t0 3
-  load 3 t1
-  t0 = t1 != 1
+  load v0 t2
+  t0 = t1 < t2
   store t0 4
   load 4 t0
   t1 = 0
   if t0 == t1 goto l10
-  load 0 t1
-  load 1 t2
-  t0 = t1 + t2
-  store t0 6
-  load 6 t1
+l9:
+  load 1 t1
   t0 = t1 * 4
   store t0 5
-  loadaddr v4 t1
+  load 0 t1
   load 5 t2
   t0 = t1 + t2
   store t0 5
@@ -103,183 +156,1536 @@ l7:
   t0 = t1[0]
   store t0 5
   load 5 t1
-  t0 = t1 == 0
+  store t1 2
+  load 1 t1
+  t0 = t1 - 1
+  store t0 6
+  load 6 t1
+  store t1 3
+l11:
+  t1 = 1
+  t0 = - t1
+  store t0 8
+  load 3 t1
+  load 8 t2
+  t0 = t1 > t2
   store t0 7
   load 7 t0
   t1 = 0
-  if t0 == t1 goto l10
-  load v2 t1
-  load 0 t2
+  if t0 == t1 goto l13
+  load 3 t1
+  t0 = t1 * 4
+  store t0 10
+  load 0 t1
+  load 10 t2
   t0 = t1 + t2
   store t0 10
   load 10 t1
-  load 1 t2
-  t0 = t1 - t2
+  t0 = t1[0]
+  store t0 10
+  load 2 t1
+  load 10 t2
+  t0 = t1 < t2
+  store t0 9
+  load 9 t0
+  t1 = 0
+  if t0 == t1 goto l13
+l12:
+  load 3 t1
+  t0 = t1 + 1
+  store t0 12
+  load 12 t1
+  t0 = t1 * 4
+  store t0 11
+  load 0 t1
+  load 11 t2
+  t0 = t1 + t2
+  store t0 11
+  load 3 t1
+  t0 = t1 * 4
+  store t0 13
+  load 0 t1
+  load 13 t2
+  t0 = t1 + t2
+  store t0 13
+  load 13 t1
+  t0 = t1[0]
+  store t0 13
+  load 13 t1
+  load 11 t0
+  t0[0] = t1
+  load 3 t1
+  t0 = t1 - 1
+  store t0 14
+  load 14 t1
+  store t1 3
+  goto l11
+l13:
+  load 3 t1
+  t0 = t1 + 1
+  store t0 16
+  load 16 t1
+  t0 = t1 * 4
+  store t0 15
+  load 0 t1
+  load 15 t2
+  t0 = t1 + t2
+  store t0 15
+  load 2 t1
+  load 15 t0
+  t0[0] = t1
+  load 1 t1
+  t0 = t1 + 1
+  store t0 17
+  load 17 t1
+  store t1 1
+  goto l8
+l10:
+  a0 = 0
+  return
+  a0 = 0
+  return
+end f_insertsort
+f_QuickSort [3] [32]
+  store a0 0
+  store a1 1
+  store a2 2
+  load 1 t1
+  load 2 t2
+  t0 = t1 < t2
+  store t0 7
+  load 7 t0
+  t1 = 0
+  if t0 == t1 goto l15
+l14:
+  load 1 t1
+  store t1 3
+  load 2 t1
+  store t1 4
+  load 1 t1
+  t0 = t1 * 4
+  store t0 8
+  load 0 t1
+  load 8 t2
+  t0 = t1 + t2
+  store t0 8
+  load 8 t1
+  t0 = t1[0]
+  store t0 8
+  load 8 t1
+  store t1 5
+l16:
+  load 3 t1
+  load 4 t2
+  t0 = t1 < t2
+  store t0 9
+  load 9 t0
+  t1 = 0
+  if t0 == t1 goto l18
+l17:
+l19:
+  load 3 t1
+  load 4 t2
+  t0 = t1 < t2
+  store t0 10
+  load 10 t0
+  t1 = 0
+  if t0 == t1 goto l21
+  load 4 t1
+  t0 = t1 * 4
+  store t0 11
+  load 0 t1
+  load 11 t2
+  t0 = t1 + t2
+  store t0 11
+  load 11 t1
+  t0 = t1[0]
+  store t0 11
+  load 5 t1
+  t0 = t1 - 1
+  store t0 13
+  load 11 t1
+  load 13 t2
+  t0 = t1 > t2
+  store t0 12
+  load 12 t0
+  t1 = 0
+  if t0 == t1 goto l21
+l20:
+  load 4 t1
+  t0 = t1 - 1
+  store t0 14
+  load 14 t1
+  store t1 4
+  goto l19
+l21:
+  load 3 t1
+  load 4 t2
+  t0 = t1 < t2
+  store t0 15
+  load 15 t0
+  t1 = 0
+  if t0 == t1 goto l23
+l22:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 16
+  load 0 t1
+  load 16 t2
+  t0 = t1 + t2
+  store t0 16
+  load 4 t1
+  t0 = t1 * 4
+  store t0 17
+  load 0 t1
+  load 17 t2
+  t0 = t1 + t2
+  store t0 17
+  load 17 t1
+  t0 = t1[0]
+  store t0 17
+  load 17 t1
+  load 16 t0
+  t0[0] = t1
+  load 3 t1
+  t0 = t1 + 1
+  store t0 18
+  load 18 t1
+  store t1 3
+l23:
+l24:
+  load 3 t1
+  load 4 t2
+  t0 = t1 < t2
+  store t0 19
+  load 19 t0
+  t1 = 0
+  if t0 == t1 goto l26
+  load 3 t1
+  t0 = t1 * 4
+  store t0 20
+  load 0 t1
+  load 20 t2
+  t0 = t1 + t2
+  store t0 20
+  load 20 t1
+  t0 = t1[0]
+  store t0 20
+  load 20 t1
+  load 5 t2
+  t0 = t1 < t2
+  store t0 21
+  load 21 t0
+  t1 = 0
+  if t0 == t1 goto l26
+l25:
+  load 3 t1
+  t0 = t1 + 1
+  store t0 22
+  load 22 t1
+  store t1 3
+  goto l24
+l26:
+  load 3 t1
+  load 4 t2
+  t0 = t1 < t2
+  store t0 23
+  load 23 t0
+  t1 = 0
+  if t0 == t1 goto l28
+l27:
+  load 4 t1
+  t0 = t1 * 4
+  store t0 24
+  load 0 t1
+  load 24 t2
+  t0 = t1 + t2
+  store t0 24
+  load 3 t1
+  t0 = t1 * 4
+  store t0 25
+  load 0 t1
+  load 25 t2
+  t0 = t1 + t2
+  store t0 25
+  load 25 t1
+  t0 = t1[0]
+  store t0 25
+  load 25 t1
+  load 24 t0
+  t0[0] = t1
+  load 4 t1
+  t0 = t1 - 1
+  store t0 26
+  load 26 t1
+  store t1 4
+l28:
+  goto l16
+l18:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 27
+  load 0 t1
+  load 27 t2
+  t0 = t1 + t2
+  store t0 27
+  load 5 t1
+  load 27 t0
+  t0[0] = t1
+  load 3 t1
+  t0 = t1 - 1
+  store t0 28
+  load 28 t1
+  store t1 6
+  load 0 a0
+  load 1 a1
+  load 6 a2
+  call f_QuickSort
+  store a0 29
+  load 29 t1
+  store t1 6
+  load 3 t1
+  t0 = t1 + 1
+  store t0 30
+  load 30 t1
+  store t1 6
+  load 0 a0
+  load 6 a1
+  load 2 a2
+  call f_QuickSort
+  store a0 31
+  load 31 t1
+  store t1 6
+l15:
+  a0 = 0
+  return
+  a0 = 0
+  return
+end f_QuickSort
+f_getMid [1] [12]
+  store a0 0
+  load v0 t1
+  t0 = t1 % 2
+  store t0 2
+  load 2 t1
+  t0 = t1 == 0
+  store t0 3
+  load 3 t0
+  t1 = 0
+  if t0 == t1 goto l30
+l29:
+  load v0 t1
+  t0 = t1 / 2
+  store t0 4
+  load 4 t1
+  store t1 1
+  load 1 t1
+  t0 = t1 * 4
+  store t0 5
+  load 0 t1
+  load 5 t2
+  t0 = t1 + t2
+  store t0 5
+  load 5 t1
+  t0 = t1[0]
+  store t0 5
+  load 1 t1
+  t0 = t1 - 1
+  store t0 8
+  load 8 t1
+  t0 = t1 * 4
+  store t0 7
+  load 0 t1
+  load 7 t2
+  t0 = t1 + t2
+  store t0 7
+  load 7 t1
+  t0 = t1[0]
+  store t0 7
+  load 5 t1
+  load 7 t2
+  t0 = t1 + t2
+  store t0 6
+  load 6 t1
+  t0 = t1 / 2
+  store t0 9
+  load 9 a0
+  return
+  goto l31
+l30:
+  load v0 t1
+  t0 = t1 / 2
   store t0 10
   load 10 t1
+  store t1 1
+  load 1 t1
+  t0 = t1 * 4
+  store t0 11
+  load 0 t1
+  load 11 t2
+  t0 = t1 + t2
+  store t0 11
+  load 11 t1
+  t0 = t1[0]
+  store t0 11
+  load 11 a0
+  return
+l31:
+  a0 = 0
+  return
+end f_getMid
+f_getMost [1] [1017]
+  store a0 0
+  t1 = 0
+  store t1 1001
+l32:
+  load 1001 t1
+  t0 = t1 < 1000
+  store t0 1005
+  load 1005 t0
+  t1 = 0
+  if t0 == t1 goto l34
+l33:
+  load 1001 t1
+  t0 = t1 * 4
+  store t0 1006
+  loadaddr 1 t1
+  load 1006 t2
+  t0 = t1 + t2
+  store t0 1006
+  t1 = 0
+  load 1006 t0
+  t0[0] = t1
+  load 1001 t1
+  t0 = t1 + 1
+  store t0 1007
+  load 1007 t1
+  store t1 1001
+  goto l32
+l34:
+  t1 = 0
+  store t1 1001
+  t1 = 0
+  store t1 1002
+l35:
+  load 1001 t1
+  load v0 t2
+  t0 = t1 < t2
+  store t0 1008
+  load 1008 t0
+  t1 = 0
+  if t0 == t1 goto l37
+l36:
+  load 1001 t1
+  t0 = t1 * 4
+  store t0 1009
+  load 0 t1
+  load 1009 t2
+  t0 = t1 + t2
+  store t0 1009
+  load 1009 t1
+  t0 = t1[0]
+  store t0 1009
+  load 1009 t1
+  store t1 1004
+  load 1004 t1
+  t0 = t1 * 4
+  store t0 1010
+  loadaddr 1 t1
+  load 1010 t2
+  t0 = t1 + t2
+  store t0 1010
+  load 1004 t1
+  t0 = t1 * 4
+  store t0 1011
+  loadaddr 1 t1
+  load 1011 t2
+  t0 = t1 + t2
+  store t0 1011
+  load 1011 t1
+  t0 = t1[0]
+  store t0 1011
+  load 1011 t1
+  t0 = t1 + 1
+  store t0 1012
+  load 1012 t1
+  load 1010 t0
+  t0[0] = t1
+  load 1004 t1
+  t0 = t1 * 4
+  store t0 1013
+  loadaddr 1 t1
+  load 1013 t2
+  t0 = t1 + t2
+  store t0 1013
+  load 1013 t1
+  t0 = t1[0]
+  store t0 1013
+  load 1013 t1
+  load 1002 t2
+  t0 = t1 > t2
+  store t0 1014
+  load 1014 t0
+  t1 = 0
+  if t0 == t1 goto l39
+l38:
+  load 1004 t1
+  t0 = t1 * 4
+  store t0 1015
+  loadaddr 1 t1
+  load 1015 t2
+  t0 = t1 + t2
+  store t0 1015
+  load 1015 t1
+  t0 = t1[0]
+  store t0 1015
+  load 1015 t1
+  store t1 1002
+  load 1004 t1
+  store t1 1003
+l39:
+  load 1001 t1
+  t0 = t1 + 1
+  store t0 1016
+  load 1016 t1
+  store t1 1001
+  goto l35
+l37:
+  load 1003 a0
+  return
+  a0 = 0
+  return
+end f_getMost
+f_revert [1] [11]
+  store a0 0
+  t1 = 0
+  store t1 2
+  t1 = 0
+  store t1 3
+l40:
+  load 2 t1
+  load 3 t2
+  t0 = t1 < t2
+  store t0 4
+  load 4 t0
+  t1 = 0
+  if t0 == t1 goto l42
+l41:
+  load 2 t1
+  t0 = t1 * 4
+  store t0 5
+  load 0 t1
+  load 5 t2
+  t0 = t1 + t2
+  store t0 5
+  load 5 t1
+  t0 = t1[0]
+  store t0 5
+  load 5 t1
+  store t1 1
+  load 2 t1
+  t0 = t1 * 4
+  store t0 6
+  load 0 t1
+  load 6 t2
+  t0 = t1 + t2
+  store t0 6
+  load 3 t1
+  t0 = t1 * 4
+  store t0 7
+  load 0 t1
+  load 7 t2
+  t0 = t1 + t2
+  store t0 7
+  load 7 t1
+  t0 = t1[0]
+  store t0 7
+  load 7 t1
+  load 6 t0
+  t0[0] = t1
+  load 3 t1
+  t0 = t1 * 4
+  store t0 8
+  load 0 t1
+  load 8 t2
+  t0 = t1 + t2
+  store t0 8
+  load 1 t1
+  load 8 t0
+  t0[0] = t1
+  load 2 t1
+  t0 = t1 + 1
+  store t0 9
+  load 9 t1
+  store t1 2
+  load 3 t1
+  t0 = t1 - 1
+  store t0 10
+  load 10 t1
+  store t1 3
+  goto l40
+l42:
+  a0 = 0
+  return
+  a0 = 0
+  return
+end f_revert
+f_arrCopy [2] [7]
+  store a0 0
+  store a1 1
+  t1 = 0
+  store t1 2
+l43:
+  load 2 t1
+  load v0 t2
+  t0 = t1 < t2
+  store t0 3
+  load 3 t0
+  t1 = 0
+  if t0 == t1 goto l45
+l44:
+  load 2 t1
+  t0 = t1 * 4
+  store t0 4
+  load 1 t1
+  load 4 t2
+  t0 = t1 + t2
+  store t0 4
+  load 2 t1
+  t0 = t1 * 4
+  store t0 5
+  load 0 t1
+  load 5 t2
+  t0 = t1 + t2
+  store t0 5
+  load 5 t1
+  t0 = t1[0]
+  store t0 5
+  load 5 t1
+  load 4 t0
+  t0[0] = t1
+  load 2 t1
+  t0 = t1 + 1
+  store t0 6
+  load 6 t1
+  store t1 2
+  goto l43
+l45:
+  a0 = 0
+  return
+  a0 = 0
+  return
+end f_arrCopy
+f_calSum [2] [13]
+  store a0 0
+  store a1 1
+  t1 = 0
+  store t1 2
+  t1 = 0
+  store t1 3
+l46:
+  load 3 t1
+  load v0 t2
+  t0 = t1 < t2
+  store t0 4
+  load 4 t0
+  t1 = 0
+  if t0 == t1 goto l48
+l47:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 6
+  load 0 t1
+  load 6 t2
+  t0 = t1 + t2
+  store t0 6
+  load 6 t1
+  t0 = t1[0]
+  store t0 6
+  load 2 t1
+  load 6 t2
+  t0 = t1 + t2
+  store t0 5
+  load 5 t1
+  store t1 2
+  load 3 t1
+  load 1 t2
+  t0 = t1 % t2
+  store t0 7
+  load 1 t1
+  t0 = t1 - 1
+  store t0 9
+  load 7 t1
+  load 9 t2
+  t0 = t1 != t2
+  store t0 8
+  load 8 t0
+  t1 = 0
+  if t0 == t1 goto l50
+l49:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 10
+  load 0 t1
+  load 10 t2
+  t0 = t1 + t2
+  store t0 10
+  t1 = 0
+  load 10 t0
+  t0[0] = t1
+  goto l51
+l50:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 11
+  load 0 t1
+  load 11 t2
+  t0 = t1 + t2
+  store t0 11
+  load 2 t1
+  load 11 t0
+  t0[0] = t1
+  t1 = 0
+  store t1 2
+l51:
+  load 3 t1
+  t0 = t1 + 1
+  store t0 12
+  load 12 t1
+  store t1 3
+  goto l46
+l48:
+  a0 = 0
+  return
+  a0 = 0
+  return
+end f_calSum
+f_avgPooling [2] [27]
+  store a0 0
+  store a1 1
+  t1 = 0
+  store t1 3
+  t1 = 0
+  store t1 2
+l52:
+  load 3 t1
+  load v0 t2
+  t0 = t1 < t2
+  store t0 5
+  load 5 t0
+  t1 = 0
+  if t0 == t1 goto l54
+l53:
+  load 1 t1
+  t0 = t1 - 1
+  store t0 7
+  load 3 t1
+  load 7 t2
+  t0 = t1 < t2
+  store t0 6
+  load 6 t0
+  t1 = 0
+  if t0 == t1 goto l56
+l55:
+  load 3 t1
   t0 = t1 * 4
   store t0 9
-  loadaddr v5 t1
+  load 0 t1
   load 9 t2
   t0 = t1 + t2
   store t0 9
   load 9 t1
   t0 = t1[0]
   store t0 9
-  load 9 t1
-  t0 = ! t1
+  load 2 t1
+  load 9 t2
+  t0 = t1 + t2
   store t0 8
-  load 8 t0
-  t1 = 0
-  if t0 == t1 goto l10
-l9:
-  load 0 t1
-  t0 = t1 * 4
+  load 8 t1
+  store t1 2
+  goto l57
+l56:
+  load 1 t1
+  t0 = t1 - 1
   store t0 11
-  loadaddr v0 t1
+  load 3 t1
   load 11 t2
-  t0 = t1 + t2
-  store t0 11
-  load 1 t1
-  load 11 t0
-  t0[0] = t1
-  load 0 t1
-  load v2 t2
   t0 = t1 == t2
-  store t0 12
-  load 12 t0
+  store t0 10
+  load 10 t0
   t1 = 0
-  if t0 == t1 goto l12
-l11:
-  call f_printans
-l12:
-  load 1 t1
+  if t0 == t1 goto l59
+l58:
+  t1 = 0
   t0 = t1 * 4
-  store t0 14
-  loadaddr v3 t1
-  load 14 t2
-  t0 = t1 + t2
-  store t0 14
-  t1 = 1
-  load 14 t0
-  t0[0] = t1
+  store t0 12
   load 0 t1
+  load 12 t2
+  t0 = t1 + t2
+  store t0 12
+  load 12 t1
+  t0 = t1[0]
+  store t0 12
+  load 12 t1
+  store t1 4
+  t1 = 0
+  t0 = t1 * 4
+  store t0 13
+  load 0 t1
+  load 13 t2
+  t0 = t1 + t2
+  store t0 13
+  load 2 t1
   load 1 t2
+  t0 = t1 / t2
+  store t0 14
+  load 14 t1
+  load 13 t0
+  t0[0] = t1
+  goto l60
+l59:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 16
+  load 0 t1
+  load 16 t2
   t0 = t1 + t2
   store t0 16
   load 16 t1
-  t0 = t1 * 4
-  store t0 15
-  loadaddr v4 t1
-  load 15 t2
+  t0 = t1[0]
+  store t0 16
+  load 2 t1
+  load 16 t2
   t0 = t1 + t2
   store t0 15
-  t1 = 1
-  load 15 t0
-  t0[0] = t1
-  load v2 t1
-  load 0 t2
-  t0 = t1 + t2
-  store t0 18
-  load 18 t1
+  load 15 t1
+  load 4 t2
+  t0 = t1 - t2
+  store t0 15
+  load 15 t1
+  store t1 2
+  load 3 t1
   load 1 t2
   t0 = t1 - t2
   store t0 18
   load 18 t1
+  t0 = t1 + 1
+  store t0 18
+  load 18 t1
   t0 = t1 * 4
   store t0 17
-  loadaddr v5 t1
+  load 0 t1
   load 17 t2
   t0 = t1 + t2
   store t0 17
-  t1 = 1
-  load 17 t0
-  t0[0] = t1
-  load 0 t1
-  t0 = t1 + 1
-  store t0 19
-  load 19 a0
-  call f_f
-  load 1 t1
-  t0 = t1 * 4
-  store t0 21
-  loadaddr v3 t1
-  load 21 t2
-  t0 = t1 + t2
-  store t0 21
-  t1 = 0
-  load 21 t0
-  t0[0] = t1
-  load 0 t1
-  load 1 t2
-  t0 = t1 + t2
-  store t0 23
-  load 23 t1
-  t0 = t1 * 4
-  store t0 22
-  loadaddr v4 t1
-  load 22 t2
-  t0 = t1 + t2
-  store t0 22
-  t1 = 0
-  load 22 t0
-  t0[0] = t1
-  load v2 t1
-  load 0 t2
-  t0 = t1 + t2
-  store t0 25
-  load 25 t1
+  load 17 t1
+  t0 = t1[0]
+  store t0 17
+  load 17 t1
+  store t1 4
+  load 3 t1
   load 1 t2
   t0 = t1 - t2
-  store t0 25
-  load 25 t1
+  store t0 20
+  load 20 t1
+  t0 = t1 + 1
+  store t0 20
+  load 20 t1
   t0 = t1 * 4
-  store t0 24
-  loadaddr v5 t1
-  load 24 t2
+  store t0 19
+  load 0 t1
+  load 19 t2
   t0 = t1 + t2
-  store t0 24
-  t1 = 0
-  load 24 t0
+  store t0 19
+  load 2 t1
+  load 1 t2
+  t0 = t1 / t2
+  store t0 21
+  load 21 t1
+  load 19 t0
   t0[0] = t1
-l10:
-  load 1 t1
+l60:
+l57:
+  load 3 t1
+  t0 = t1 + 1
+  store t0 22
+  load 22 t1
+  store t1 3
+  goto l52
+l54:
+  load v0 t1
+  load 1 t2
+  t0 = t1 - t2
+  store t0 23
+  load 23 t1
+  t0 = t1 + 1
+  store t0 23
+  load 23 t1
+  store t1 3
+l61:
+  load 3 t1
+  load v0 t2
+  t0 = t1 < t2
+  store t0 24
+  load 24 t0
+  t1 = 0
+  if t0 == t1 goto l63
+l62:
+  load 3 t1
+  t0 = t1 * 4
+  store t0 25
+  load 0 t1
+  load 25 t2
+  t0 = t1 + t2
+  store t0 25
+  t1 = 0
+  load 25 t0
+  t0[0] = t1
+  load 3 t1
   t0 = t1 + 1
   store t0 26
   load 26 t1
-  store t1 1
-  goto l6
-l8:
+  store t1 3
+  goto l61
+l63:
+  a0 = 0
   return
-end f_f
-f_main [0] [6]
-  call f_getint
-  store a0 1
-  load 1 t1
-  store t1 0
-l13:
-  load 0 t1
-  t0 = t1 > 0
-  store t0 2
-  load 2 t0
-  t1 = 0
-  if t0 == t1 goto l15
-l14:
-  call f_getint
-  store a0 3
-  load 3 t1
-  loadaddr v2 t0
+  a0 = 0
+  return
+end f_avgPooling
+f_main [0] [143]
+  t1 = 32
+  loadaddr v0 t0
   t0[0] = t1
-  a0 = 1
-  call f_f
-  load 0 t1
-  t0 = t1 - 1
-  store t0 5
-  load 5 t1
-  store t1 0
-  goto l13
-l15:
-  load v1 a0
+  t1 = 0
+  t0 = t1 * 4
+  store t0 66
+  loadaddr 0 t1
+  load 66 t2
+  t0 = t1 + t2
+  store t0 66
+  t1 = 7
+  load 66 t0
+  t0[0] = t1
+  t1 = 1
+  t0 = t1 * 4
+  store t0 67
+  loadaddr 0 t1
+  load 67 t2
+  t0 = t1 + t2
+  store t0 67
+  t1 = 23
+  load 67 t0
+  t0[0] = t1
+  t1 = 2
+  t0 = t1 * 4
+  store t0 68
+  loadaddr 0 t1
+  load 68 t2
+  t0 = t1 + t2
+  store t0 68
+  t1 = 89
+  load 68 t0
+  t0[0] = t1
+  t1 = 3
+  t0 = t1 * 4
+  store t0 69
+  loadaddr 0 t1
+  load 69 t2
+  t0 = t1 + t2
+  store t0 69
+  t1 = 26
+  load 69 t0
+  t0[0] = t1
+  t1 = 4
+  t0 = t1 * 4
+  store t0 70
+  loadaddr 0 t1
+  load 70 t2
+  t0 = t1 + t2
+  store t0 70
+  t1 = 282
+  load 70 t0
+  t0[0] = t1
+  t1 = 5
+  t0 = t1 * 4
+  store t0 71
+  loadaddr 0 t1
+  load 71 t2
+  t0 = t1 + t2
+  store t0 71
+  t1 = 254
+  load 71 t0
+  t0[0] = t1
+  t1 = 6
+  t0 = t1 * 4
+  store t0 72
+  loadaddr 0 t1
+  load 72 t2
+  t0 = t1 + t2
+  store t0 72
+  t1 = 27
+  load 72 t0
+  t0[0] = t1
+  t1 = 7
+  t0 = t1 * 4
+  store t0 73
+  loadaddr 0 t1
+  load 73 t2
+  t0 = t1 + t2
+  store t0 73
+  t1 = 5
+  load 73 t0
+  t0[0] = t1
+  t1 = 8
+  t0 = t1 * 4
+  store t0 74
+  loadaddr 0 t1
+  load 74 t2
+  t0 = t1 + t2
+  store t0 74
+  t1 = 83
+  load 74 t0
+  t0[0] = t1
+  t1 = 9
+  t0 = t1 * 4
+  store t0 75
+  loadaddr 0 t1
+  load 75 t2
+  t0 = t1 + t2
+  store t0 75
+  t1 = 273
+  load 75 t0
+  t0[0] = t1
+  t1 = 10
+  t0 = t1 * 4
+  store t0 76
+  loadaddr 0 t1
+  load 76 t2
+  t0 = t1 + t2
+  store t0 76
+  t1 = 574
+  load 76 t0
+  t0[0] = t1
+  t1 = 11
+  t0 = t1 * 4
+  store t0 77
+  loadaddr 0 t1
+  load 77 t2
+  t0 = t1 + t2
+  store t0 77
+  t1 = 905
+  load 77 t0
+  t0[0] = t1
+  t1 = 12
+  t0 = t1 * 4
+  store t0 78
+  loadaddr 0 t1
+  load 78 t2
+  t0 = t1 + t2
+  store t0 78
+  t1 = 354
+  load 78 t0
+  t0[0] = t1
+  t1 = 13
+  t0 = t1 * 4
+  store t0 79
+  loadaddr 0 t1
+  load 79 t2
+  t0 = t1 + t2
+  store t0 79
+  t1 = 657
+  load 79 t0
+  t0[0] = t1
+  t1 = 14
+  t0 = t1 * 4
+  store t0 80
+  loadaddr 0 t1
+  load 80 t2
+  t0 = t1 + t2
+  store t0 80
+  t1 = 935
+  load 80 t0
+  t0[0] = t1
+  t1 = 15
+  t0 = t1 * 4
+  store t0 81
+  loadaddr 0 t1
+  load 81 t2
+  t0 = t1 + t2
+  store t0 81
+  t1 = 264
+  load 81 t0
+  t0[0] = t1
+  t1 = 16
+  t0 = t1 * 4
+  store t0 82
+  loadaddr 0 t1
+  load 82 t2
+  t0 = t1 + t2
+  store t0 82
+  t1 = 639
+  load 82 t0
+  t0[0] = t1
+  t1 = 17
+  t0 = t1 * 4
+  store t0 83
+  loadaddr 0 t1
+  load 83 t2
+  t0 = t1 + t2
+  store t0 83
+  t1 = 459
+  load 83 t0
+  t0[0] = t1
+  t1 = 18
+  t0 = t1 * 4
+  store t0 84
+  loadaddr 0 t1
+  load 84 t2
+  t0 = t1 + t2
+  store t0 84
+  t1 = 29
+  load 84 t0
+  t0[0] = t1
+  t1 = 19
+  t0 = t1 * 4
+  store t0 85
+  loadaddr 0 t1
+  load 85 t2
+  t0 = t1 + t2
+  store t0 85
+  t1 = 68
+  load 85 t0
+  t0[0] = t1
+  t1 = 20
+  t0 = t1 * 4
+  store t0 86
+  loadaddr 0 t1
+  load 86 t2
+  t0 = t1 + t2
+  store t0 86
+  t1 = 929
+  load 86 t0
+  t0[0] = t1
+  t1 = 21
+  t0 = t1 * 4
+  store t0 87
+  loadaddr 0 t1
+  load 87 t2
+  t0 = t1 + t2
+  store t0 87
+  t1 = 756
+  load 87 t0
+  t0[0] = t1
+  t1 = 22
+  t0 = t1 * 4
+  store t0 88
+  loadaddr 0 t1
+  load 88 t2
+  t0 = t1 + t2
+  store t0 88
+  t1 = 452
+  load 88 t0
+  t0[0] = t1
+  t1 = 23
+  t0 = t1 * 4
+  store t0 89
+  loadaddr 0 t1
+  load 89 t2
+  t0 = t1 + t2
+  store t0 89
+  t1 = 279
+  load 89 t0
+  t0[0] = t1
+  t1 = 24
+  t0 = t1 * 4
+  store t0 90
+  loadaddr 0 t1
+  load 90 t2
+  t0 = t1 + t2
+  store t0 90
+  t1 = 58
+  load 90 t0
+  t0[0] = t1
+  t1 = 25
+  t0 = t1 * 4
+  store t0 91
+  loadaddr 0 t1
+  load 91 t2
+  t0 = t1 + t2
+  store t0 91
+  t1 = 87
+  load 91 t0
+  t0[0] = t1
+  t1 = 26
+  t0 = t1 * 4
+  store t0 92
+  loadaddr 0 t1
+  load 92 t2
+  t0 = t1 + t2
+  store t0 92
+  t1 = 96
+  load 92 t0
+  t0[0] = t1
+  t1 = 27
+  t0 = t1 * 4
+  store t0 93
+  loadaddr 0 t1
+  load 93 t2
+  t0 = t1 + t2
+  store t0 93
+  t1 = 36
+  load 93 t0
+  t0[0] = t1
+  t1 = 28
+  t0 = t1 * 4
+  store t0 94
+  loadaddr 0 t1
+  load 94 t2
+  t0 = t1 + t2
+  store t0 94
+  t1 = 39
+  load 94 t0
+  t0[0] = t1
+  t1 = 29
+  t0 = t1 * 4
+  store t0 95
+  loadaddr 0 t1
+  load 95 t2
+  t0 = t1 + t2
+  store t0 95
+  t1 = 28
+  load 95 t0
+  t0[0] = t1
+  t1 = 30
+  t0 = t1 * 4
+  store t0 96
+  loadaddr 0 t1
+  load 96 t2
+  t0 = t1 + t2
+  store t0 96
+  t1 = 1
+  load 96 t0
+  t0[0] = t1
+  t1 = 31
+  t0 = t1 * 4
+  store t0 97
+  loadaddr 0 t1
+  load 97 t2
+  t0 = t1 + t2
+  store t0 97
+  t1 = 290
+  load 97 t0
+  t0[0] = t1
+  loadaddr 0 a0
+  loadaddr 32 a1
+  call f_arrCopy
+  store a0 98
+  load 98 t1
+  store t1 64
+  loadaddr 32 a0
+  call f_revert
+  store a0 99
+  load 99 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+l64:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 100
+  load 100 t0
+  t1 = 0
+  if t0 == t1 goto l66
+l65:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 101
+  loadaddr 32 t1
+  load 101 t2
+  t0 = t1 + t2
+  store t0 101
+  load 101 t1
+  t0 = t1[0]
+  store t0 101
+  load 101 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 103
+  load 103 t1
+  store t1 65
+  goto l64
+l66:
+  loadaddr 32 a0
+  call f_bubblesort
+  store a0 104
+  load 104 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+l67:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 105
+  load 105 t0
+  t1 = 0
+  if t0 == t1 goto l69
+l68:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 106
+  loadaddr 32 t1
+  load 106 t2
+  t0 = t1 + t2
+  store t0 106
+  load 106 t1
+  t0 = t1[0]
+  store t0 106
+  load 106 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 108
+  load 108 t1
+  store t1 65
+  goto l67
+l69:
+  loadaddr 32 a0
+  call f_getMid
+  store a0 109
+  load 109 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  loadaddr 32 a0
+  call f_getMost
+  store a0 111
+  load 111 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  loadaddr 0 a0
+  loadaddr 32 a1
+  call f_arrCopy
+  store a0 113
+  load 113 t1
+  store t1 64
+  loadaddr 32 a0
+  call f_bubblesort
+  store a0 114
+  load 114 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+l70:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 115
+  load 115 t0
+  t1 = 0
+  if t0 == t1 goto l72
+l71:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 116
+  loadaddr 32 t1
+  load 116 t2
+  t0 = t1 + t2
+  store t0 116
+  load 116 t1
+  t0 = t1[0]
+  store t0 116
+  load 116 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 118
+  load 118 t1
+  store t1 65
+  goto l70
+l72:
+  loadaddr 0 a0
+  loadaddr 32 a1
+  call f_arrCopy
+  store a0 119
+  load 119 t1
+  store t1 64
+  loadaddr 32 a0
+  call f_insertsort
+  store a0 120
+  load 120 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+l73:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 121
+  load 121 t0
+  t1 = 0
+  if t0 == t1 goto l75
+l74:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 122
+  loadaddr 32 t1
+  load 122 t2
+  t0 = t1 + t2
+  store t0 122
+  load 122 t1
+  t0 = t1[0]
+  store t0 122
+  load 122 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 124
+  load 124 t1
+  store t1 65
+  goto l73
+l75:
+  loadaddr 0 a0
+  loadaddr 32 a1
+  call f_arrCopy
+  store a0 125
+  load 125 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+  t1 = 31
+  store t1 64
+  loadaddr 32 a0
+  load 65 a1
+  load 64 a2
+  call f_QuickSort
+  store a0 126
+  load 126 t1
+  store t1 64
+l76:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 127
+  load 127 t0
+  t1 = 0
+  if t0 == t1 goto l78
+l77:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 128
+  loadaddr 32 t1
+  load 128 t2
+  t0 = t1 + t2
+  store t0 128
+  load 128 t1
+  t0 = t1[0]
+  store t0 128
+  load 128 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 130
+  load 130 t1
+  store t1 65
+  goto l76
+l78:
+  loadaddr 0 a0
+  loadaddr 32 a1
+  call f_arrCopy
+  store a0 131
+  load 131 t1
+  store t1 64
+  loadaddr 32 a0
+  a1 = 4
+  call f_calSum
+  store a0 132
+  load 132 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+l79:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 133
+  load 133 t0
+  t1 = 0
+  if t0 == t1 goto l81
+l80:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 134
+  loadaddr 32 t1
+  load 134 t2
+  t0 = t1 + t2
+  store t0 134
+  load 134 t1
+  t0 = t1[0]
+  store t0 134
+  load 134 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 136
+  load 136 t1
+  store t1 65
+  goto l79
+l81:
+  loadaddr 0 a0
+  loadaddr 32 a1
+  call f_arrCopy
+  store a0 137
+  load 137 t1
+  store t1 64
+  loadaddr 32 a0
+  a1 = 3
+  call f_avgPooling
+  store a0 138
+  load 138 t1
+  store t1 64
+  t1 = 0
+  store t1 65
+l82:
+  load 65 t1
+  t0 = t1 < 32
+  store t0 139
+  load 139 t0
+  t1 = 0
+  if t0 == t1 goto l84
+l83:
+  load 65 t1
+  t0 = t1 * 4
+  store t0 140
+  loadaddr 32 t1
+  load 140 t2
+  t0 = t1 + t2
+  store t0 140
+  load 140 t1
+  t0 = t1[0]
+  store t0 140
+  load 140 t1
+  store t1 64
+  load 64 a0
+  call f_putint
+  load 65 t1
+  t0 = t1 + 1
+  store t0 142
+  load 142 t1
+  store t1 65
+  goto l82
+l84:
+  a0 = 0
   return
   a0 = 0
   return
