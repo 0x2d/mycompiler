@@ -1,13 +1,11 @@
 #include"ast_eeyore.h"
 #include<stdio.h>
 #include<string>
-#include<string.h>
 #include"eeyore.tab.hpp"
 using namespace eeyore;
 extern FILE *eeyorein;
 extern FILE *eeyoreout;
 
-int regs[28] = {0};
 std::vector<ENTRY *>global_table;
 std::vector<class FUNC *>functions;
 class FUNC *func_ptr = nullptr;

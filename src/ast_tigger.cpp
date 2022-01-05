@@ -1,7 +1,6 @@
 #include"ast_tigger.h"
 #include<stdio.h>
 #include<string>
-#include<string.h>
 #include"tigger.tab.hpp"
 using namespace tigger;
 extern FILE *tiggerin;
@@ -20,6 +19,7 @@ void AST::irgen_exp(int STK){
         if(this->son[3]->type == _Reg){
             reg3 = this->son[3]->id;
         } else{
+            //暂时没做直接立即数加法
             fprintf(tiggerout,"  li     s0, %d\n",this->son[3]->val);
             reg3 = "s0";
         }

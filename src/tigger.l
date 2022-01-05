@@ -2,10 +2,8 @@
     #include<stdio.h>
     #include<stdlib.h>
     #include<string.h>
-    //保持以下顺序
     #include"ast_tigger.h"
-    #include"tigger.tab.hpp"
-    //保持以上顺序
+    #include"tigger.tab.hpp"    //保持以上顺序
     using namespace tigger;
 %}
 

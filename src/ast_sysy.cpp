@@ -170,7 +170,6 @@ std::string AST::irgen_UnaryExp(){
         if(this->son.size() == 2){
             int param_num = this->son[1]->son.size();
             std::string params[param_num];
-            
             for(int i=0;i<param_num;i++){
                 if(func_temp->symtable){
                     std::string p_temp = "p"+std::to_string(i);
@@ -307,7 +306,7 @@ void AST::irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e){
             addr += nval/e->shape[layer]*4;
         } else if(this->son[i]->son[0]->type == _ConstExp){
             int init_temp = this->son[i]->son[0]->val;
-            e->arr[nval_temp] = init_temp;
+            //e->arr[nval_temp] = init_temp;
             print_indent();
             fprintf(sysyout,"%s[%d] = %d\n", e->eeyore_id.c_str(), addr, init_temp);
             addr += 4;
@@ -319,7 +318,7 @@ void AST::irgen_ConstInitVal(int addr, int layer, ENTRY_VAL *e){
         }
     }
     for(;nval_temp<nval;nval_temp++){
-        e->arr[nval_temp] = 0;
+        //e->arr[nval_temp] = 0;
         print_indent();
         fprintf(sysyout,"%s[%d] = 0\n", e->eeyore_id.c_str(), addr);
         addr += 4;
@@ -402,24 +401,31 @@ void AST::irgen_LOrExp(int label_true, int label_false){
 
 void AST::irgen_Stmt(){
     if(this->son.size() == 0){
+        //';'
         return;
     }
     if(this->son[0]->type == _RETURN){
         if(this->son.size() == 1){
+            //RETURN ';'
             fprintf(sysyout,"  return\n");
         } else{
+            //RETURN Exp ';'
             std::string return_temp = this->son[1]->son[0]->irgen_AddExp();
             fprintf(sysyout,"  return %s\n",return_temp.c_str());
         }
     } else if(this->son[0]->type == _LVal){
+        //LVal '=' Exp ';'
         std::string left_temp = this->son[0]->irgen_LVal(true);
         std::string right_temp = this->son[1]->son[0]->irgen_AddExp();
         fprintf(sysyout,"  %s = %s\n",left_temp.c_str(),right_temp.c_str());
     } else if(this->son[0]->type == _Exp){
+        //Exp ';'
         this->son[0]->son[0]->irgen_AddExp();
     } else if(this->son[0]->type == _Block){
+        //Block
         this->son[0]->irgen_Block();
     } else if(this->son[0]->type == _WHILE){
+        //WHILE '(' Cond ')' Stmt
         int label_in_temp = label_in_global;
         int label_out_temp = label_out_global;
         this->label_in = label;
@@ -437,6 +443,7 @@ void AST::irgen_Stmt(){
         label_in_global = label_in_temp;
         label_out_global = label_out_temp;
     } else if(this->son[0]->type == _IF && this->son.size() == 5){
+        //IF '(' Cond ')' Stmt ELSE Stmt
         this->label_in = label;
         this->label_in2 = label+1;
         this->label_out = label+2;
@@ -449,6 +456,7 @@ void AST::irgen_Stmt(){
         this->son[4]->irgen_Stmt();
         fprintf(sysyout,"l%d:\n",this->label_out);
     } else if(this->son[0]->type == _IF && this->son.size() == 3){
+        //IF '(' Cond ')' Stmt
         this->label_in = label;
         this->label_out = label+1;
         label += 2;
@@ -457,8 +465,10 @@ void AST::irgen_Stmt(){
         this->son[2]->irgen_Stmt();
         fprintf(sysyout,"l%d:\n",this->label_out);
     } else if(this->son[0]->type == _BREAK){
+        //BREAK ';'
         fprintf(sysyout,"  goto l%d\n",label_out_global);
     } else if(this->son[0]->type == _CONTINUE){
+        //CONTINUE ';'
         fprintf(sysyout,"  goto l%d\n",label_in_global);
     }
 }
@@ -533,7 +543,7 @@ void AST::irgen_Decl(){
                 fprintf(sysyout,"%s = %d\n", entry_temp->eeyore_id.c_str(), entry_temp->val);
             } else {
                 if(ptr_temp->son.size() > 2){
-                    entry_temp->arr = new int [entry_temp->size/4];
+                    //entry_temp->arr = new int [entry_temp->size/4];
                     ptr_temp->son[2]->irgen_ConstInitVal(0, 0, entry_temp);
                 }
             }

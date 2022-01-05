@@ -53,7 +53,7 @@ public:
 
     int lineno;
 
-    bool isint = false;
+    bool isint = false; //尚未实现
 
     int label_in;
     int label_in2;
@@ -103,7 +103,7 @@ public:
     int size;
     std::vector<int> shape;
     int val;
-    int *arr;
+    //int *arr; 实现const数组编译时确定值的路线之一，不太靠谱
 };
 
 class ENTRY_FUNC: public ENTRY{

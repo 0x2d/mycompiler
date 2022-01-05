@@ -6,10 +6,11 @@
     extern int sysylex();
     extern int lineno;
     extern char *sysytext;
-    extern class AST *root_sysy;
-    extern class TABLE *root_symtable;
+    extern AST *root_sysy;
+    extern TABLE *root_symtable;
     extern std::vector<TABLE *>symtable_vector;
-    extern class TABLE *symtable_ptr;
+    extern TABLE *symtable_ptr;
+    
     void yyerror(char *str){
         printf("LINE %d in %s : %s\n",lineno, sysytext, str);
     };
@@ -144,7 +145,7 @@ ConstInitVal    : ConstExp {
                 }
                 | '{' ConstInitVal_temp '}' {
                     AST *temp = new AST(_ConstInitVal);
-                    temp->son = $2->son;    //copy vector
+                    temp->son = $2->son;
                     delete $2;
                     $$ = temp;
                 }

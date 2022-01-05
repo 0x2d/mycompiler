@@ -4,11 +4,11 @@
     #include"ast_tigger.h"
     using namespace tigger;
     extern int tiggerlex();
-    extern int tiggerlineno;
     extern char *tiggertext;
     extern class AST *root_tigger;
+    
     void yyerror(char *str){
-        printf("LINE %d in %s : %s\n",tiggerlineno, tiggertext, str);
+        printf("In %s : %s\n",tiggertext, str);
     };
 %}
 

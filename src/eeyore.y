@@ -4,15 +4,15 @@
     #include"ast_eeyore.h"
     using namespace eeyore;
     extern int eeyorelex();
-    extern int eeyorelineno;
     extern char *eeyoretext;
     extern ENTRY *findvar(FUNC *func, std::string id);
     extern class AST *root_eeyore;
     extern std::vector<ENTRY *>global_table;
     extern std::vector<FUNC *>functions;
     extern FUNC *func_ptr;
+    
     void yyerror(char *str){
-        printf("LINE %d in %s : %s\n",eeyorelineno, eeyoretext, str);
+        printf("In %s : %s\n", eeyoretext, str);
     };
     int v_i = 0;
 %}

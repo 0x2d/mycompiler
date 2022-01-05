@@ -2,17 +2,13 @@
     #include<stdio.h>
     #include<stdlib.h>
     #include<string.h>
-    //保持以下顺序
     #include"ast_sysy.h"
-    #include"parser.tab.hpp"
-    //保持以上顺序
+    #include"parser.tab.hpp" //保持此顺序
     using namespace sysy;
-
     int lineno = 1;
 %}
 
 %option prefix="sysy"
-
 %x COMMENTS
 
 ident   ([_a-zA-Z][_a-zA-Z0-9]*)
@@ -22,7 +18,6 @@ decimal ([1-9][0-9]*)|0
 oct 0[0-7]*
 hex 0[xX][0-9A-Fa-f]+
 comment ("//".*)
-
 
 %%
 
