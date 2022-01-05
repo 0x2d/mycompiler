@@ -269,11 +269,18 @@ void AST::irgen_InitVal(int addr, int layer, ENTRY_VAL *e){
             nval_temp += nval/e->shape[layer];
             addr += nval/e->shape[layer]*4;
         } else if(this->son[i]->son[0]->type == _Exp){
-            std::string init_temp = this->son[i]->son[0]->son[0]->irgen_AddExp();
-            print_indent();
-            fprintf(sysyout,"%s[%d] = %s\n", e->eeyore_id.c_str(), addr, init_temp.c_str());
-            addr += 4;
-            nval_temp++;
+            if(symtable_ptr == root_symtable){
+                print_indent();
+                fprintf(sysyout,"%s[%d] = %d\n", e->eeyore_id.c_str(), addr, this->son[i]->son[0]->val);
+                addr += 4;
+                nval_temp++;
+            } else{
+                std::string init_temp = this->son[i]->son[0]->son[0]->irgen_AddExp();
+                print_indent();
+                fprintf(sysyout,"%s[%d] = %s\n", e->eeyore_id.c_str(), addr, init_temp.c_str());
+                addr += 4;
+                nval_temp++;
+            }
         } else{
             this->son[i]->irgen_InitVal(addr,layer+1,e);
             nval_temp += nval/e->shape[layer];
@@ -510,7 +517,7 @@ void AST::irgen_Decl(){
                 }
             } else {
                 if(ptr_temp->son.size() > 2){
-                    entry_temp->arr = new int [entry_temp->size/4];
+                    //entry_temp->arr = new int [entry_temp->size/4];
                     ptr_temp->son[2]->irgen_InitVal(0, 0, entry_temp);
                 }
             }

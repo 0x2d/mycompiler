@@ -1,8 +1,11 @@
-var T0
-f_bubblesort [1]
-  var T1
-  var T2
+var 12 T0
+var T1
+var 40000 T2
+f_set [3]
   var T3
+  var 124 T4
+  var T5
+  var T6
   var t0
   var t1
   var t2
@@ -19,60 +22,6 @@ f_bubblesort [1]
   var t13
   var t14
   var t15
-  T1 = 0
-l0:
-  t1 = T0 - 1
-  t0 = T1 < t1
-  if t0 == 0 goto l2
-l1:
-  T2 = 0
-l3:
-  t3 = T0 - T1
-  t3 = t3 - 1
-  t2 = T2 < t3
-  if t2 == 0 goto l5
-l4:
-  t4 = T2 * 4
-  t4 = p0 + t4
-  t4 = t4[0]
-  t7 = T2 + 1
-  t6 = t7 * 4
-  t6 = p0 + t6
-  t6 = t6[0]
-  t5 = t4 > t6
-  if t5 == 0 goto l7
-l6:
-  t9 = T2 + 1
-  t8 = t9 * 4
-  t8 = p0 + t8
-  t8 = t8[0]
-  T3 = t8
-  t11 = T2 + 1
-  t10 = t11 * 4
-  t10 = p0 + t10
-  t12 = T2 * 4
-  t12 = p0 + t12
-  t12 = t12[0]
-  t10[0] = t12
-  t13 = T2 * 4
-  t13 = p0 + t13
-  t13[0] = T3
-l7:
-  t14 = T2 + 1
-  T2 = t14
-  goto l3
-l5:
-  t15 = T1 + 1
-  T1 = t15
-  goto l0
-l2:
-  return 0
-  return 0
-end f_bubblesort
-f_insertsort [1]
-  var T4
-  var T5
-  var T6
   var t16
   var t17
   var t18
@@ -87,54 +36,6 @@ f_insertsort [1]
   var t27
   var t28
   var t29
-  T4 = 1
-l8:
-  t16 = T4 < T0
-  if t16 == 0 goto l10
-l9:
-  t17 = T4 * 4
-  t17 = p0 + t17
-  t17 = t17[0]
-  T5 = t17
-  t18 = T4 - 1
-  T6 = t18
-l11:
-  t20 = - 1
-  t19 = T6 > t20
-  if t19 == 0 goto l13
-  t22 = T6 * 4
-  t22 = p0 + t22
-  t22 = t22[0]
-  t21 = T5 < t22
-  if t21 == 0 goto l13
-l12:
-  t24 = T6 + 1
-  t23 = t24 * 4
-  t23 = p0 + t23
-  t25 = T6 * 4
-  t25 = p0 + t25
-  t25 = t25[0]
-  t23[0] = t25
-  t26 = T6 - 1
-  T6 = t26
-  goto l11
-l13:
-  t28 = T6 + 1
-  t27 = t28 * 4
-  t27 = p0 + t27
-  t27[0] = T5
-  t29 = T4 + 1
-  T4 = t29
-  goto l8
-l10:
-  return 0
-  return 0
-end f_insertsort
-f_QuickSort [3]
-  var T7
-  var T8
-  var T9
-  var T10
   var t30
   var t31
   var t32
@@ -160,95 +61,6 @@ f_QuickSort [3]
   var t52
   var t53
   var t54
-  t30 = p1 < p2
-  if t30 == 0 goto l15
-l14:
-  T7 = p1
-  T8 = p2
-  t31 = p1 * 4
-  t31 = p0 + t31
-  t31 = t31[0]
-  T9 = t31
-l16:
-  t32 = T7 < T8
-  if t32 == 0 goto l18
-l17:
-l19:
-  t33 = T7 < T8
-  if t33 == 0 goto l21
-  t34 = T8 * 4
-  t34 = p0 + t34
-  t34 = t34[0]
-  t36 = T9 - 1
-  t35 = t34 > t36
-  if t35 == 0 goto l21
-l20:
-  t37 = T8 - 1
-  T8 = t37
-  goto l19
-l21:
-  t38 = T7 < T8
-  if t38 == 0 goto l23
-l22:
-  t39 = T7 * 4
-  t39 = p0 + t39
-  t40 = T8 * 4
-  t40 = p0 + t40
-  t40 = t40[0]
-  t39[0] = t40
-  t41 = T7 + 1
-  T7 = t41
-l23:
-l24:
-  t42 = T7 < T8
-  if t42 == 0 goto l26
-  t43 = T7 * 4
-  t43 = p0 + t43
-  t43 = t43[0]
-  t44 = t43 < T9
-  if t44 == 0 goto l26
-l25:
-  t45 = T7 + 1
-  T7 = t45
-  goto l24
-l26:
-  t46 = T7 < T8
-  if t46 == 0 goto l28
-l27:
-  t47 = T8 * 4
-  t47 = p0 + t47
-  t48 = T7 * 4
-  t48 = p0 + t48
-  t48 = t48[0]
-  t47[0] = t48
-  t49 = T8 - 1
-  T8 = t49
-l28:
-  goto l16
-l18:
-  t50 = T7 * 4
-  t50 = p0 + t50
-  t50[0] = T9
-  t51 = T7 - 1
-  T10 = t51
-  param p0
-  param p1
-  param T10
-  t52 = call f_QuickSort
-  T10 = t52
-  t53 = T7 + 1
-  T10 = t53
-  param p0
-  param T10
-  param p2
-  t54 = call f_QuickSort
-  T10 = t54
-l15:
-  return 0
-  return 0
-end f_QuickSort
-f_getMid [1]
-  var T11
   var t55
   var t56
   var t57
@@ -259,43 +71,218 @@ f_getMid [1]
   var t62
   var t63
   var t64
-  t55 = T0 % 2
-  t56 = t55 == 0
-  if t56 == 0 goto l30
-l29:
-  t57 = T0 / 2
-  T11 = t57
-  t58 = T11 * 4
-  t58 = p0 + t58
-  t58 = t58[0]
-  t61 = T11 - 1
-  t60 = t61 * 4
-  t60 = p0 + t60
-  t60 = t60[0]
-  t59 = t58 + t60
-  t62 = t59 / 2
-  return t62
-  goto l31
-l30:
-  t63 = T0 / 2
-  T11 = t63
-  t64 = T11 * 4
-  t64 = p0 + t64
-  t64 = t64[0]
-  return t64
-l31:
-  return 0
-end f_getMid
-f_getMost [1]
-  var 4000 T12
-  var T13
-  var T14
-  var T15
-  var T16
   var t65
   var t66
   var t67
   var t68
+  var t69
+  T3 = 30
+  T4[0] = 0
+  T4[4] = 0
+  T4[8] = 0
+  T4[12] = 0
+  T4[16] = 0
+  T4[20] = 0
+  T4[24] = 0
+  T4[28] = 0
+  T4[32] = 0
+  T4[36] = 0
+  T4[40] = 0
+  T4[44] = 0
+  T4[48] = 0
+  T4[52] = 0
+  T4[56] = 0
+  T4[60] = 0
+  T4[64] = 0
+  T4[68] = 0
+  T4[72] = 0
+  T4[76] = 0
+  T4[80] = 0
+  T4[84] = 0
+  T4[88] = 0
+  T4[92] = 0
+  T4[96] = 0
+  T4[100] = 0
+  T4[104] = 0
+  T4[108] = 0
+  T4[112] = 0
+  T4[116] = 0
+  T4[120] = 0
+  t0 = 0 * 4
+  t0 = T4 + t0
+  t0[0] = 1
+  t1 = 1 * 4
+  t1 = T4 + t1
+  t2 = 0 * 4
+  t2 = T4 + t2
+  t2 = t2[0]
+  t3 = t2 * 2
+  t1[0] = t3
+  t4 = 2 * 4
+  t4 = T4 + t4
+  t5 = 1 * 4
+  t5 = T4 + t5
+  t5 = t5[0]
+  t6 = t5 * 2
+  t4[0] = t6
+  t7 = 3 * 4
+  t7 = T4 + t7
+  t8 = 2 * 4
+  t8 = T4 + t8
+  t8 = t8[0]
+  t9 = t8 * 2
+  t7[0] = t9
+  t10 = 4 * 4
+  t10 = T4 + t10
+  t11 = 3 * 4
+  t11 = T4 + t11
+  t11 = t11[0]
+  t12 = t11 * 2
+  t10[0] = t12
+  t13 = 5 * 4
+  t13 = T4 + t13
+  t14 = 4 * 4
+  t14 = T4 + t14
+  t14 = t14[0]
+  t15 = t14 * 2
+  t13[0] = t15
+  t16 = 6 * 4
+  t16 = T4 + t16
+  t17 = 5 * 4
+  t17 = T4 + t17
+  t17 = t17[0]
+  t18 = t17 * 2
+  t16[0] = t18
+  t19 = 7 * 4
+  t19 = T4 + t19
+  t20 = 6 * 4
+  t20 = T4 + t20
+  t20 = t20[0]
+  t21 = t20 * 2
+  t19[0] = t21
+  t22 = 8 * 4
+  t22 = T4 + t22
+  t23 = 7 * 4
+  t23 = T4 + t23
+  t23 = t23[0]
+  t24 = t23 * 2
+  t22[0] = t24
+  t25 = 9 * 4
+  t25 = T4 + t25
+  t26 = 8 * 4
+  t26 = T4 + t26
+  t26 = t26[0]
+  t27 = t26 * 2
+  t25[0] = t27
+  t28 = 10 * 4
+  t28 = T4 + t28
+  t29 = 9 * 4
+  t29 = T4 + t29
+  t29 = t29[0]
+  t30 = t29 * 2
+  t28[0] = t30
+  T5 = 10
+l0:
+  t31 = T5 < T3
+  if t31 == 0 goto l2
+l1:
+  t32 = T5 + 1
+  T5 = t32
+  t33 = T5 * 4
+  t33 = T4 + t33
+  t35 = T5 - 1
+  t34 = t35 * 4
+  t34 = T4 + t34
+  t34 = t34[0]
+  t36 = t34 * 2
+  t33[0] = t36
+  goto l0
+l2:
+  T6 = 0
+  t37 = p1 / T3
+  t38 = t37 >= 10000
+  if t38 == 0 goto l4
+l3:
+  return 0
+l4:
+  t40 = p1 / T3
+  t39 = t40 * 4
+  t39 = p0 + t39
+  t39 = t39[0]
+  t43 = p1 % T3
+  t42 = t43 * 4
+  t42 = T4 + t42
+  t42 = t42[0]
+  t41 = t39 / t42
+  t41 = t41 % 2
+  t44 = t41 != p2
+  if t44 == 0 goto l6
+l5:
+  t46 = p1 / T3
+  t45 = t46 * 4
+  t45 = p0 + t45
+  t45 = t45[0]
+  t49 = p1 % T3
+  t48 = t49 * 4
+  t48 = T4 + t48
+  t48 = t48[0]
+  t47 = t45 / t48
+  t47 = t47 % 2
+  t50 = t47 == 0
+  if t50 == 0 goto l8
+l7:
+  t51 = p2 == 1
+  if t51 == 0 goto l10
+l9:
+  t53 = p1 % T3
+  t52 = t53 * 4
+  t52 = T4 + t52
+  t52 = t52[0]
+  T6 = t52
+l10:
+l8:
+  t55 = p1 / T3
+  t54 = t55 * 4
+  t54 = p0 + t54
+  t54 = t54[0]
+  t58 = p1 % T3
+  t57 = t58 * 4
+  t57 = T4 + t57
+  t57 = t57[0]
+  t56 = t54 / t57
+  t56 = t56 % 2
+  t59 = t56 == 1
+  if t59 == 0 goto l12
+l11:
+  t60 = p2 == 0
+  if t60 == 0 goto l14
+l13:
+  t63 = p1 % T3
+  t62 = t63 * 4
+  t62 = T4 + t62
+  t62 = t62[0]
+  t61 = T6 - t62
+  T6 = t61
+l14:
+l12:
+l6:
+  t65 = p1 / T3
+  t64 = t65 * 4
+  t64 = p0 + t64
+  t67 = p1 / T3
+  t66 = t67 * 4
+  t66 = p0 + t66
+  t66 = t66[0]
+  t68 = t66 + T6
+  t64[0] = t68
+  return 0
+  return 0
+end f_set
+T0[0] = 19971231
+T0[4] = 19981013
+T0[8] = 1000000007
+T1 = 0
+f_rand [0]
   var t69
   var t70
   var t71
@@ -304,604 +291,78 @@ f_getMost [1]
   var t74
   var t75
   var t76
-  T13 = 0
-l32:
-  t65 = T13 < 1000
-  if t65 == 0 goto l34
-l33:
-  t66 = T13 * 4
-  t66 = T12 + t66
-  t66[0] = 0
-  t67 = T13 + 1
-  T13 = t67
-  goto l32
-l34:
-  T13 = 0
-  T14 = 0
-l35:
-  t68 = T13 < T0
-  if t68 == 0 goto l37
-l36:
-  t69 = T13 * 4
-  t69 = p0 + t69
-  t69 = t69[0]
-  T16 = t69
-  t70 = T16 * 4
-  t70 = T12 + t70
-  t71 = T16 * 4
-  t71 = T12 + t71
-  t71 = t71[0]
-  t72 = t71 + 1
-  t70[0] = t72
-  t73 = T16 * 4
-  t73 = T12 + t73
-  t73 = t73[0]
-  t74 = t73 > T14
-  if t74 == 0 goto l39
-l38:
-  t75 = T16 * 4
-  t75 = T12 + t75
-  t75 = t75[0]
-  T14 = t75
-  T15 = T16
-l39:
-  t76 = T13 + 1
-  T13 = t76
-  goto l35
-l37:
-  return T15
-  return 0
-end f_getMost
-f_revert [1]
-  var T17
-  var T18
-  var T19
   var t77
+  t70 = 0 * 4
+  t70 = T0 + t70
+  t70 = t70[0]
+  t69 = T1 * t70
+  t72 = 1 * 4
+  t72 = T0 + t72
+  t72 = t72[0]
+  t71 = t69 + t72
+  T1 = t71
+  t74 = 2 * 4
+  t74 = T0 + t74
+  t74 = t74[0]
+  t73 = T1 % t74
+  T1 = t73
+  t75 = T1 < 0
+  if t75 == 0 goto l16
+l15:
+  t76 = 2 * 4
+  t76 = T0 + t76
+  t76 = t76[0]
+  t77 = t76 + T1
+  T1 = t77
+l16:
+  return T1
+  return 0
+end f_rand
+f_main [0]
+  var T7
+  var T8
+  var T9
   var t78
   var t79
   var t80
   var t81
   var t82
   var t83
-  T18 = 0
-  T19 = 0
-l40:
-  t77 = T18 < T19
-  if t77 == 0 goto l42
-l41:
-  t78 = T18 * 4
-  t78 = p0 + t78
-  t78 = t78[0]
-  T17 = t78
-  t79 = T18 * 4
-  t79 = p0 + t79
-  t80 = T19 * 4
-  t80 = p0 + t80
-  t80 = t80[0]
-  t79[0] = t80
-  t81 = T19 * 4
-  t81 = p0 + t81
-  t81[0] = T17
-  t82 = T18 + 1
-  T18 = t82
-  t83 = T19 - 1
-  T19 = t83
-  goto l40
-l42:
-  return 0
-  return 0
-end f_revert
-f_arrCopy [2]
-  var T20
   var t84
   var t85
   var t86
   var t87
-  T20 = 0
-l43:
-  t84 = T20 < T0
-  if t84 == 0 goto l45
-l44:
-  t85 = T20 * 4
-  t85 = p1 + t85
-  t86 = T20 * 4
-  t86 = p0 + t86
-  t86 = t86[0]
-  t85[0] = t86
-  t87 = T20 + 1
-  T20 = t87
-  goto l43
-l45:
-  return 0
-  return 0
-end f_arrCopy
-f_calSum [2]
-  var T21
-  var T22
   var t88
   var t89
-  var t90
-  var t91
-  var t92
-  var t93
-  var t94
-  var t95
-  var t96
-  T21 = 0
-  T22 = 0
-l46:
-  t88 = T22 < T0
-  if t88 == 0 goto l48
-l47:
-  t90 = T22 * 4
-  t90 = p0 + t90
-  t90 = t90[0]
-  t89 = T21 + t90
-  T21 = t89
-  t91 = T22 % p1
-  t93 = p1 - 1
-  t92 = t91 != t93
-  if t92 == 0 goto l50
-l49:
-  t94 = T22 * 4
-  t94 = p0 + t94
-  t94[0] = 0
-  goto l51
-l50:
-  t95 = T22 * 4
-  t95 = p0 + t95
-  t95[0] = T21
-  T21 = 0
-l51:
-  t96 = T22 + 1
-  T22 = t96
-  goto l46
-l48:
-  return 0
-  return 0
-end f_calSum
-f_avgPooling [2]
-  var T23
-  var T24
-  var T25
-  var t97
-  var t98
-  var t99
-  var t100
-  var t101
-  var t102
-  var t103
-  var t104
-  var t105
-  var t106
-  var t107
-  var t108
-  var t109
-  var t110
-  var t111
-  var t112
-  var t113
-  var t114
-  var t115
-  var t116
-  var t117
-  var t118
-  T24 = 0
-  T23 = 0
-l52:
-  t97 = T24 < T0
-  if t97 == 0 goto l54
-l53:
-  t99 = p1 - 1
-  t98 = T24 < t99
-  if t98 == 0 goto l56
-l55:
-  t101 = T24 * 4
-  t101 = p0 + t101
-  t101 = t101[0]
-  t100 = T23 + t101
-  T23 = t100
-  goto l57
-l56:
-  t103 = p1 - 1
-  t102 = T24 == t103
-  if t102 == 0 goto l59
-l58:
-  t104 = 0 * 4
-  t104 = p0 + t104
-  t104 = t104[0]
-  T25 = t104
-  t105 = 0 * 4
-  t105 = p0 + t105
-  t106 = T23 / p1
-  t105[0] = t106
-  goto l60
-l59:
-  t108 = T24 * 4
-  t108 = p0 + t108
-  t108 = t108[0]
-  t107 = T23 + t108
-  t107 = t107 - T25
-  T23 = t107
-  t110 = T24 - p1
-  t110 = t110 + 1
-  t109 = t110 * 4
-  t109 = p0 + t109
-  t109 = t109[0]
-  T25 = t109
-  t112 = T24 - p1
-  t112 = t112 + 1
-  t111 = t112 * 4
-  t111 = p0 + t111
-  t113 = T23 / p1
-  t111[0] = t113
-l60:
-l57:
-  t114 = T24 + 1
-  T24 = t114
-  goto l52
-l54:
-  t115 = T0 - p1
-  t115 = t115 + 1
-  T24 = t115
-l61:
-  t116 = T24 < T0
-  if t116 == 0 goto l63
-l62:
-  t117 = T24 * 4
-  t117 = p0 + t117
-  t117[0] = 0
-  t118 = T24 + 1
-  T24 = t118
-  goto l61
-l63:
-  return 0
-  return 0
-end f_avgPooling
-f_main [0]
-  var 128 T26
-  var 128 T27
-  var T28
-  var T29
-  var t119
-  var t120
-  var t121
-  var t122
-  var t123
-  var t124
-  var t125
-  var t126
-  var t127
-  var t128
-  var t129
-  var t130
-  var t131
-  var t132
-  var t133
-  var t134
-  var t135
-  var t136
-  var t137
-  var t138
-  var t139
-  var t140
-  var t141
-  var t142
-  var t143
-  var t144
-  var t145
-  var t146
-  var t147
-  var t148
-  var t149
-  var t150
-  var t151
-  var t152
-  var t153
-  var t154
-  var t155
-  var t156
-  var t157
-  var t158
-  var t159
-  var t160
-  var t161
-  var t162
-  var t163
-  var t164
-  var t165
-  var t166
-  var t167
-  var t168
-  var t169
-  var t170
-  var t171
-  var t172
-  var t173
-  var t174
-  var t175
-  var t176
-  var t177
-  var t178
-  var t179
-  var t180
-  var t181
-  var t182
-  var t183
-  var t184
-  var t185
-  var t186
-  var t187
-  var t188
-  var t189
-  var t190
-  var t191
-  var t192
-  var t193
-  var t194
-  var t195
-  T0 = 32
-  t119 = 0 * 4
-  t119 = T26 + t119
-  t119[0] = 7
-  t120 = 1 * 4
-  t120 = T26 + t120
-  t120[0] = 23
-  t121 = 2 * 4
-  t121 = T26 + t121
-  t121[0] = 89
-  t122 = 3 * 4
-  t122 = T26 + t122
-  t122[0] = 26
-  t123 = 4 * 4
-  t123 = T26 + t123
-  t123[0] = 282
-  t124 = 5 * 4
-  t124 = T26 + t124
-  t124[0] = 254
-  t125 = 6 * 4
-  t125 = T26 + t125
-  t125[0] = 27
-  t126 = 7 * 4
-  t126 = T26 + t126
-  t126[0] = 5
-  t127 = 8 * 4
-  t127 = T26 + t127
-  t127[0] = 83
-  t128 = 9 * 4
-  t128 = T26 + t128
-  t128[0] = 273
-  t129 = 10 * 4
-  t129 = T26 + t129
-  t129[0] = 574
-  t130 = 11 * 4
-  t130 = T26 + t130
-  t130[0] = 905
-  t131 = 12 * 4
-  t131 = T26 + t131
-  t131[0] = 354
-  t132 = 13 * 4
-  t132 = T26 + t132
-  t132[0] = 657
-  t133 = 14 * 4
-  t133 = T26 + t133
-  t133[0] = 935
-  t134 = 15 * 4
-  t134 = T26 + t134
-  t134[0] = 264
-  t135 = 16 * 4
-  t135 = T26 + t135
-  t135[0] = 639
-  t136 = 17 * 4
-  t136 = T26 + t136
-  t136[0] = 459
-  t137 = 18 * 4
-  t137 = T26 + t137
-  t137[0] = 29
-  t138 = 19 * 4
-  t138 = T26 + t138
-  t138[0] = 68
-  t139 = 20 * 4
-  t139 = T26 + t139
-  t139[0] = 929
-  t140 = 21 * 4
-  t140 = T26 + t140
-  t140[0] = 756
-  t141 = 22 * 4
-  t141 = T26 + t141
-  t141[0] = 452
-  t142 = 23 * 4
-  t142 = T26 + t142
-  t142[0] = 279
-  t143 = 24 * 4
-  t143 = T26 + t143
-  t143[0] = 58
-  t144 = 25 * 4
-  t144 = T26 + t144
-  t144[0] = 87
-  t145 = 26 * 4
-  t145 = T26 + t145
-  t145[0] = 96
-  t146 = 27 * 4
-  t146 = T26 + t146
-  t146[0] = 36
-  t147 = 28 * 4
-  t147 = T26 + t147
-  t147[0] = 39
-  t148 = 29 * 4
-  t148 = T26 + t148
-  t148[0] = 28
-  t149 = 30 * 4
-  t149 = T26 + t149
-  t149[0] = 1
-  t150 = 31 * 4
-  t150 = T26 + t150
-  t150[0] = 290
-  param T26
-  param T27
-  t151 = call f_arrCopy
-  T28 = t151
-  param T27
-  t152 = call f_revert
-  T28 = t152
-  T29 = 0
-l64:
-  t153 = T29 < 32
-  if t153 == 0 goto l66
-l65:
-  t154 = T29 * 4
-  t154 = T27 + t154
-  t154 = t154[0]
-  T28 = t154
-  param T28
-  call f_putint
-  t156 = T29 + 1
-  T29 = t156
-  goto l64
-l66:
-  param T27
-  t157 = call f_bubblesort
-  T28 = t157
-  T29 = 0
-l67:
-  t158 = T29 < 32
-  if t158 == 0 goto l69
-l68:
-  t159 = T29 * 4
-  t159 = T27 + t159
-  t159 = t159[0]
-  T28 = t159
-  param T28
-  call f_putint
-  t161 = T29 + 1
-  T29 = t161
-  goto l67
-l69:
-  param T27
-  t162 = call f_getMid
-  T28 = t162
-  param T28
-  call f_putint
-  param T27
-  t164 = call f_getMost
-  T28 = t164
-  param T28
-  call f_putint
-  param T26
-  param T27
-  t166 = call f_arrCopy
-  T28 = t166
-  param T27
-  t167 = call f_bubblesort
-  T28 = t167
-  T29 = 0
-l70:
-  t168 = T29 < 32
-  if t168 == 0 goto l72
-l71:
-  t169 = T29 * 4
-  t169 = T27 + t169
-  t169 = t169[0]
-  T28 = t169
-  param T28
-  call f_putint
-  t171 = T29 + 1
-  T29 = t171
-  goto l70
-l72:
-  param T26
-  param T27
-  t172 = call f_arrCopy
-  T28 = t172
-  param T27
-  t173 = call f_insertsort
-  T28 = t173
-  T29 = 0
-l73:
-  t174 = T29 < 32
-  if t174 == 0 goto l75
-l74:
-  t175 = T29 * 4
-  t175 = T27 + t175
-  t175 = t175[0]
-  T28 = t175
-  param T28
-  call f_putint
-  t177 = T29 + 1
-  T29 = t177
-  goto l73
-l75:
-  param T26
-  param T27
-  t178 = call f_arrCopy
-  T28 = t178
-  T29 = 0
-  T28 = 31
-  param T27
-  param T29
-  param T28
-  t179 = call f_QuickSort
-  T28 = t179
-l76:
-  t180 = T29 < 32
-  if t180 == 0 goto l78
-l77:
-  t181 = T29 * 4
-  t181 = T27 + t181
-  t181 = t181[0]
-  T28 = t181
-  param T28
-  call f_putint
-  t183 = T29 + 1
-  T29 = t183
-  goto l76
-l78:
-  param T26
-  param T27
-  t184 = call f_arrCopy
-  T28 = t184
-  param T27
-  param 4
-  t185 = call f_calSum
-  T28 = t185
-  T29 = 0
-l79:
-  t186 = T29 < 32
-  if t186 == 0 goto l81
-l80:
-  t187 = T29 * 4
-  t187 = T27 + t187
-  t187 = t187[0]
-  T28 = t187
-  param T28
-  call f_putint
-  t189 = T29 + 1
-  T29 = t189
-  goto l79
-l81:
-  param T26
-  param T27
-  t190 = call f_arrCopy
-  T28 = t190
-  param T27
-  param 3
-  t191 = call f_avgPooling
-  T28 = t191
-  T29 = 0
-l82:
-  t192 = T29 < 32
-  if t192 == 0 goto l84
-l83:
-  t193 = T29 * 4
-  t193 = T27 + t193
-  t193 = t193[0]
-  T28 = t193
-  param T28
-  call f_putint
-  t195 = T29 + 1
-  T29 = t195
-  goto l82
-l84:
+  t78 = call f_getint
+  T7 = t78
+  t79 = call f_getint
+  T1 = t79
+  param 56
+  call f__sysy_starttime
+l17:
+  t81 = T7 > 0
+  if t81 == 0 goto l19
+l18:
+  t82 = T7 - 1
+  T7 = t82
+  t83 = call f_rand
+  t84 = t83 % 300000
+  T8 = t84
+  t85 = call f_rand
+  t86 = t85 % 2
+  T9 = t86
+  param T2
+  param T8
+  param T9
+  t87 = call f_set
+  goto l17
+l19:
+  param 64
+  call f__sysy_stoptime
+  param 10000
+  param T2
+  call f_putarray
   return 0
   return 0
 end f_main
