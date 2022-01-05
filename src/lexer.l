@@ -7,6 +7,8 @@
     #include"parser.tab.hpp"
     //保持以上顺序
     using namespace sysy;
+
+    int lineno = 1;
 %}
 
 %option prefix="sysy"
@@ -139,7 +141,7 @@ comment ("//".*)
     return INT_CONST;
 }
 {comment}
-\n
+\n  {lineno++;}
 .
 
 %%

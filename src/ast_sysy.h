@@ -51,6 +51,8 @@ public:
     char *id;
     ENTRY *entry;
 
+    int lineno;
+
     bool isint = false;
 
     int label_in;

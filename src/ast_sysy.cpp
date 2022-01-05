@@ -190,19 +190,24 @@ std::string AST::irgen_UnaryExp(){
                 params[i] = val1;
             }
             for(int i=0;i<param_num;i++){
-                print_indent();
-                fprintf(sysyout,"param %s\n", params[i].c_str());
+                fprintf(sysyout,"  param %s\n", params[i].c_str());
             }
         }
         if(func_temp->isreturn){
             val1 = "t"+std::to_string(t_i);
             t_i++;
-            print_indent();
-            fprintf(sysyout,"%s = call f_%s\n",val1.c_str(),func_temp->id);
+            fprintf(sysyout,"  %s = call f_%s\n",val1.c_str(),func_temp->id);
         } else{
             t_i++;
-            print_indent();
-            fprintf(sysyout,"call f_%s\n",func_temp->id);
+            if(strcmp(func_temp->id,"starttime") == 0){
+                fprintf(sysyout,"  param %d\n", this->lineno);
+                fprintf(sysyout,"  call f__sysy_starttime\n");
+            } else if(strcmp(func_temp->id,"stoptime") == 0){
+                fprintf(sysyout,"  param %d\n", this->lineno);
+                fprintf(sysyout,"  call f__sysy_stoptime\n");
+            } else{
+                fprintf(sysyout,"  call f_%s\n",func_temp->id);
+            }
         }
     }
     return val1;

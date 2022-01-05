@@ -4,14 +4,14 @@
     #include"ast_sysy.h"
     using namespace sysy;
     extern int sysylex();
-    extern int sysylineno;
+    extern int lineno;
     extern char *sysytext;
     extern class AST *root_sysy;
     extern class TABLE *root_symtable;
     extern std::vector<TABLE *>symtable_vector;
     extern class TABLE *symtable_ptr;
     void yyerror(char *str){
-        printf("LINE %d in %s : %s\n",sysylineno, sysytext, str);
+        printf("LINE %d in %s : %s\n",lineno, sysytext, str);
     };
     int NumberOfTemp;   //记录一个函数需要多少临时变量
 %}
@@ -495,6 +495,7 @@ UnaryExp    : PrimaryExp {
             | IDENT '(' ')' {
                 NumberOfTemp++;
                 AST *temp = new AST(_UnaryExp);
+                temp->lineno = lineno;
                 temp->son.push_back($1);
                 $$ = temp;
             }
