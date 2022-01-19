@@ -4,7 +4,6 @@
     #include<string.h>
     #include"ast_eeyore.h"
     #include"eeyore.tab.hpp"    //保持以上顺序
-    using namespace eeyore;
 %}
 
 %option prefix="eeyore"

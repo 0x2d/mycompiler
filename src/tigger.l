@@ -3,8 +3,7 @@
     #include<stdlib.h>
     #include<string.h>
     #include"ast_tigger.h"
-    #include"tigger.tab.hpp"    //保持以上顺序
-    using namespace tigger;
+    #include"tigger.tab.hpp"    //保持以上顺序make
 %}
 
 %option prefix="tigger"

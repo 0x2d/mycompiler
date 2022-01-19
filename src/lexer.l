@@ -4,7 +4,7 @@
     #include<string.h>
     #include"ast_sysy.h"
     #include"parser.tab.hpp" //保持此顺序
-    using namespace sysy;
+    
     int lineno = 1;
 %}
 
@@ -102,11 +102,8 @@ comment ("//".*)
     return OR;
 }
 {ident} {
-    int len = strlen(yytext)+1;
-    char *id = (char *)malloc(len);
-    memset(id, '\0', len);
-    strcpy(id,yytext);
-    AST *temp = new AST(_IDENT, id);
+    AST *temp = new AST(_IDENT);
+    temp->id = yytext;
     sysylval.ast = temp;
     return IDENT;
 }

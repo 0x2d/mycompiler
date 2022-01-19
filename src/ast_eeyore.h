@@ -4,8 +4,6 @@
 #include<vector>
 #include<string>
 
-namespace eeyore{
-
 enum TYPE {
     _IF, _RETURN, _VAR, _NUM, _SYMBOL, _END, _FUNCTION, _LOGICOP, _OP, _GOTO, _LABEL, _PARAM, _CALL,
     _Program, _Declaration, _Initialization, _FunctionDef, _FunctionHeader, _Statements, _FunctionEnd,
@@ -20,17 +18,11 @@ public:
     AST() = default;
     AST(TYPE t):type(t){}
 
-    void irgen();
-    void irgen_decl();
-    void irgen_func();
-    void irgen_exp();
-
     std::vector<AST *> son;
     TYPE type;
     std::string op;
     int val;
     std::string id;
-
     ENTRY *entry;
 };
 
@@ -50,7 +42,6 @@ public:
     int reg;
     int stack;
     int size;
-
     //用于初始化
     int val;
     int *init;
@@ -63,13 +54,11 @@ public:
     FUNC(std::string i, int p):id(i),pnum(p){
         this->stack_size = 0;
     }
-
+    
     std::string id;
     int pnum;
     std::vector<ENTRY *>table;
     int stack_size;
 };
-
-}
 
 #endif

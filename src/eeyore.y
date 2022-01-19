@@ -2,11 +2,11 @@
     #include<stdio.h>
     #include<string.h>
     #include"ast_eeyore.h"
-    using namespace eeyore;
+
     extern int eeyorelex();
     extern char *eeyoretext;
     extern ENTRY *findvar(FUNC *func, std::string id);
-    extern class AST *root_eeyore;
+    extern AST *root_eeyore;
     extern std::vector<ENTRY *>global_table;
     extern std::vector<FUNC *>functions;
     extern FUNC *func_ptr;
@@ -14,13 +14,14 @@
     void yyerror(char *str){
         printf("In %s : %s\n", eeyoretext, str);
     };
+    
     int v_i = 0;
 %}
 
 %define api.prefix {eeyore}
 
 %union{
-    class eeyore::AST *ast;
+    class AST *ast;
 }
 
 %token <ast>  IF RETURN VAR NUM SYMBOL END FUNCTION LOGICOP OP GOTO LABEL PARAM CALL

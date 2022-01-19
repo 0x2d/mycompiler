@@ -2,7 +2,7 @@
     #include<stdio.h>
     #include<string.h>
     #include"ast_sysy.h"
-    using namespace sysy;
+
     extern int sysylex();
     extern int lineno;
     extern char *sysytext;
@@ -14,13 +14,14 @@
     void yyerror(char *str){
         printf("LINE %d in %s : %s\n",lineno, sysytext, str);
     };
+    
     int NumberOfTemp;   //记录一个函数需要多少临时变量
 %}
 
 %define api.prefix {sysy}
 
 %union{
-    class sysy::AST *ast; //class关键字必需添加
+    class AST *ast; //class关键字必需添加
 }
 
 %token <ast> CONST INT VOID IF ELSE WHILE BREAK CONTINUE RETURN

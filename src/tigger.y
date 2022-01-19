@@ -2,10 +2,10 @@
     #include<stdio.h>
     #include<string.h>
     #include"ast_tigger.h"
-    using namespace tigger;
+    
     extern int tiggerlex();
     extern char *tiggertext;
-    extern class AST *root_tigger;
+    extern AST *root_tigger;
     
     void yyerror(char *str){
         printf("In %s : %s\n",tiggertext, str);
@@ -15,7 +15,7 @@
 %define api.prefix {tigger}
 
 %union{
-    class tigger::AST *ast;
+    class AST *ast;
 }
 
 %token <ast>  IF RETURN VARIABLE NUM MALLOC END FUNCTION LOGICOP OP GOTO LABEL CALL STORE LOAD LOADADDR Reg

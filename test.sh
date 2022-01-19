@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo --------test.c--------
-./build/compiler -e test.c
+./build/compiler -S ./test.c -o ./test.S
 
 #num=0
 #i=0
